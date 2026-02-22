@@ -21,7 +21,8 @@ class UserService:
         # Additional business rules can be validated here
         return await self.repository.create(user_in)
 
-    async def get_user_by_telegram_id(self, telegram_id: str) -> User | None:
+    from typing import Optional
+    async def get_user_by_telegram_id(self, telegram_id: str) -> Optional[User]:
         """
         Retrieve a user. Further logic can be placed here if necessary.
         """
