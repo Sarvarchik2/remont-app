@@ -1,0 +1,338 @@
+import React, { useState } from 'react';
+import { translations, Language } from '../../utils/translations';
+import { Project } from '../../utils/mockData';
+import { 
+  ArrowLeft, 
+  DollarSign, 
+  TrendingUp, 
+  Calendar, 
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  CreditCard,
+  Package,
+  Video,
+  MessageSquare
+} from 'lucide-react';
+import { ImageWithFallback } from '../figma/ImageWithFallback';
+
+interface ProjectDetailScreenProps {
+  lang: Language;
+  onNavigate: (tab: string) => void;
+  projectId?: string | number;
+  projects?: Project[];
+}
+
+export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({ 
+  lang, 
+  onNavigate,
+  projectId,
+  projects = []
+}) => {
+  const [activeTab, setActiveTab] = useState<'finance' | 'payments' | 'timeline'>('finance');
+  
+  // Find project by ID or use first one as fallback
+  const project = projects.find(p => p.id === String(projectId)) || projects[0];
+
+  const progressPercentage = project.finance 
+    ? Math.round((project.finance.paid / project.finance.total) * 100) 
+    : 0;
+
+  return (
+    <div className="pb-32 bg-[#F9F9F7] min-h-screen">
+      {/* Header with Hero Image */}
+      <div className="relative h-72 overflow-hidden">
+        <ImageWithFallback 
+          src="https://images.unsplash.com/photo-1687669930011-65755484a0a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBwcm9ncmVzcyUyMHRpbWVsaW5lfGVufDF8fHx8MTc3MTAwNTI4Mnww&ixlib=rb-4.1.0&q=80&w=1080"
+          alt="Project"
+          className="w-full h-full object-cover grayscale"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+        
+        {/* Back Button */}
+        <button 
+          onClick={() => onNavigate('dashboard')}
+          className="absolute top-6 left-4 w-10 h-10 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors border border-white/20"
+        >
+          <ArrowLeft size={20} />
+        </button>
+
+        {/* Project Info Overlay */}
+        <div className="absolute bottom-6 left-4 right-4 text-white">
+          <div className="flex items-center space-x-2 mb-2">
+            <span className="bg-white text-black text-[10px] font-bold px-3 py-1.5 rounded-full">
+              В РАБОТЕ
+            </span>
+            <span className="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/20">
+              Договор №{project.contractNumber}
+            </span>
+          </div>
+          <h1 className="text-2xl font-bold mb-1">Мой проект</h1>
+          <p className="text-white/70 text-sm">{project.address}</p>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="px-4 pt-6 pb-4">
+        <div className="bg-white rounded-[24px] p-1.5 flex space-x-1 shadow-sm border border-slate-100">
+          <TabButton 
+            active={activeTab === 'finance'} 
+            onClick={() => setActiveTab('finance')}
+            icon={DollarSign}
+            label="Финансы"
+          />
+          <TabButton 
+            active={activeTab === 'payments'} 
+            onClick={() => setActiveTab('payments')}
+            icon={CreditCard}
+            label="Платежи"
+          />
+          <TabButton 
+            active={activeTab === 'timeline'} 
+            onClick={() => setActiveTab('timeline')}
+            icon={Package}
+            label="Работы"
+          />
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="px-4">
+        {activeTab === 'finance' && <FinanceTab project={project} progressPercentage={progressPercentage} />}
+        {activeTab === 'payments' && <PaymentsTab project={project} />}
+        {activeTab === 'timeline' && <TimelineTab project={project} />}
+      </div>
+    </div>
+  );
+};
+
+// Tab Button Component
+interface TabButtonProps {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ElementType;
+  label: string;
+}
+
+const TabButton: React.FC<TabButtonProps> = ({ active, onClick, icon: Icon, label }) => (
+  <button
+    onClick={onClick}
+    className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-[18px] font-bold text-xs transition-all ${
+      active 
+        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' 
+        : 'text-slate-400 hover:text-slate-600'
+    }`}
+  >
+    <Icon size={16} />
+    <span>{label}</span>
+  </button>
+);
+
+// Finance Tab
+const FinanceTab = ({ project, progressPercentage }: any) => (
+  <div className="space-y-4">
+    {/* Summary Cards */}
+    <div className="grid grid-cols-2 gap-3">
+      <div className="bg-[#FFB800] rounded-[28px] p-6 text-black relative overflow-hidden shadow-lg shadow-[#FFB800]/20">
+        <div className="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-full blur-2xl" />
+        <div className="relative z-10">
+          <DollarSign size={28} className="mb-3 opacity-80" />
+          <div className="text-3xl font-bold mb-1">{(project.finance.total / 1000000).toFixed(1)}М</div>
+          <div className="text-xs text-black/60 font-medium">Общая смета</div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-[28px] p-6 text-slate-900 relative overflow-hidden border border-slate-200">
+        <div className="relative z-10">
+          <CheckCircle2 size={28} className="mb-3 text-slate-900" />
+          <div className="text-3xl font-bold mb-1">{(project.finance.paid / 1000000).toFixed(1)}М</div>
+          <div className="text-xs text-slate-400 font-medium">Оплачено</div>
+        </div>
+      </div>
+    </div>
+
+    {/* Remaining Amount */}
+    <div className="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-bold text-slate-900">Остаток к оплате</h3>
+        <AlertCircle size={20} className="text-slate-900" />
+      </div>
+      <div className="text-3xl font-bold text-slate-900 mb-1">
+        {(project.finance.remaining / 1000000).toFixed(2)} млн
+      </div>
+      <p className="text-sm text-slate-500">
+        {project.finance.remaining.toLocaleString('ru-RU')} сум
+      </p>
+    </div>
+
+    {/* Progress Card */}
+    <div className="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-bold text-slate-900">Прогресс оплаты</h3>
+        <span className="text-2xl font-bold text-slate-900">{progressPercentage}%</span>
+      </div>
+      <div className="bg-slate-100 rounded-full h-3 overflow-hidden mb-4">
+        <div 
+          className="bg-primary h-full rounded-full transition-all duration-500"
+          style={{ width: `${progressPercentage}%` }}
+        />
+      </div>
+      <div className="flex items-center text-sm text-slate-500">
+        <TrendingUp size={16} className="mr-2" />
+        <span>Оплата по графику</span>
+      </div>
+    </div>
+
+    {/* Stage Info */}
+    <div className="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm">
+      <div className="flex items-start space-x-4">
+        <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+          <Clock size={24} className="text-slate-900" />
+        </div>
+        <div className="flex-1">
+          <h3 className="font-bold text-slate-900 mb-1">Текущий этап</h3>
+          <p className="text-slate-600 text-sm mb-2">{project.stage}</p>
+          <p className="text-xs text-slate-400">
+            Прогноз завершения: {project.forecast}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Payments Tab
+const PaymentsTab = ({ project }: any) => (
+  <div className="space-y-3">
+    <div className="flex items-center justify-between mb-2">
+      <h3 className="font-bold text-slate-900 text-lg">История платежей</h3>
+      <span className="text-xs text-slate-400 font-medium">{project.payments.length} операций</span>
+    </div>
+
+    {project.payments.length === 0 ? (
+      <div className="bg-white rounded-[24px] p-8 border border-slate-100 text-center">
+        <div className="w-16 h-16 bg-slate-100 rounded-full mx-auto mb-3 flex items-center justify-center">
+          <CreditCard size={28} className="text-slate-400" />
+        </div>
+        <p className="text-slate-500 text-sm">Платежей пока нет</p>
+      </div>
+    ) : (
+      project.payments.map((payment: any, index: number) => (
+        <div key={index} className="bg-white rounded-[24px] p-5 border border-slate-100 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start space-x-3">
+              <div className="w-11 h-11 bg-[#FFB800] rounded-2xl flex items-center justify-center text-black flex-shrink-0">
+                <CreditCard size={20} />
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-sm mb-1">{payment.description || payment.comment}</h4>
+                <p className="text-xs text-slate-400 flex items-center">
+                  <Calendar size={12} className="mr-1" />
+                  {payment.date}
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-lg font-bold text-slate-900">
+                +{(payment.amount / 1000000).toFixed(2)}М
+              </div>
+              <div className="text-xs text-slate-400">
+                {payment.amount.toLocaleString('ru-RU')} сум
+              </div>
+            </div>
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+);
+
+// Timeline Tab - Chat Style
+const TimelineTab = ({ project }: any) => (
+  <div className="space-y-4">
+    <div className="flex items-center justify-between mb-3">
+      <h3 className="font-bold text-slate-900 text-lg">Хронология работ</h3>
+      <span className="text-xs text-slate-400 font-medium">{project.timeline.length} обновлений</span>
+    </div>
+
+    <div className="space-y-3">
+      {project.timeline.map((event: any, index: number) => (
+        <div key={index} className="bg-white rounded-[24px] p-4 border border-slate-100 shadow-sm">
+          {/* Header - Date */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-[#FFB800] rounded-full flex items-center justify-center">
+                <span className="text-black text-xs font-bold">A</span>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-slate-900">Менеджер</p>
+                <p className="text-[10px] text-slate-400">{event.date}</p>
+              </div>
+            </div>
+            {event.status === 'completed' && (
+              <span className="text-[10px] font-bold text-slate-900 bg-slate-100 px-2 py-1 rounded-full border border-slate-200">
+                Завершено
+              </span>
+            )}
+            {event.status === 'in_progress' && (
+              <span className="text-[10px] font-bold text-black bg-[#FFB800] px-2 py-1 rounded-full">
+                В работе
+              </span>
+            )}
+            {event.status === 'planned' && (
+              <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-full border border-slate-100">
+                Запланировано
+              </span>
+            )}
+          </div>
+
+          {/* Message Content */}
+          {event.message && (
+            <p className="text-sm text-slate-700 mb-3 leading-relaxed">{event.message}</p>
+          )}
+
+          {/* Photo */}
+          {event.type === 'photo' && event.mediaUrl && (
+            <div className="rounded-2xl overflow-hidden mb-2 border border-slate-100">
+              <ImageWithFallback 
+                src={event.mediaUrl}
+                alt="Work progress"
+                className="w-full h-64 object-cover grayscale"
+              />
+            </div>
+          )}
+
+          {/* Video */}
+          {event.type === 'video' && event.videoUrl && (
+            <div className="rounded-2xl overflow-hidden bg-slate-50 mb-2 border border-slate-100">
+              <div className="aspect-video flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-2 shadow-sm border border-slate-100">
+                    <Video size={28} className="text-slate-900" />
+                  </div>
+                  <p className="text-sm text-slate-600 font-medium">Видео доступно</p>
+                  <p className="text-xs text-slate-400 mt-1">Нажмите для просмотра</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Text Only */}
+          {event.type === 'text' && !event.mediaUrl && !event.videoUrl && (
+            <div className="flex items-start space-x-2 text-slate-500">
+              <MessageSquare size={14} className="mt-0.5 flex-shrink-0" />
+              <p className="text-xs">Текстовое обновление</p>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+
+    {/* Info Note */}
+    <div className="bg-slate-50 rounded-2xl p-4 text-center border border-slate-100">
+      <p className="text-xs text-slate-500">
+        Здесь менеджер публикует обновления о ходе работ на вашем объекте
+      </p>
+    </div>
+  </div>
+);
