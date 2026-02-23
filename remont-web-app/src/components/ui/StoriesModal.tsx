@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { Language } from '../../utils/translations';
-import { Story } from '../../utils/mockData';
+import { Story } from '../../utils/types';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 
 interface StoriesModalProps {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { translations, Language } from '../../utils/translations';
-import { Project } from '../../utils/mockData';
+import { Project, Story, PortfolioItem, ServiceCategory } from '../../utils/types';
 import {
   Lock,
   ChevronRight,
@@ -122,9 +122,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNaviga
       {/* Avatar & Stats */}
       <div className="bg-white rounded-[40px] p-8 mb-6 text-center shadow-sm border border-slate-100">
         <div className="w-28 h-28 mx-auto bg-primary rounded-full flex items-center justify-center text-primary-foreground text-4xl font-bold mb-6 shadow-xl shadow-primary/20">
-          {currentProject.clientName.charAt(0)}
+          {(typeof currentProject.clientName === 'string' ? currentProject.clientName : (currentProject.clientName as any)?.[lang] || (currentProject.clientName as any)?.ru || '').charAt(0)}
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">{currentProject.clientName}</h2>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">
+          {typeof currentProject.clientName === 'string' ? currentProject.clientName : (currentProject.clientName as any)?.[lang] || (currentProject.clientName as any)?.ru}
+        </h2>
         <p className="text-slate-400 font-medium text-sm">{lang === 'ru' ? 'Договор №' : lang === 'en' ? 'Contract #' : 'Shartnoma №'}{currentProject.contractNumber}</p>
 
         <div className="mt-8 flex items-center justify-center divide-x divide-slate-100">
@@ -167,11 +169,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNaviga
             <div className="space-y-2.5">
               <div className="flex items-center text-slate-600 text-sm">
                 <MapPin size={16} className="mr-2 text-slate-400" />
-                <span>{currentProject.address}</span>
+                <span>{typeof currentProject.address === 'string' ? currentProject.address : (currentProject.address as any)?.[lang] || (currentProject.address as any)?.ru}</span>
               </div>
               <div className="flex items-center text-slate-600 text-sm">
                 <Calendar size={16} className="mr-2 text-slate-400" />
-                <span>{lang === 'ru' ? 'Этап:' : lang === 'en' ? 'Stage:' : 'Bosqich:'} {currentProject.stage || currentProject.currentStage}</span>
+                <span>{lang === 'ru' ? 'Этап:' : lang === 'en' ? 'Stage:' : 'Bosqich:'} {typeof currentProject.currentStage === 'string' ? currentProject.currentStage : (currentProject.currentStage as any)?.[lang] || (currentProject.currentStage as any)?.ru}</span>
               </div>
               <div className="flex items-center text-slate-600 text-sm">
                 <DollarSign size={16} className="mr-2 text-slate-400" />

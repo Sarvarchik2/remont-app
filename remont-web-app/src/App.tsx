@@ -12,7 +12,8 @@ import { CatalogScreen } from './components/screens/CatalogScreen';
 import { ProductDetailScreen } from './components/screens/ProductDetailScreen';
 import { PortfolioDetailScreen } from './components/screens/PortfolioDetailScreen';
 import { translations, Language } from './utils/translations';
-import { Lead, INITIAL_CALCULATOR_PRICES, Story, Project, PortfolioItem, ServiceCategory, CatalogItem } from './utils/mockData';
+import { Lead, Story, Project, PortfolioItem, ServiceCategory, CatalogItem } from './utils/types';
+import { INITIAL_CALCULATOR_PRICES } from './utils/constants';
 import { Toaster, toast } from 'sonner';
 
 // Admin Components
@@ -298,7 +299,7 @@ export default function App() {
   // 3. Client App
   const renderClientScreen = () => {
     switch (activeTab) {
-      case 'home': return <HomeScreen lang={lang} onNavigate={handleClientNavigate} stories={stories} />;
+      case 'home': return <HomeScreen lang={lang} onNavigate={handleClientNavigate} stories={stories} portfolio={portfolio} services={services} />;
       case 'calc': return <CalculatorScreen lang={lang} onNavigate={handleClientNavigate} onSubmitLead={handleSubmitLead} prices={calculatorPrices} />;
       case 'services': return <ServicesScreen lang={lang} onNavigate={handleClientNavigate} categories={services} />;
       case 'catalog': return <CatalogScreen lang={lang} onNavigate={handleClientNavigate} catalog={catalog} />;

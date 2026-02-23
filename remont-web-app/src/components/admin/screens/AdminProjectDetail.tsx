@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, DollarSign, Plus, Upload, CheckCircle, Clock, FileText, X, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Calendar, DollarSign, Plus, Upload, CheckCircle, Clock, FileText, X, ChevronRight, MapPin } from 'lucide-react';
 import { Language, translations } from '../../../utils/translations';
-import { Project } from '../../../utils/mockData';
+import { Project } from '../../../utils/types';
 
 interface AdminProjectDetailProps {
   projectId: string;
@@ -92,9 +92,12 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-xl font-extrabold text-slate-900 leading-tight">{project.clientName}</h1>
-            <p className="text-xs font-bold text-slate-400 mt-1 flex items-center">
-              {project.address}
+            <h1 className="text-3xl font-extrabold text-slate-900 leading-tight mb-2">
+              {typeof initialProject.clientName === 'string' ? initialProject.clientName : initialProject.clientName?.[lang] || (initialProject.clientName as any)?.ru}
+            </h1>
+            <p className="text-slate-500 font-medium flex items-center">
+              <MapPin size={16} className="mr-2 text-primary" />
+              {typeof initialProject.address === 'string' ? initialProject.address : initialProject.address?.[lang] || (initialProject.address as any)?.ru}
             </p>
           </div>
         </div>
@@ -160,18 +163,20 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
                 <button className="text-xs font-bold text-slate-400 hover:text-slate-900">Все</button>
               </div>
               <div className="space-y-4">
-                {project.payments.slice(0, 3).map(p => (
-                  <div key={p.id} className="flex justify-between items-center group">
+                {project.payments.slice(0, 3).map(payment => (
+                  <div key={payment.id} className="flex justify-between items-center group">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-black group-hover:text-white transition-colors">
                         <DollarSign size={14} />
                       </div>
                       <div>
-                        <p className="font-bold text-slate-900 text-sm">{p.comment}</p>
-                        <p className="text-[10px] font-bold text-slate-400">{p.date}</p>
+                        <h3 className="text-slate-900 font-bold mb-1">
+                          {typeof payment.description === 'string' ? payment.description : payment.description?.[lang] || (payment.description as any)?.ru || (payment as any).comment}
+                        </h3>
+                        <p className="text-slate-500 text-xs font-medium">{payment.date}</p>
                       </div>
                     </div>
-                    <span className="font-bold text-slate-900 text-sm">+{p.amount.toLocaleString()}</span>
+                    <span className="font-bold text-slate-900 text-sm">+{payment.amount.toLocaleString()}</span>
                   </div>
                 ))}
                 {project.payments.length === 0 && (
@@ -210,19 +215,21 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
                   </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                    <span className="font-extrabold text-slate-900 text-lg">{event.title || 'Обновление'}</span>
+                    <span className="font-extrabold text-slate-900 text-lg">
+                      {typeof event.title === 'string' ? event.title : event.title?.[lang] || (event.title as any)?.ru || 'Обновление'}
+                    </span>
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide bg-slate-50 px-3 py-1 rounded-full border border-slate-100">{event.date}</span>
                   </div>
 
                   {event.message && (
                     <p className="text-slate-600 text-sm font-medium mb-3 leading-relaxed max-w-2xl bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                      {event.message}
+                      {typeof event.message === 'string' ? event.message : (event.message as any)?.[lang] || (event.message as any)?.ru}
                     </p>
                   )}
 
                   {event.description && (
                     <p className="text-slate-500 text-sm font-medium mb-3 leading-relaxed max-w-2xl">
-                      {event.description}
+                      {typeof event.description === 'string' ? event.description : (event.description as any)?.[lang] || (event.description as any)?.ru}
                     </p>
                   )}
 

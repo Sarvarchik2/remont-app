@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../../utils/translations';
-import { ServiceCategory, ServiceItem } from '../../../utils/mockData';
+import { ServiceCategory, ServiceItem } from '../../../utils/types';
 import { Plus, Trash2, Pencil, ChevronDown, ChevronRight, X, Save, Hammer, Zap, Paintbrush, Grid3x3, Droplet, Home as HomeIcon, Wrench, LucideIcon } from 'lucide-react';
 
 interface AdminServicesProps {
@@ -39,14 +39,21 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
   const [editingCategory, setEditingCategory] = useState<ServiceCategory | null>(null);
   const [editingService, setEditingService] = useState<ServiceItem | null>(null);
   const [parentId, setParentId] = useState<string | null>(null); // For adding service to a category
+  const [inputLang, setInputLang] = useState<Language>('ru');
 
   // Form State
-  const [formData, setFormData] = useState({
-    title: '',
+  const [formData, setFormData] = useState<{
+    title: Record<Language, string> | string,
+    icon: string,
+    name: Record<Language, string> | string,
+    price: string,
+    unit: Record<Language, string> | string
+  }>({
+    title: { ru: '', uz: '', en: '' },
     icon: 'Hammer',
-    name: '',
+    name: { ru: '', uz: '', en: '' },
     price: '',
-    unit: 'сум/м²'
+    unit: { ru: 'сум/м²', uz: 'so\'m/m²', en: 'sum/m²' }
   });
 
   const toggleCategory = (id: string) => {
@@ -58,7 +65,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
   const handleAddCategory = () => {
     setModalMode('category');
     setEditingCategory(null);
-    setFormData({ title: '', icon: 'Hammer', name: '', price: '', unit: '' });
+    setFormData({ title: { ru: '', uz: '', en: '' }, icon: 'Hammer', name: { ru: '', uz: '', en: '' }, price: '', unit: { ru: 'сум/м²', uz: 'so\'m/m²', en: 'sum/m²' } });
     setIsModalOpen(true);
   };
 
@@ -81,7 +88,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
     setModalMode('service');
     setParentId(categoryId);
     setEditingService(null);
-    setFormData({ title: '', icon: '', name: '', price: '', unit: 'сум/м²' });
+    setFormData({ title: { ru: '', uz: '', en: '' }, icon: '', name: { ru: '', uz: '', en: '' }, price: '', unit: { ru: 'сум/м²', uz: 'so\'m/m²', en: 'sum/m²' } });
     setIsModalOpen(true);
   };
 
@@ -194,7 +201,9 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                     <Icon size={22} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900">{category.title}</h3>
+                    <h3 className="text-lg font-bold text-slate-900">
+                      {typeof category.title === 'string' ? category.title : (category.title as any)?.[lang] || (category.title as any)?.ru}
+                    </h3>
                     <p className="text-xs font-medium text-slate-400">{category.services.length} услуг</p>
                   </div>
                 </div>
@@ -232,12 +241,16 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                       {category.services.map((service) => (
                         <div key={service.id} className="px-6 py-4 flex justify-between items-center group hover:bg-slate-50 transition-colors">
                           <div className="flex-1 pr-4">
-                            <span className="text-slate-700 font-bold text-sm block">{service.name}</span>
+                            <span className="text-slate-700 font-bold text-sm block">
+                              {typeof service.name === 'string' ? service.name : (service.name as any)?.[lang] || (service.name as any)?.ru}
+                            </span>
                           </div>
                           <div className="flex items-center gap-4">
                             <div className="text-right mr-2">
                               <div className="text-slate-900 font-black text-sm">{service.price}</div>
-                              <div className="text-slate-400 text-[10px] uppercase font-bold">{service.unit}</div>
+                              <div className="text-slate-400 text-[10px] uppercase font-bold">
+                                {typeof service.unit === 'string' ? service.unit : (service.unit as any)?.[lang] || (service.unit as any)?.ru}
+                              </div>
                             </div>
                             <div className="flex gap-2">
                               <button
@@ -292,16 +305,37 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
               </button>
             </div>
 
+            {/* Language Switcher for Inputs */}
+            <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+              {(['ru', 'uz', 'en'] as const).map(l => (
+                <button
+                  key={l}
+                  onClick={() => setInputLang(l)}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-6">
               {modalMode === 'category' ? (
                 // Category Form
                 <>
                   <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Название</label>
+                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                      Название <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                    </label>
                     <input
                       placeholder="Например: Электрика"
-                      value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      value={typeof formData.title === 'string' ? formData.title : (formData.title as any)?.[inputLang] || ''}
+                      onChange={(e) => {
+                        const newTitle = typeof formData.title === 'string'
+                          ? { ru: formData.title, uz: formData.title, en: formData.title, [inputLang]: e.target.value }
+                          : { ...(formData.title as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                        setFormData({ ...formData, title: newTitle });
+                      }}
                       required
                       autoFocus
                       className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
@@ -316,8 +350,8 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                           type="button"
                           onClick={() => setFormData({ ...formData, icon: opt.name })}
                           className={`p-4 rounded-2xl flex items-center justify-center transition-all ${formData.icon === opt.name
-                              ? 'bg-black text-white shadow-lg scale-105'
-                              : 'bg-white text-slate-400 hover:bg-slate-50'
+                            ? 'bg-black text-white shadow-lg scale-105'
+                            : 'bg-white text-slate-400 hover:bg-slate-50'
                             }`}
                         >
                           <opt.icon size={24} />
@@ -333,11 +367,18 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                 // Service Form
                 <>
                   <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Название услуги</label>
+                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                      Название услуги <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                    </label>
                     <input
                       placeholder="Например: Установка розетки"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      value={typeof formData.name === 'string' ? formData.name : (formData.name as any)?.[inputLang] || ''}
+                      onChange={(e) => {
+                        const newName = typeof formData.name === 'string'
+                          ? { ru: formData.name, uz: formData.name, en: formData.name, [inputLang]: e.target.value }
+                          : { ...(formData.name as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                        setFormData({ ...formData, name: newName });
+                      }}
                       required
                       autoFocus
                       className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
@@ -355,11 +396,18 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Ед. измерения</label>
+                      <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                        Ед. измерения <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                      </label>
                       <input
                         placeholder="сум/шт"
-                        value={formData.unit}
-                        onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                        value={typeof formData.unit === 'string' ? formData.unit : (formData.unit as any)?.[inputLang] || ''}
+                        onChange={(e) => {
+                          const newUnit = typeof formData.unit === 'string'
+                            ? { ru: formData.unit, uz: formData.unit, en: formData.unit, [inputLang]: e.target.value }
+                            : { ...(formData.unit as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                          setFormData({ ...formData, unit: newUnit });
+                        }}
                         required
                         className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
                       />

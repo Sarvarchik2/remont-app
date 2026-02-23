@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { translations, Language } from '../../utils/translations';
 import { ArrowRight, Calculator as CalcIcon, X, CheckCircle2 } from 'lucide-react';
-import { INITIAL_CALCULATOR_PRICES } from '../../utils/mockData';
+import { Lead } from '../../utils/types';
+import { INITIAL_CALCULATOR_PRICES } from '../../utils/constants';
 
 interface CalculatorPrices {
   new: { economy: number; standard: number; premium: number };

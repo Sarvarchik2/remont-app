@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { translations, Language } from '../../utils/translations';
 import { ChevronDown, Hammer, Zap, Paintbrush, Grid3x3, Droplet, Home as HomeIcon, Wrench, LucideIcon } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
-import { ServiceCategory as ServiceCategoryType } from '../../utils/mockData';
+import { ServiceCategory as ServiceCategoryType } from '../../utils/types';
 
 interface ServicesScreenProps {
   lang: Language;
@@ -211,7 +211,7 @@ const ServiceCategory: React.FC<ServiceCategoryProps> = ({
               <span className="text-slate-700 font-medium text-sm">{typeof service.name === 'string' ? service.name : (service.name as any)?.[lang] || (service.name as any)?.ru}</span>
               <div className="text-right">
                 <div className="text-slate-900 font-bold text-sm">{service.price}</div>
-                <div className="text-slate-400 text-xs">{service.unit}</div>
+                <div className="text-slate-400 text-xs">{typeof service.unit === 'string' ? service.unit : service.unit?.[lang] || (service.unit as any)?.ru}</div>
               </div>
             </div>
           ))}

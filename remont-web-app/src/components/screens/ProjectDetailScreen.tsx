@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../utils/translations';
-import { Project } from '../../utils/mockData';
+import { Project } from '../../utils/types';
 import {
   ArrowLeft,
   DollarSign,
@@ -68,7 +68,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
             </span>
           </div>
           <h1 className="text-2xl font-bold mb-1">{lang === 'ru' ? 'Мой проект' : lang === 'en' ? 'My Project' : 'Mening loyiham'}</h1>
-          <p className="text-white/70 text-sm">{project.address}</p>
+          <p className="text-white/70 text-sm">{typeof project.address === 'string' ? project.address : (project.address as any)?.[lang] || (project.address as any)?.ru}</p>
         </div>
       </div>
 
@@ -190,7 +190,7 @@ const FinanceTab = ({ project, progressPercentage, lang }: any) => (
         </div>
         <div className="flex-1">
           <h3 className="font-bold text-slate-900 mb-1">{lang === 'ru' ? 'Текущий этап' : lang === 'en' ? 'Current stage' : 'Joriy bosqich'}</h3>
-          <p className="text-slate-600 text-sm mb-2">{project.stage}</p>
+          <p className="text-slate-600 text-sm mb-2">{typeof project.currentStage === 'string' ? project.currentStage : (project.currentStage as any)?.[lang] || (project.currentStage as any)?.ru}</p>
           <p className="text-xs text-slate-400">
             {lang === 'ru' ? 'Прогноз завершения:' : lang === 'en' ? 'Estimated completion:' : 'Tugatish prognozi:'} {project.forecast}
           </p>
@@ -224,7 +224,11 @@ const PaymentsTab = ({ project, lang }: any) => (
                 <CreditCard size={20} />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm mb-1">{payment.description || payment.comment}</h4>
+                <h4 className="font-bold text-slate-900 text-sm mb-1">
+                  {typeof (payment.description || payment.comment) === 'string'
+                    ? (payment.description || payment.comment)
+                    : (payment.description || payment.comment)?.[lang] || (payment.description || payment.comment)?.ru}
+                </h4>
                 <p className="text-xs text-slate-400 flex items-center">
                   <Calendar size={12} className="mr-1" />
                   {payment.date}
@@ -286,8 +290,12 @@ const TimelineTab = ({ project, lang }: any) => (
           </div>
 
           {/* Message Content */}
-          {event.message && (
-            <p className="text-sm text-slate-700 mb-3 leading-relaxed">{event.message}</p>
+          {(event.message || event.description) && (
+            <p className="text-sm text-slate-700 mb-3 leading-relaxed">
+              {typeof (event.message || event.description) === 'string'
+                ? (event.message || event.description)
+                : (event.message || event.description)?.[lang] || (event.message || event.description)?.ru}
+            </p>
           )}
 
           {/* Photo */}

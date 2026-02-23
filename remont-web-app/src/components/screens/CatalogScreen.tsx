@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../utils/translations';
-import { CatalogItem } from '../../utils/mockData';
+import { CatalogItem } from '../../utils/types';
 import { Search, ArrowRight } from 'lucide-react';
 
 interface CatalogScreenProps {
@@ -60,8 +60,8 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
             className={`px-6 py-3 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-300 ${activeCategory === cat.id
-                ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105'
-                : 'bg-white text-slate-500 shadow-sm hover:bg-slate-50'
+              ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105'
+              : 'bg-white text-slate-500 shadow-sm hover:bg-slate-50'
               }`}
           >
             {cat.label}

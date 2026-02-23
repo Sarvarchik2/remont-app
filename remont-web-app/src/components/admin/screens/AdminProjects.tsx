@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../../utils/translations';
-import { Project } from '../../../utils/mockData';
+import { Project } from '../../../utils/types';
 import { AdminProjectDetail } from './AdminProjectDetail';
 import { Search, Plus, MapPin, Calendar, X, DollarSign, User, Phone, FileText } from 'lucide-react';
 
@@ -44,7 +44,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
       status: 'new',
       currentStage: formData.currentStage || 'Подготовка',
       stage: formData.currentStage || 'Подготовка', // Alias
-      forecast: formData.deadline || '', // Initially forecast = deadline
+      forecast: typeof formData.deadline === 'string' ? formData.deadline : formData.deadline?.[lang] || (formData.deadline as any)?.ru || '', // Initially forecast = deadline
       finance: {
         total: formData.totalEstimate || 0,
         paid: 0,
@@ -89,11 +89,13 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
     );
   }
 
-  const filteredProjects = projects.filter(p =>
-    p.clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.contractNumber.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProjects = projects.filter(p => {
+    const clientName = typeof p.clientName === 'string' ? p.clientName : p.clientName?.[lang] || (p.clientName as any)?.ru || '';
+    const address = typeof p.address === 'string' ? p.address : p.address?.[lang] || (p.address as any)?.ru || '';
+    return clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.contractNumber.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div className="space-y-6 animate-fade-in pb-24 md:pb-6">
@@ -135,6 +137,9 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
           const total = p.finance?.total || 1;
           const progress = total > 0 ? Math.min(100, Math.round((totalPaid / total) * 100)) : 0;
 
+          const displayClientName = typeof p.clientName === 'string' ? p.clientName : p.clientName?.[lang] || (p.clientName as any)?.ru || '';
+          const displayAddress = typeof p.address === 'string' ? p.address : p.address?.[lang] || (p.address as any)?.ru || '';
+
           return (
             <div
               key={p.id}
@@ -143,11 +148,11 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center font-bold text-slate-900 text-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors border border-slate-100 uppercase">
-                  {p.clientName.charAt(0)}
+                  {displayClientName.charAt(0)}
                 </div>
                 <div className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wide border ${p.status === 'process' ? 'bg-primary text-primary-foreground border-primary' :
-                    p.status === 'finished' ? 'bg-white text-slate-900 border-slate-200' :
-                      'bg-slate-100 text-slate-500 border-slate-200'
+                  p.status === 'finished' ? 'bg-white text-slate-900 border-slate-200' :
+                    'bg-slate-100 text-slate-500 border-slate-200'
                   }`}>
                   {p.status === 'process' ? 'В работе' :
                     p.status === 'finished' ? 'Завершен' : 'Новый'}
@@ -155,7 +160,9 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
               </div>
 
               <div className="mb-6 flex-grow">
-                <h3 className="text-xl font-bold text-slate-900 mb-2 leading-tight group-hover:text-black transition-colors line-clamp-1">{p.clientName}</h3>
+                <h3 className="text-xl font-bold text-slate-900 mb-2 leading-tight group-hover:text-black transition-colors line-clamp-1">
+                  {displayClientName}
+                </h3>
 
                 <div className="space-y-2">
                   <div className="flex items-center text-slate-500 text-sm font-medium">
@@ -234,7 +241,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                       <input
                         required
                         type="text"
-                        value={formData.clientName}
+                        value={typeof formData.clientName === 'string' ? formData.clientName : formData.clientName?.[lang] || (formData.clientName as any)?.ru || ''}
                         onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
                         className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
                         placeholder="Иванов Иван"
@@ -267,7 +274,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                       <input
                         required
                         type="text"
-                        value={formData.address}
+                        value={typeof formData.address === 'string' ? formData.address : formData.address?.[lang] || (formData.address as any)?.ru || ''}
                         onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
                         placeholder="Улица, Дом, Квартира"

@@ -6,7 +6,7 @@ class PortfolioItem(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     type = Column(String) # 'living' | 'kitchen' | 'bath' | 'bedroom'
-    title = Column(String)
+    title = Column(JSON)
     imgBefore = Column(String)
     imgAfter = Column(String)
     area = Column(String)
@@ -16,7 +16,7 @@ class PortfolioItem(Base):
     isNewBuilding = Column(Boolean, default=False)
     
     tags = Column(JSON, nullable=True)
-    description = Column(String, nullable=True)
+    description = Column(JSON, nullable=True)
     worksCompleted = Column(JSON, nullable=True)
     budget = Column(String, nullable=True)
     duration = Column(String, nullable=True)

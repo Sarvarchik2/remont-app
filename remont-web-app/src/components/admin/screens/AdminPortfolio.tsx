@@ -1,6 +1,6 @@
 import React, { useState, Dispatch, SetStateAction } from 'react';
 import { translations, Language } from '../../../utils/translations';
-import { PortfolioItem } from '../../../utils/mockData';
+import { PortfolioItem } from '../../../utils/types';
 import { Plus, Trash2, MapPin, Ruler, Clock, X, Image as ImageIcon, Pencil, CheckSquare, List, Type } from 'lucide-react';
 
 interface AdminPortfolioProps {
@@ -14,16 +14,17 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'details' | 'media'>('general');
+  const [inputLang, setInputLang] = useState<Language>('ru');
 
   // Form State
   const defaultItem: Partial<PortfolioItem> = {
     type: 'living',
-    title: '',
+    title: { ru: '', uz: '', en: '' },
     area: '',
     term: '',
     cost: '',
     location: '',
-    description: '',
+    description: { ru: '', uz: '', en: '' },
     tags: [],
     materials: [],
     isNewBuilding: false,
@@ -75,12 +76,12 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
       const item: PortfolioItem = {
         id: Date.now(),
         type: newItem.type as any || 'living',
-        title: newItem.title!,
+        title: newItem.title || { ru: 'Новый проект', uz: 'Yangi loyiha', en: 'New project' },
         area: newItem.area!,
         term: newItem.term || '1 мес',
         cost: newItem.cost || '0',
         location: newItem.location || 'Ташкент',
-        description: newItem.description || '',
+        description: newItem.description || { ru: '', uz: '', en: '' },
         tags: newItem.tags || [],
         materials: newItem.materials || [],
         isNewBuilding: newItem.isNewBuilding || false,
@@ -125,7 +126,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
             <div className="relative h-64 overflow-hidden">
               <img
                 src={item.imgAfter}
-                alt={item.title}
+                alt={typeof item.title === 'string' ? item.title : (item.title as any)?.[lang] || (item.title as any)?.ru}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
@@ -136,7 +137,9 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
 
             <div className="p-6 flex flex-col flex-grow">
               <div className="flex justify-between items-start mb-4">
-                <h3 className="font-extrabold text-slate-900 text-xl leading-tight">{item.title}</h3>
+                <h3 className="font-extrabold text-slate-900 text-xl leading-tight">
+                  {typeof item.title === 'string' ? item.title : (item.title as any)?.[lang] || (item.title as any)?.ru}
+                </h3>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEdit(item)}
@@ -211,17 +214,38 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               </button>
             </div>
 
+            {/* Language Switcher for Inputs */}
+            <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+              {(['ru', 'uz', 'en'] as const).map(l => (
+                <button
+                  key={l}
+                  onClick={() => setInputLang(l)}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+
             <form onSubmit={handleSave} className="space-y-6">
 
               {/* GENERAL TAB */}
               {activeTab === 'general' && (
                 <div className="space-y-4 animate-fade-in">
                   <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Название ЖК</label>
+                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                      Название ЖК <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                    </label>
                     <input
                       placeholder="ЖК Infinity"
-                      value={newItem.title}
-                      onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+                      value={typeof newItem.title === 'string' ? newItem.title : (newItem.title as any)?.[inputLang] || ''}
+                      onChange={(e) => {
+                        const newTitle = typeof newItem.title === 'string'
+                          ? { ru: newItem.title, uz: newItem.title, en: newItem.title, [inputLang]: e.target.value }
+                          : { ...(newItem.title as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                        setNewItem({ ...newItem, title: newTitle });
+                      }}
                       required
                       className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
                     />
@@ -296,11 +320,18 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               {activeTab === 'details' && (
                 <div className="space-y-4 animate-fade-in">
                   <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Описание</label>
+                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                      Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                    </label>
                     <textarea
                       placeholder="Подробное описание проекта..."
-                      value={newItem.description}
-                      onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                      value={typeof newItem.description === 'string' ? newItem.description : (newItem.description as any)?.[inputLang] || ''}
+                      onChange={(e) => {
+                        const newDesc = typeof newItem.description === 'string'
+                          ? { ru: newItem.description, uz: newItem.description, en: newItem.description, [inputLang]: e.target.value }
+                          : { ...(newItem.description as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                        setNewItem({ ...newItem, description: newDesc });
+                      }}
                       className="w-full bg-white border-none rounded-2xl py-5 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5 min-h-[120px] resize-none"
                     />
                   </div>

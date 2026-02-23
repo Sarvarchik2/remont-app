@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../utils/translations';
-import { PortfolioItem } from '../../utils/mockData';
+import { PortfolioItem } from '../../utils/types';
 
 interface PortfolioScreenProps {
   lang: Language;
@@ -72,7 +72,7 @@ export const PortfolioScreen: React.FC<PortfolioScreenProps> = ({ lang, onNaviga
             <div className="relative h-[280px] overflow-hidden">
               <img
                 src={project.imgAfter}
-                alt={project.title}
+                alt={typeof project.title === 'string' ? project.title : project.title?.[lang] || (project.title as any)?.ru}
                 className="w-full h-full object-cover"
               />
             </div>

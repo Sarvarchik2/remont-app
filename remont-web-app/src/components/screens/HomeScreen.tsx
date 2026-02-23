@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../utils/translations';
 import { StoriesModal } from '../ui/StoriesModal';
-import { STORIES_DATA, Story } from '../../utils/mockData';
+import { Story, PortfolioItem, ServiceCategory } from '../../utils/types';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { ArrowUpRight, Heart, Plus, Clock, Target, Gem, Shield, Award, Star } from 'lucide-react';
 
@@ -9,9 +9,17 @@ interface HomeScreenProps {
   lang: Language;
   onNavigate: (tab: string) => void;
   stories?: Story[];
+  portfolio?: PortfolioItem[];
+  services?: ServiceCategory[];
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ lang, onNavigate, stories = STORIES_DATA }) => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({
+  lang,
+  onNavigate,
+  stories = [],
+  portfolio = [],
+  services = []
+}) => {
   const t = translations[lang].home;
   const [storyIndex, setStoryIndex] = useState<number | null>(null);
 
@@ -121,25 +129,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ lang, onNavigate, storie
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <ServiceCard
-            title={lang === 'ru' ? 'Косметический' : lang === 'en' ? 'Cosmetic' : 'Kosmetik'}
-            price={lang === 'ru' ? 'от 1.2 млн/м²' : lang === 'en' ? 'from 1.2m/m²' : '1.2 mln/m² dan'}
-            img="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=400"
-            tag={lang === 'ru' ? 'Популярно' : lang === 'en' ? 'Popular' : 'Ommabop'}
-            onNavigate={onNavigate}
-          />
-          <ServiceCard
-            title={lang === 'ru' ? 'Капитальный' : lang === 'en' ? 'Major' : 'Kapital'}
-            price={lang === 'ru' ? 'от 2.5 млн/м²' : lang === 'en' ? 'from 2.5m/m²' : '2.5 mln/m² dan'}
-            img="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=400"
-            onNavigate={onNavigate}
-          />
-          <ServiceCard
-            title={lang === 'ru' ? 'Дизайн проект' : lang === 'en' ? 'Design Project' : 'Dizayn loyiha'}
-            price={lang === 'ru' ? 'от 150 тыс/м²' : lang === 'en' ? 'from 150k/m²' : '150 ming/m² dan'}
-            img="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&q=80&w=400"
-            onNavigate={onNavigate}
-          />
+          {services.slice(0, 3).map((cat) => (
+            <ServiceCard
+              key={cat.id}
+              title={typeof cat.title === 'string' ? cat.title : cat.title?.[lang] || (cat.title as any)?.ru}
+              price={lang === 'ru' ? 'от 100 тыс.' : lang === 'en' ? 'from 100k' : '100 mingdan'}
+              img={cat.icon === 'Zap' ? "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=400" :
+                cat.icon === 'Hammer' ? "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=400" :
+                  "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&q=80&w=400"}
+              onNavigate={onNavigate}
+            />
+          ))}
 
           {/* More Card */}
           <div
@@ -255,18 +255,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ lang, onNavigate, storie
         </div>
 
         <div className="space-y-4">
-          <ProjectPreviewCard
-            title="ЖК Tashkent City"
-            location="Шайхантахур"
-            img="https://images.unsplash.com/photo-1765767056681-9583b29007cf?auto=format&fit=crop&w=800&q=80"
-            onNavigate={onNavigate}
-          />
-          <ProjectPreviewCard
-            title="ЖК Magic City"
-            location="Юнусабад"
-            img="https://images.unsplash.com/photo-1667584523543-d1d9cc828a15?auto=format&fit=crop&w=800&q=80"
-            onNavigate={onNavigate}
-          />
+          {portfolio.slice(0, 3).map((item) => (
+            <ProjectPreviewCard
+              key={item.id}
+              title={typeof item.title === 'string' ? item.title : item.title?.[lang] || (item.title as any)?.ru}
+              location={item.location || ''}
+              img={item.imgAfter}
+              onNavigate={onNavigate}
+            />
+          ))}
         </div>
       </div>
     </div >

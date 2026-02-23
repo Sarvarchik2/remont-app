@@ -1,6 +1,6 @@
 import React, { useState, Dispatch, SetStateAction } from 'react';
 import { translations, Language } from '../../../utils/translations';
-import { CatalogItem } from '../../../utils/mockData';
+import { CatalogItem } from '../../../utils/types';
 import { Plus, Trash2, Pencil, Search, X, Image as ImageIcon, Check } from 'lucide-react';
 
 interface AdminCatalogProps {
@@ -33,7 +33,8 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
     const [newItem, setNewItem] = useState<Partial<CatalogItem>>(defaultItem);
 
     const filteredCatalog = catalog.filter(item => {
-        const matchesSearch = item.title.ru.toLowerCase().includes(searchQuery.toLowerCase());
+        const title = typeof item.title === 'string' ? item.title : item.title?.[lang] || (item.title as any)?.ru || '';
+        const matchesSearch = title.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesCategory = filterCategory === 'all' || item.category === filterCategory;
         return matchesSearch && matchesCategory;
     });

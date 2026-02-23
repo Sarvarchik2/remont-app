@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../../utils/translations';
-import { 
-  Phone, 
-  ArrowRight, 
+import {
+  Phone,
+  ArrowRight,
   Calculator,
   Calendar,
   Home,
@@ -11,7 +11,7 @@ import {
   X,
   User
 } from 'lucide-react';
-import { Lead } from '../../../utils/mockData';
+import { Lead } from '../../../utils/types';
 
 interface AdminCRMProps {
   lang: Language;
@@ -23,8 +23,8 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
   const t = translations[lang].admin.crm;
   const [filter, setFilter] = useState<'all' | Lead['status']>('all');
 
-  const filteredLeads = filter === 'all' 
-    ? leads 
+  const filteredLeads = filter === 'all'
+    ? leads
     : leads.filter(lead => lead.status === filter);
 
   const getStatusColor = (status: Lead['status']) => {
@@ -77,24 +77,23 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
           </p>
           <h1 className="text-3xl font-bold text-slate-900">{t.title}</h1>
         </div>
-        
+
         {/* Filters Desktop */}
         <div className="hidden md:flex items-center space-x-2 bg-white p-1 rounded-full border border-slate-200">
-           {['all', 'new', 'contacted', 'measuring'].map((f) => (
-             <button
-               key={f}
-               onClick={() => setFilter(f as any)}
-               className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
-                 filter === f
-                   ? 'bg-black text-white shadow-md'
-                   : 'text-slate-500 hover:bg-slate-50'
-               }`}
-             >
-               {f === 'all' ? 'Все' : 
-                f === 'new' ? 'Новые' : 
-                f === 'contacted' ? 'Связались' : 'Замер'}
-             </button>
-           ))}
+          {['all', 'new', 'contacted', 'measuring'].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f as any)}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${filter === f
+                ? 'bg-black text-white shadow-md'
+                : 'text-slate-500 hover:bg-slate-50'
+                }`}
+            >
+              {f === 'all' ? 'Все' :
+                f === 'new' ? 'Новые' :
+                  f === 'contacted' ? 'Связались' : 'Замер'}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -112,41 +111,37 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
       <div className="md:hidden flex items-center space-x-2 overflow-x-auto scrollbar-hide pb-2">
         <button
           onClick={() => setFilter('all')}
-          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${
-            filter === 'all'
-              ? 'bg-black text-white shadow-lg'
-              : 'bg-white text-slate-400 border border-slate-200'
-          }`}
+          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${filter === 'all'
+            ? 'bg-black text-white shadow-lg'
+            : 'bg-white text-slate-400 border border-slate-200'
+            }`}
         >
           Все ({leads.length})
         </button>
         <button
           onClick={() => setFilter('new')}
-          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${
-            filter === 'new'
-              ? 'bg-slate-900 text-white shadow-lg'
-              : 'bg-white text-slate-400 border border-slate-200'
-          }`}
+          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${filter === 'new'
+            ? 'bg-slate-900 text-white shadow-lg'
+            : 'bg-white text-slate-400 border border-slate-200'
+            }`}
         >
           Новые ({leads.filter(l => l.status === 'new').length})
         </button>
         <button
           onClick={() => setFilter('contacted')}
-          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${
-            filter === 'contacted'
-              ? 'bg-slate-200 text-slate-800'
-              : 'bg-white text-slate-400 border border-slate-200'
-          }`}
+          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${filter === 'contacted'
+            ? 'bg-slate-200 text-slate-800'
+            : 'bg-white text-slate-400 border border-slate-200'
+            }`}
         >
           Связались
         </button>
         <button
           onClick={() => setFilter('measuring')}
-          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${
-            filter === 'measuring'
-              ? 'bg-slate-600 text-white shadow-lg'
-              : 'bg-white text-slate-400 border border-slate-200'
-          }`}
+          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${filter === 'measuring'
+            ? 'bg-slate-600 text-white shadow-lg'
+            : 'bg-white text-slate-400 border border-slate-200'
+            }`}
         >
           Замер
         </button>
@@ -166,7 +161,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
           {filteredLeads.map((lead) => {
             const statusInfo = getStatusColor(lead.status);
             const SourceIcon = getSourceIcon(lead.source);
-            
+
             return (
               <div key={lead.id} className="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 duration-300 group flex flex-col h-full">
                 {/* Header */}
@@ -188,15 +183,17 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                 {/* Contact Info */}
                 <div className="mb-6">
                   {lead.name ? (
-                     <div className="flex items-center space-x-2 mb-1">
-                       <User size={16} className="text-slate-400" />
-                       <h3 className="text-lg font-bold text-slate-900">{lead.name}</h3>
-                     </div>
+                    <div className="flex items-center space-x-2 mb-1">
+                      <User size={16} className="text-slate-400" />
+                      <h3 className="text-xl font-bold text-slate-900 group-hover:text-black transition-colors">
+                        {typeof lead.name === 'string' ? lead.name : lead.name?.[lang] || (lead.name as any)?.ru}
+                      </h3>
+                    </div>
                   ) : (
                     <div className="text-slate-400 italic mb-1">Имя не указано</div>
                   )}
                   {lead.phone && (
-                     <p className="text-sm text-slate-500 font-mono ml-6">{lead.phone}</p>
+                    <p className="text-sm text-slate-500 font-mono ml-6">{lead.phone}</p>
                   )}
                 </div>
 
@@ -237,7 +234,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                 {/* Actions */}
                 <div className="flex items-center gap-3 mt-auto">
                   {lead.phone && (
-                    <a 
+                    <a
                       href={`tel:${lead.phone}`}
                       className="flex-1 bg-white border border-slate-200 text-slate-900 py-3 rounded-xl flex items-center justify-center font-bold text-sm hover:bg-slate-50 transition-colors"
                     >
@@ -246,7 +243,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                     </a>
                   )}
                   {lead.status === 'new' && onUpdateLeadStatus && (
-                    <button 
+                    <button
                       onClick={() => onUpdateLeadStatus(lead.id, 'contacted')}
                       className="flex-1 bg-black text-white py-3 rounded-xl flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
                     >

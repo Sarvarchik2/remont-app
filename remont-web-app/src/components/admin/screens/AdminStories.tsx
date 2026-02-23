@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../../utils/translations';
-import { Story } from '../../../utils/mockData';
+import { Story } from '../../../utils/types';
 import { Plus, Trash2, Edit2, Play, Image as ImageIcon, Check, X, Search } from 'lucide-react';
 
 interface AdminStoriesProps {
