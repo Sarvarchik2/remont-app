@@ -12,8 +12,8 @@ export const PortfolioScreen: React.FC<PortfolioScreenProps> = ({ lang, onNaviga
   const t = translations[lang].portfolio;
   const [filter, setFilter] = useState<'all' | 'newbuilding'>('all');
 
-  const filteredProjects = filter === 'all' 
-    ? portfolio 
+  const filteredProjects = filter === 'all'
+    ? portfolio
     : portfolio.filter(p => p.isNewBuilding);
 
 
@@ -22,10 +22,10 @@ export const PortfolioScreen: React.FC<PortfolioScreenProps> = ({ lang, onNaviga
       {/* Header */}
       <div className="mb-2">
         <p className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-          ПОРТФОЛИО
+          {lang === 'ru' ? 'ПОРТФОЛИО' : lang === 'en' ? 'PORTFOLIO' : 'PORTFOLIO'}
         </p>
         <h1 className="text-3xl font-bold text-slate-900">
-          Наши работы
+          {lang === 'ru' ? 'Наши работы' : lang === 'en' ? 'Our works' : 'Bizning ishlar'}
         </h1>
       </div>
 
@@ -33,25 +33,23 @@ export const PortfolioScreen: React.FC<PortfolioScreenProps> = ({ lang, onNaviga
       <div className="flex space-x-3 mb-6 mt-6 relative">
         <button
           onClick={() => setFilter('all')}
-          className={`px-6 py-3 rounded-full text-sm font-bold transition-all ${
-            filter === 'all'
-              ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
-              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-          }`}
+          className={`px-6 py-3 rounded-full text-sm font-bold transition-all ${filter === 'all'
+            ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+            : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+            }`}
         >
-          Все проекты
+          {lang === 'ru' ? 'Все проекты' : lang === 'en' ? 'All projects' : 'Barcha loyihalar'}
         </button>
         <button
           onClick={() => setFilter('newbuilding')}
-          className={`px-6 py-3 rounded-full text-sm font-bold transition-all ${
-            filter === 'newbuilding'
-              ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
-              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-          }`}
+          className={`px-6 py-3 rounded-full text-sm font-bold transition-all ${filter === 'newbuilding'
+            ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+            : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+            }`}
         >
-          Новостройки
+          {lang === 'ru' ? 'Новостройки' : lang === 'en' ? 'New buildings' : 'Yangi binolar'}
         </button>
-        
+
         {/* Active indicator line */}
         <div className="absolute -bottom-2 left-0 h-0.5 bg-primary transition-all duration-300"
           style={{
@@ -82,10 +80,10 @@ export const PortfolioScreen: React.FC<PortfolioScreenProps> = ({ lang, onNaviga
             {/* Project Info */}
             <div className="p-5">
               <h3 className="text-xl font-bold text-slate-900 mb-1">
-                {project.title}
+                {typeof project.title === 'string' ? project.title : (project.title as any)?.[lang] || (project.title as any)?.ru}
               </h3>
               <p className="text-sm text-slate-500 font-medium">
-                Полный ремонт под ключ
+                {lang === 'ru' ? 'Полный ремонт под ключ' : lang === 'en' ? 'Full turnkey renovation' : 'To\'liq kalit taslim ta\'mirlash'}
               </p>
             </div>
           </div>

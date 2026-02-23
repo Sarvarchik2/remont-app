@@ -22,8 +22,8 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
 
     const defaultItem: Partial<CatalogItem> = {
         category: 'materials',
-        title: { ru: '', uz: '' },
-        description: { ru: '', uz: '' },
+        title: { ru: '', uz: '', en: '' },
+        description: { ru: '', uz: '', en: '' },
         price: 0,
         image: '',
         images: [],
@@ -69,8 +69,8 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
             const item: CatalogItem = {
                 id: `cat-${Date.now()}`,
                 category: newItem.category as any || 'materials',
-                title: newItem.title! || { ru: 'Новый товар', uz: 'Yangi mahsulot' },
-                description: newItem.description || { ru: '', uz: '' },
+                title: newItem.title! || { ru: 'Новый товар', uz: 'Yangi mahsulot', en: 'New product' },
+                description: newItem.description || { ru: '', uz: '', en: '' },
                 price: Number(newItem.price),
                 image: newItem.image || 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
                 images: newItem.images || [],
@@ -131,8 +131,8 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                             key={catKey}
                             onClick={() => setFilterCategory(catKey)}
                             className={`whitespace-nowrap px-6 py-3 rounded-full text-sm font-bold transition-all border ${filterCategory === catKey
-                                    ? 'bg-black text-white border-black shadow-lg shadow-black/20'
-                                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                                ? 'bg-black text-white border-black shadow-lg shadow-black/20'
+                                : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
                                 }`}
                         >
                             {catKey === 'all' ? t.categories.all : t.categories[catKey as keyof typeof t.categories]}
@@ -192,6 +192,29 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                                     required
                                     className="w-full bg-white border-none rounded-2xl py-4 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
                                 />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Название (UZ)</label>
+                                    <input
+                                        placeholder="Masalan: Kristall qandil"
+                                        value={newItem.title?.uz || ''}
+                                        onChange={(e) => handleTitleChange('uz', e.target.value)}
+                                        required
+                                        className="w-full bg-white border-none rounded-2xl py-4 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Название (EN)</label>
+                                    <input
+                                        placeholder="E.g: Kristall chandelier"
+                                        value={newItem.title?.en || ''}
+                                        onChange={(e) => handleTitleChange('en', e.target.value)}
+                                        required
+                                        className="w-full bg-white border-none rounded-2xl py-4 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                                    />
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">

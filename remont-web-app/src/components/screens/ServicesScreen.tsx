@@ -32,21 +32,21 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
       {/* Hero Section */}
       <div className="px-4 pt-4 pb-6">
         <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">
-          ПРАЙС-ЛИСТ
+          {lang === 'ru' ? 'ПРАЙС-ЛИСТ' : lang === 'en' ? 'PRICE LIST' : 'PRICEY RO\'YXAT'}
         </p>
         <h1 className="text-3xl font-bold text-slate-900 leading-tight mb-3">
-          Каталог работ
+          {lang === 'ru' ? 'Каталог работ' : lang === 'en' ? 'Works catalog' : 'Ishlar katalogi'}
         </h1>
         <p className="text-slate-600 leading-relaxed text-sm">
-          Прозрачное ценообразование на все виды ремонтных работ
+          {lang === 'ru' ? 'Прозрачное ценообразование на все виды ремонтных работ' : lang === 'en' ? 'Transparent pricing for all types of renovation works' : 'Barcha turdagi ta\'mirlash ishlari uchun shaffof narxlar'}
         </p>
       </div>
 
       {/* Featured Categories Grid */}
       <div className="px-4 mb-8">
         <div className="grid grid-cols-2 gap-3">
-          <CategoryCard 
-            title="Электрика"
+          <CategoryCard
+            title={lang === 'ru' ? 'Электрика' : lang === 'en' ? 'Electrical' : 'Elektr'}
             image="https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&q=80&w=400"
             icon={Zap}
             onClick={() => {
@@ -56,8 +56,8 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
               }, 100);
             }}
           />
-          <CategoryCard 
-            title="Отделка"
+          <CategoryCard
+            title={lang === 'ru' ? 'Отделка' : lang === 'en' ? 'Finishing' : 'Pardozlash'}
             image="https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&q=80&w=400"
             icon={Paintbrush}
             onClick={() => {
@@ -67,8 +67,8 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
               }, 100);
             }}
           />
-          <CategoryCard 
-            title="Плитка"
+          <CategoryCard
+            title={lang === 'ru' ? 'Плитка' : lang === 'en' ? 'Tiles' : 'Kafel'}
             image="https://images.unsplash.com/photo-1604709177225-055f99402ea3?auto=format&fit=crop&q=80&w=400"
             icon={Grid3x3}
             onClick={() => {
@@ -78,8 +78,8 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
               }, 100);
             }}
           />
-          <CategoryCard 
-            title="Сантехника"
+          <CategoryCard
+            title={lang === 'ru' ? 'Сантехника' : lang === 'en' ? 'Plumbing' : 'Santexnika'}
             image="https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&q=80&w=400"
             icon={Droplet}
             onClick={() => {
@@ -94,7 +94,7 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
 
       {/* Services Catalog */}
       <div className="px-4">
-        <h2 className="text-xl font-bold text-slate-900 mb-4">Полный прайс-лист</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-4">{lang === 'ru' ? 'Полный прайс-лист' : lang === 'en' ? 'Full price list' : 'To\'liq narxlar'}</h2>
         <div className="space-y-3">
           {categories.map((category) => (
             <ServiceCategory
@@ -102,6 +102,7 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
               category={category}
               isExpanded={expandedCategory === category.id}
               onToggle={toggleCategory}
+              lang={lang}
             />
           ))}
         </div>
@@ -110,7 +111,7 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
       {/* CTA Section */}
       <div className="px-4 mt-8">
         <div className="relative rounded-[32px] overflow-hidden">
-          <ImageWithFallback 
+          <ImageWithFallback
             src="https://images.unsplash.com/photo-1581094794329-cd1361ddee2d?auto=format&fit=crop&q=80&w=800"
             alt="CTA"
             className="w-full h-64 object-cover"
@@ -118,16 +119,16 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent" />
           <div className="absolute inset-0 flex flex-col justify-end p-8 text-center items-center">
             <h3 className="text-2xl font-bold text-white mb-2">
-              Нужна консультация?
+              {lang === 'ru' ? 'Нужна консультация?' : lang === 'en' ? 'Need consultation?' : 'Maslahat kerakmi?'}
             </h3>
             <p className="text-white/80 mb-6 text-sm">
-              Поможем рассчитать точную стоимость ремонта
+              {lang === 'ru' ? 'Поможем рассчитать точную стоимость ремонта' : lang === 'en' ? 'We will help you calculate the exact cost of renovation' : 'Ta\'mirlashning aniq narxini hisoblashga yordam beramiz'}
             </p>
-            <button 
+            <button
               onClick={() => onNavigate('calc')}
               className="bg-primary text-primary-foreground px-8 py-4 rounded-full font-bold text-sm hover:bg-primary/90 transition-all active:scale-95"
             >
-              Рассчитать бюджет
+              {lang === 'ru' ? 'Рассчитать бюджет' : lang === 'en' ? 'Calculate budget' : 'Budjetni hisoblash'}
             </button>
           </div>
         </div>
@@ -144,14 +145,14 @@ interface CategoryCardProps {
 }
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ title, image, icon: Icon, onClick }) => (
-  <div 
+  <div
     onClick={onClick}
     className="relative aspect-square rounded-[28px] overflow-hidden group cursor-pointer"
   >
-    <ImageWithFallback 
-      src={image} 
-      alt={title} 
-      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+    <ImageWithFallback
+      src={image}
+      alt={title}
+      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
     />
     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
     <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
@@ -167,12 +168,14 @@ interface ServiceCategoryProps {
   category: ServiceCategoryType;
   isExpanded: boolean;
   onToggle: (id: string) => void;
+  lang: Language;
 }
 
 const ServiceCategory: React.FC<ServiceCategoryProps> = ({
   category,
   isExpanded,
-  onToggle
+  onToggle,
+  lang
 }) => {
   const Icon = ICON_MAP[category.icon] || Hammer;
 
@@ -187,12 +190,11 @@ const ServiceCategory: React.FC<ServiceCategoryProps> = ({
           <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
             <Icon size={20} className="text-slate-700" />
           </div>
-          <h3 className="text-base font-bold text-slate-900">{category.title}</h3>
+          <h3 className="text-base font-bold text-slate-900">{typeof category.title === 'string' ? category.title : (category.title as any)?.[lang] || (category.title as any)?.ru}</h3>
         </div>
-        <ChevronDown 
-          className={`text-slate-400 transition-transform duration-300 ${
-            isExpanded ? 'rotate-180' : ''
-          }`}
+        <ChevronDown
+          className={`text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''
+            }`}
           size={20}
         />
       </button>
@@ -203,11 +205,10 @@ const ServiceCategory: React.FC<ServiceCategoryProps> = ({
           {category.services.map((service, idx) => (
             <div
               key={service.id || idx}
-              className={`px-6 py-4 flex justify-between items-center hover:bg-slate-50 transition-colors ${
-                idx !== category.services.length - 1 ? 'border-b border-slate-50' : ''
-              }`}
+              className={`px-6 py-4 flex justify-between items-center hover:bg-slate-50 transition-colors ${idx !== category.services.length - 1 ? 'border-b border-slate-50' : ''
+                }`}
             >
-              <span className="text-slate-700 font-medium text-sm">{service.name}</span>
+              <span className="text-slate-700 font-medium text-sm">{typeof service.name === 'string' ? service.name : (service.name as any)?.[lang] || (service.name as any)?.ru}</span>
               <div className="text-right">
                 <div className="text-slate-900 font-bold text-sm">{service.price}</div>
                 <div className="text-slate-400 text-xs">{service.unit}</div>

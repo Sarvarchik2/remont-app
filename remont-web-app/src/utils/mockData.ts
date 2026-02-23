@@ -233,98 +233,104 @@ export const MOCK_CATALOG: CatalogItem[] = [
   {
     id: 'c1',
     category: 'materials',
-    title: { ru: 'Ламинат дуб натуральный', uz: 'Tabiiy eman laminati' },
-    description: { 
-      ru: 'Высококачественный ламинат 33 класса. Влагостойкий, подходит для теплых полов. Текстура натурального дерева.', 
-      uz: 'Yuqori sifatli 33-sinf laminati. Namlikka chidamli, issiq pollar uchun mos. Tabiiy yog\'och teksturasi.' 
+    title: { ru: 'Ламинат дуб натуральный', uz: 'Tabiiy eman laminati', en: 'Ламинат дуб натуральный' },
+    description: {
+      ru: 'Высококачественный ламинат 33 класса. Влагостойкий, подходит для теплых полов. Текстура натурального дерева.',
+      uz: 'Yuqori sifatli 33-sinf laminati. Namlikka chidamli, issiq pollar uchun mos. Tabiiy yog\'och teksturasi.',
+      en: 'Высококачественный ламинат 33 класса. Влагостойкий, подходит для теплых полов. Текстура натурального дерева.'
     },
     price: 120000,
     image: 'https://images.unsplash.com/photo-1761053133165-0f3acdaf1770?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsYW1pbmF0ZSUyMGZsb29yaW5nJTIwd29vZCUyMHRleHR1cmV8ZW58MXx8fHwxNzcxMTUxOTQ1fDA&ixlib=rb-4.1.0&q=80&w=1080',
     images: ['https://images.unsplash.com/photo-1761053133165-0f3acdaf1770?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsYW1pbmF0ZSUyMGZsb29yaW5nJTIwd29vZCUyMHRleHR1cmV8ZW58MXx8fHwxNzcxMTUxOTQ1fDA&ixlib=rb-4.1.0&q=80&w=1080'],
     specs: [
-      { label: { ru: 'Класс', uz: 'Sinf' }, value: { ru: '33', uz: '33' } },
-      { label: { ru: 'Толщина', uz: 'Qalinligi' }, value: { ru: '12 мм', uz: '12 mm' } },
-      { label: { ru: 'Производитель', uz: 'Ishlab chiqaruvchi' }, value: { ru: 'Kastamonu', uz: 'Kastamonu' } }
+      { label: { ru: 'Класс', uz: 'Sinf', en: 'Класс' }, value: { ru: '33', uz: '33', en: '33' } },
+      { label: { ru: 'Толщина', uz: 'Qalinligi', en: 'Толщина' }, value: { ru: '12 мм', uz: '12 mm', en: '12 мм' } },
+      { label: { ru: 'Производитель', uz: 'Ishlab chiqaruvchi', en: 'Производитель' }, value: { ru: 'Kastamonu', uz: 'Kastamonu', en: 'Kastamonu' } }
     ]
   },
   {
     id: 'c2',
     category: 'plumbing',
-    title: { ru: 'Смеситель для кухни Chrome', uz: 'Oshxona uchun smesitel Chrome' },
-    description: { 
-      ru: 'Современный однорычажный смеситель с высоким изливом. Хромированное покрытие, керамический картридж.', 
-      uz: 'Zamonaviy bir tutqichli yuqori jo\'mrakli smesitel. Xrom qoplama, keramik kartridj.' 
+    title: { ru: 'Смеситель для кухни Chrome', uz: 'Oshxona uchun smesitel Chrome', en: 'Смеситель для кухни Chrome' },
+    description: {
+      ru: 'Современный однорычажный смеситель с высоким изливом. Хромированное покрытие, керамический картридж.',
+      uz: 'Zamonaviy bir tutqichli yuqori jo\'mrakli smesitel. Xrom qoplama, keramik kartridj.',
+      en: 'Современный однорычажный смеситель с высоким изливом. Хромированное покрытие, керамический картридж.'
     },
     price: 850000,
     image: 'https://images.unsplash.com/photo-1769763828411-eb09bb05d97f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxraXRjaGVuJTIwZmF1Y2V0JTIwY2hyb21lJTIwbW9kZXJufGVufDF8fHx8MTc3MTE1MTk0NXww&ixlib=rb-4.1.0&q=80&w=1080',
     images: ['https://images.unsplash.com/photo-1769763828411-eb09bb05d97f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxraXRjaGVuJTIwZmF1Y2V0JTIwY2hyb21lJTIwbW9kZXJufGVufDF8fHx8MTc3MTE1MTk0NXww&ixlib=rb-4.1.0&q=80&w=1080'],
     specs: [
-      { label: { ru: 'Материал', uz: 'Material' }, value: { ru: 'Латунь', uz: 'Latun' } },
-      { label: { ru: 'Тип', uz: 'Tur' }, value: { ru: 'Однорычажный', uz: 'Bir tutqichli' } }
+      { label: { ru: 'Материал', uz: 'Material', en: 'Материал' }, value: { ru: 'Латунь', uz: 'Latun', en: 'Латунь' } },
+      { label: { ru: 'Тип', uz: 'Tur', en: 'Тип' }, value: { ru: 'Однорычажный', uz: 'Bir tutqichli', en: 'Однорычажный' } }
     ]
   },
   {
     id: 'c3',
     category: 'materials',
-    title: { ru: 'Плитка керамогранит Marble', uz: 'Marmar keramogranit plitkasi' },
-    description: { 
-      ru: 'Крупноформатный керамогранит под белый мрамор. Полированная поверхность, ректифицированные края.', 
-      uz: 'Oq marmar ostidagi katta formatli keramogranit. Sayqallangan sirt, rektifikatsiyalangan qirralar.' 
+    title: { ru: 'Плитка керамогранит Marble', uz: 'Marmar keramogranit plitkasi', en: 'Плитка керамогранит Marble' },
+    description: {
+      ru: 'Крупноформатный керамогранит под белый мрамор. Полированная поверхность, ректифицированные края.',
+      uz: 'Oq marmar ostidagi katta formatli keramogranit. Sayqallangan sirt, rektifikatsiyalangan qirralar.',
+      en: 'Крупноформатный керамогранит под белый мрамор. Полированная поверхность, ректифицированные края.'
     },
     price: 180000,
     image: 'https://images.unsplash.com/photo-1695191388218-f6259600223f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjZXJhbWljJTIwdGlsZXMlMjBiYXRocm9vbXxlbnwxfHx8fDE3NzExNTE5NDV8MA&ixlib=rb-4.1.0&q=80&w=1080',
     images: ['https://images.unsplash.com/photo-1695191388218-f6259600223f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjZXJhbWljJTIwdGlsZXMlMjBiYXRocm9vbXxlbnwxfHx8fDE3NzExNTE5NDV8MA&ixlib=rb-4.1.0&q=80&w=1080'],
     specs: [
-      { label: { ru: 'Размер', uz: 'O\'lcham' }, value: { ru: '60x120 см', uz: '60x120 sm' } },
-      { label: { ru: 'Поверхность', uz: 'Sirt' }, value: { ru: 'Полированная', uz: 'Sayqallangan' } }
+      { label: { ru: 'Размер', uz: 'O\'lcham', en: 'Размер' }, value: { ru: '60x120 см', uz: '60x120 sm', en: '60x120 см' } },
+      { label: { ru: 'Поверхность', uz: 'Sirt', en: 'Поверхность' }, value: { ru: 'Полированная', uz: 'Sayqallangan', en: 'Полированная' } }
     ]
   },
   {
     id: 'c4',
     category: 'furniture',
-    title: { ru: 'Диван Modern Beige', uz: 'Modern Beige divani' },
-    description: { 
-      ru: 'Стильный двухместный диван в бежевой обивке. Мягкие подушки, прочный деревянный каркас.', 
-      uz: 'Bej qoplamali zamonaviy ikki kishilik divan. Yumshoq yostiqlar, mustahkam yog\'och karkas.' 
+    title: { ru: 'Диван Modern Beige', uz: 'Modern Beige divani', en: 'Диван Modern Beige' },
+    description: {
+      ru: 'Стильный двухместный диван в бежевой обивке. Мягкие подушки, прочный деревянный каркас.',
+      uz: 'Bej qoplamali zamonaviy ikki kishilik divan. Yumshoq yostiqlar, mustahkam yog\'och karkas.',
+      en: 'Стильный двухместный диван в бежевой обивке. Мягкие подушки, прочный деревянный каркас.'
     },
     price: 4500000,
     image: 'https://images.unsplash.com/photo-1767584394169-cb62eccfe930?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBiZWlnZSUyMHNvZmElMjBsaXZpbmclMjByb29tfGVufDF8fHx8MTc3MTE1MTk0NXww&ixlib=rb-4.1.0&q=80&w=1080',
     images: ['https://images.unsplash.com/photo-1767584394169-cb62eccfe930?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBiZWlnZSUyMHNvZmElMjBsaXZpbmclMjByb29tfGVufDF8fHx8MTc3MTE1MTk0NXww&ixlib=rb-4.1.0&q=80&w=1080'],
     specs: [
-      { label: { ru: 'Ширина', uz: 'Kengligi' }, value: { ru: '220 см', uz: '220 sm' } },
-      { label: { ru: 'Обивка', uz: 'Qoplama' }, value: { ru: 'Велюр', uz: 'Velyur' } }
+      { label: { ru: 'Ширина', uz: 'Kengligi', en: 'Ширина' }, value: { ru: '220 см', uz: '220 sm', en: '220 см' } },
+      { label: { ru: 'Обивка', uz: 'Qoplama', en: 'Обивка' }, value: { ru: 'Велюр', uz: 'Velyur', en: 'Велюр' } }
     ]
   },
   {
     id: 'c5',
     category: 'materials',
-    title: { ru: 'Краска интерьерная Matt', uz: 'Interyer bo\'yog\'i Matt' },
-    description: { 
-      ru: 'Матовая моющаяся краска для стен и потолков. Экологичная, без запаха.', 
-      uz: 'Devor va shiftlar uchun matli yuviladigan bo\'yoq. Ekologik toza, hidsiz.' 
+    title: { ru: 'Краска интерьерная Matt', uz: 'Interyer bo\'yog\'i Matt', en: 'Краска интерьерная Matt' },
+    description: {
+      ru: 'Матовая моющаяся краска для стен и потолков. Экологичная, без запаха.',
+      uz: 'Devor va shiftlar uchun matli yuviladigan bo\'yoq. Ekologik toza, hidsiz.',
+      en: 'Матовая моющаяся краска для стен и потолков. Экологичная, без запаха.'
     },
     price: 450000,
     image: 'https://images.unsplash.com/photo-1673297821205-e0575bbc2ab7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYW4lMjBvZiUyMHdhbGwlMjBwYWludCUyMGludGVyaW9yfGVufDF8fHx8MTc3MTE1MTk0NXww&ixlib=rb-4.1.0&q=80&w=1080',
     images: ['https://images.unsplash.com/photo-1673297821205-e0575bbc2ab7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYW4lMjBvZiUyMHdhbGwlMjBwYWludCUyMGludGVyaW9yfGVufDF8fHx8MTc3MTE1MTk0NXww&ixlib=rb-4.1.0&q=80&w=1080'],
     specs: [
-      { label: { ru: 'Объем', uz: 'Hajmi' }, value: { ru: '9 л', uz: '9 l' } },
-      { label: { ru: 'Цвет', uz: 'Rangi' }, value: { ru: 'Белый', uz: 'Oq' } }
+      { label: { ru: 'Объем', uz: 'Hajmi', en: 'Объем' }, value: { ru: '9 л', uz: '9 l', en: '9 л' } },
+      { label: { ru: 'Цвет', uz: 'Rangi', en: 'Цвет' }, value: { ru: 'Белый', uz: 'Oq', en: 'Белый' } }
     ]
   },
   {
     id: 'c6',
     category: 'lighting',
-    title: { ru: 'Люстра Modern Ring', uz: 'Modern Ring qandili' },
-    description: { 
-      ru: 'Дизайнерская светодиодная люстра в форме колец. Регулируемая яркость и цветовая температура.', 
-      uz: 'Uzuk shaklidagi dizaynerlik LED qandil. Sozlanishi yorqinlik va rang harorati.' 
+    title: { ru: 'Люстра Modern Ring', uz: 'Modern Ring qandili', en: 'Люстра Modern Ring' },
+    description: {
+      ru: 'Дизайнерская светодиодная люстра в форме колец. Регулируемая яркость и цветовая температура.',
+      uz: 'Uzuk shaklidagi dizaynerlik LED qandil. Sozlanishi yorqinlik va rang harorati.',
+      en: 'Дизайнерская светодиодная люстра в форме колец. Регулируемая яркость и цветовая температура.'
     },
     price: 1500000,
     image: 'https://images.unsplash.com/photo-1665832966717-238c3a7e2bf7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjaGFuZGVsaWVyJTIwbGlnaHRpbmd8ZW58MXx8fHwxNzcxMTUxOTQ1fDA&ixlib=rb-4.1.0&q=80&w=1080',
     images: ['https://images.unsplash.com/photo-1665832966717-238c3a7e2bf7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjaGFuZGVsaWVyJTIwbGlnaHRpbmd8ZW58MXx8fHwxNzcxMTUxOTQ1fDA&ixlib=rb-4.1.0&q=80&w=1080'],
     specs: [
-      { label: { ru: 'Мощность', uz: 'Quvvati' }, value: { ru: '60 Вт', uz: '60 Vt' } },
-      { label: { ru: 'Диаметр', uz: 'Diametri' }, value: { ru: '80 см', uz: '80 sm' } }
+      { label: { ru: 'Мощность', uz: 'Quvvati', en: 'Мощность' }, value: { ru: '60 Вт', uz: '60 Vt', en: '60 Вт' } },
+      { label: { ru: 'Диаметр', uz: 'Diametri', en: 'Диаметр' }, value: { ru: '80 см', uz: '80 sm', en: '80 см' } }
     ]
   }
 ];
@@ -482,37 +488,37 @@ export const STORIES_DATA: Story[] = [
     id: '1',
     category: 'process',
     imageUrl: 'https://images.unsplash.com/photo-1581094794329-cd1361ddee2d?auto=format&fit=crop&q=80&w=800',
-    title: { ru: 'Монтаж электрики', uz: 'Elektr montaji' }
+    title: { ru: 'Монтаж электрики', uz: 'Elektr montaji', en: 'Монтаж электрики' }
   },
   {
     id: '2',
     category: 'process',
     imageUrl: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=800',
-    title: { ru: 'Укладка плитки', uz: 'Plitka yotqizish' }
+    title: { ru: 'Укладка плитки', uz: 'Plitka yotqizish', en: 'Укладка плитки' }
   },
   {
     id: '3',
     category: 'reviews',
     imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?auto=format&fit=crop&q=80&w=800',
-    title: { ru: 'Отзыв клиента', uz: 'Sharh' }
+    title: { ru: 'Отзыв клиента', uz: 'Sharh', en: 'Отзыв клиента' }
   },
   {
     id: '4',
     category: 'team',
     imageUrl: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=800',
-    title: { ru: 'Наша команда', uz: 'Bizning jamoa' }
+    title: { ru: 'Наша команда', uz: 'Bizning jamoa', en: 'Наша команда' }
   },
   {
     id: '5',
     category: 'promo',
     imageUrl: 'https://images.unsplash.com/photo-1513161455079-7dc1de15ef3e?auto=format&fit=crop&q=80&w=800',
-    title: { ru: 'Скидка -20%', uz: 'Chegirma -20%' }
+    title: { ru: 'Скидка -20%', uz: 'Chegirma -20%', en: 'Скидка -20%' }
   },
   {
     id: '6',
     category: 'process',
     imageUrl: 'https://images.unsplash.com/photo-1615529328331-f8917597711f?auto=format&fit=crop&q=80&w=800',
-    title: { ru: 'Отделка стен', uz: 'Devorlarni bezash' }
+    title: { ru: 'Отделка стен', uz: 'Devorlarni bezash', en: 'Отделка стен' }
   }
 ];
 

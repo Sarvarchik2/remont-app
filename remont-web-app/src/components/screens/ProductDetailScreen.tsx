@@ -17,13 +17,13 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
   if (!product) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F9F9F7]">
-        <div className="text-slate-400 font-bold">Product not found</div>
+        <div className="text-slate-400 font-bold">{lang === 'ru' ? 'Товар не найден' : lang === 'en' ? 'Product not found' : 'Mahsulot topilmadi'}</div>
       </div>
     );
   }
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' : 'uz-UZ').format(price);
+    return new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'uz-UZ').format(price);
   };
 
   return (
@@ -61,7 +61,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
             </div>
             <div className="flex items-center text-slate-900 text-xs font-bold">
               <Check size={14} className="mr-1 text-[#FFB800]" />
-              {lang === 'ru' ? 'В наличии' : 'Mavjud'}
+              {lang === 'ru' ? 'В наличии' : lang === 'en' ? 'Available' : 'Mavjud'}
             </div>
           </div>
 
@@ -71,7 +71,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
 
           <div className="flex items-baseline text-slate-900">
             <span className="text-3xl font-black mr-1">{formatPrice(product.price)}</span>
-            <span className="text-lg font-bold text-slate-400">{lang === 'ru' ? 'сум' : "so'm"}</span>
+            <span className="text-lg font-bold text-slate-400">{lang === 'ru' ? 'сум' : lang === 'en' ? 'sum' : "so'm"}</span>
           </div>
         </div>
 
@@ -103,7 +103,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
       <div className="fixed bottom-6 left-6 right-6 z-20">
         <button className="w-full bg-[#FFB800] text-black rounded-[24px] py-4 shadow-xl shadow-[#FFB800]/20 flex items-center justify-center font-bold text-lg active:scale-[0.98] transition-transform hover:bg-[#E5A600]">
           <MessageCircle className="mr-2" size={24} />
-          {lang === 'ru' ? 'Узнать подробнее' : "Batafsil ma'lumot"}
+          {lang === 'ru' ? 'Узнать подробнее' : lang === 'en' ? 'Learn More' : "Batafsil ma'lumot"}
         </button>
       </div>
     </div>

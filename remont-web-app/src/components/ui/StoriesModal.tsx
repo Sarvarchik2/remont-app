@@ -32,7 +32,7 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
           handleNext();
           return 0;
         }
-        return prev + 1.5; 
+        return prev + 1.5;
       });
     }, 50);
 
@@ -65,10 +65,9 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
       <div className="absolute top-4 left-4 right-4 flex space-x-1.5 z-30">
         {stories.map((story, idx) => (
           <div key={story.id} className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
-            <div 
-              className={`h-full bg-white transition-all duration-75 ease-linear ${
-                idx < currentIndex ? 'w-full' : idx === currentIndex ? '' : 'w-0'
-              }`}
+            <div
+              className={`h-full bg-white transition-all duration-75 ease-linear ${idx < currentIndex ? 'w-full' : idx === currentIndex ? '' : 'w-0'
+                }`}
               style={{ width: idx === currentIndex ? `${progress}%` : undefined }}
             />
           </div>
@@ -79,9 +78,9 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
       <div className="absolute top-8 left-4 right-4 flex justify-between items-center z-30 pt-2">
         <div className="flex items-center space-x-3">
           <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-rose-400 to-orange-400 p-0.5">
-             <div className="w-full h-full bg-black rounded-full flex items-center justify-center font-bold text-xs">
-                R
-             </div>
+            <div className="w-full h-full bg-black rounded-full flex items-center justify-center font-bold text-xs">
+              R
+            </div>
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-sm leading-none mb-0.5">RemontUz</span>
@@ -95,15 +94,15 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
 
       {/* Content */}
       <div className="flex-1 relative flex items-center justify-center bg-zinc-900">
-        <ImageWithFallback 
-          src={currentStory.imageUrl} 
-          alt="Story" 
+        <ImageWithFallback
+          src={currentStory.imageUrl}
+          alt="Story"
           className="w-full h-full object-cover"
         />
-        
+
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
-        
+
         {/* Navigation Areas */}
         <div className="absolute inset-0 flex z-20">
           <div className="w-1/3 h-full" onClick={handlePrev} />
@@ -112,11 +111,11 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
 
         {/* Caption & CTA */}
         <div className="absolute bottom-10 left-6 right-6 z-30">
-           <h3 className="text-3xl font-black mb-6 leading-tight tracking-tight">{currentStory.title[lang]}</h3>
-           
-           <button className="w-full bg-white text-black py-4 rounded-2xl font-bold text-sm uppercase tracking-widest active:scale-95 transition-transform flex items-center justify-center">
-             {lang === 'ru' ? 'Подробнее' : 'Batafsil'}
-           </button>
+          <h3 className="text-3xl font-black mb-6 leading-tight tracking-tight">{currentStory.title[lang]}</h3>
+
+          <button className="w-full bg-white text-black py-4 rounded-2xl font-bold text-sm uppercase tracking-widest active:scale-95 transition-transform flex items-center justify-center">
+            {lang === 'ru' ? 'Подробнее' : lang === 'en' ? 'Details' : 'Batafsil'}
+          </button>
         </div>
       </div>
     </div>

@@ -30,7 +30,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
   });
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' : 'uz-UZ').format(price);
+    return new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'uz-UZ').format(price);
   };
 
   return (
@@ -38,7 +38,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
       {/* Header */}
       <div className="mb-8 mt-2">
         <h1 className="text-4xl font-extrabold text-slate-900 mb-6 tracking-tight">{t.title}</h1>
-        
+
         {/* Search */}
         <div className="relative group">
           <div className="absolute inset-0 bg-white rounded-3xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.08)] transition-shadow duration-300 group-focus-within:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)]" />
@@ -59,11 +59,10 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`px-6 py-3 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-300 ${
-              activeCategory === cat.id
+            className={`px-6 py-3 rounded-full text-sm font-bold whitespace-nowrap transition-all duration-300 ${activeCategory === cat.id
                 ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105'
                 : 'bg-white text-slate-500 shadow-sm hover:bg-slate-50'
-            }`}
+              }`}
           >
             {cat.label}
           </button>
@@ -77,10 +76,10 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
             key={item.id}
             onClick={() => onNavigate('product_detail', { id: item.id })}
             className="group bg-white rounded-[32px] overflow-hidden relative cursor-pointer active:scale-[0.96] transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)]"
-            style={{ 
+            style={{
               animation: 'fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
               opacity: 0,
-              animationDelay: `${index * 0.05}s` 
+              animationDelay: `${index * 0.05}s`
             }}
           >
             {/* Image Container */}
@@ -91,7 +90,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
-              
+
               {/* Price Tag on Image */}
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <div className="text-[10px] font-bold uppercase tracking-widest opacity-70 mb-1 text-white">
@@ -102,7 +101,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium opacity-90">
-                    {formatPrice(item.price)} <span className="text-[10px]">{lang === 'ru' ? 'сум' : "so'm"}</span>
+                    {formatPrice(item.price)} <span className="text-[10px]">{lang === 'ru' ? 'сум' : lang === 'en' ? 'sum' : "so'm"}</span>
                   </span>
                   <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center scale-90 group-hover:scale-100 transition-transform shadow-lg">
                     <ArrowRight size={14} />
@@ -117,10 +116,10 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
       {filteredItems.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6 text-slate-300">
-             <Search size={32} />
+            <Search size={32} />
           </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-2">Ничего не найдено</h3>
-          <p className="text-slate-400 text-sm max-w-[200px]">Попробуйте изменить параметры поиска</p>
+          <h3 className="text-lg font-bold text-slate-900 mb-2">{lang === 'ru' ? 'Ничего не найдено' : lang === 'en' ? 'Nothing found' : 'Hech narsa topilmadi'}</h3>
+          <p className="text-slate-400 text-sm max-w-[200px]">{lang === 'ru' ? 'Попробуйте изменить параметры поиска' : lang === 'en' ? 'Try changing your search parameters' : 'Qidiruv parametrlarini o\'zgartirib ko\'ring'}</p>
         </div>
       )}
     </div>

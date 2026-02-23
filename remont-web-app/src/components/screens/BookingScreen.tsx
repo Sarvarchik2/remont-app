@@ -30,9 +30,9 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate }
           </div>
           <h2 className="text-2xl font-black mb-2 text-slate-900 leading-tight">{t.success.title}</h2>
           <p className="text-slate-400 mb-8 font-medium text-sm px-4">{t.success.text}</p>
-          
-          <button 
-            onClick={() => { setSubmitted(false); onNavigate('home'); }} 
+
+          <button
+            onClick={() => { setSubmitted(false); onNavigate('home'); }}
             className="w-full bg-slate-100 text-slate-900 font-bold py-4 rounded-2xl hover:bg-slate-200 transition-colors"
           >
             {t.success.home}
@@ -44,16 +44,16 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate }
 
   return (
     <div className="pb-24 pt-4 px-4 min-h-screen bg-[#F9F9F7]">
-       {/* Header */}
-       <div className="flex items-center mb-8">
-         <button onClick={() => onNavigate('home')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-900 mr-4">
-           <ArrowLeft size={18} />
-         </button>
-         <h2 className="text-2xl font-extrabold text-slate-900">{t.title}</h2>
-       </div>
+      {/* Header */}
+      <div className="flex items-center mb-8">
+        <button onClick={() => onNavigate('home')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-900 mr-4">
+          <ArrowLeft size={18} />
+        </button>
+        <h2 className="text-2xl font-extrabold text-slate-900">{t.title}</h2>
+      </div>
 
       {/* Telegram Button */}
-      <button 
+      <button
         className="w-full bg-[#24A1DE] text-white py-5 rounded-[24px] shadow-lg shadow-blue-400/20 mb-8 flex items-center justify-center font-bold active:scale-[0.98] transition-transform"
       >
         <Send size={20} className="mr-3" />
@@ -69,26 +69,26 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate }
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-[32px] shadow-sm border border-slate-100 space-y-6">
         <div>
           <label className="block text-xs font-bold text-slate-900 mb-2 uppercase tracking-wide ml-2">{t.name}</label>
-          <input 
-            placeholder="Алишер" 
-            required 
+          <input
+            placeholder={lang === 'ru' ? 'Алишер' : lang === 'en' ? 'Alisher' : 'Alisher'}
+            required
             className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 font-bold outline-none focus:ring-2 focus:ring-[#FFB800]/20"
           />
         </div>
-        
+
         <div>
           <label className="block text-xs font-bold text-slate-900 mb-2 uppercase tracking-wide ml-2">{t.phone}</label>
-          <input 
-            placeholder="+998 90 123 45 67" 
-            required 
-            type="tel" 
+          <input
+            placeholder="+998 90 123 45 67"
+            required
+            type="tel"
             className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 font-bold outline-none focus:ring-2 focus:ring-[#FFB800]/20"
           />
         </div>
-        
+
         <div className="pt-4">
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={isLoading}
             className="w-full bg-[#FFB800] text-black rounded-2xl py-4 font-bold text-lg shadow-lg shadow-[#FFB800]/20 active:scale-[0.98] transition-transform disabled:opacity-70 flex items-center justify-center hover:bg-[#E5A600]"
           >

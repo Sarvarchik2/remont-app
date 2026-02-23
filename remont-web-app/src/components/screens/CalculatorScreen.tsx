@@ -42,7 +42,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
   }, [area, type, level, prices]);
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' : 'uz-UZ').format(price);
+    return new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'uz-UZ').format(price);
   };
 
   const handleOrderClick = () => {
@@ -117,8 +117,8 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
                 <button
                   onClick={() => setType('new')}
                   className={`py-4 rounded-2xl font-bold text-sm transition-all border ${type === 'new'
-                      ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20'
-                      : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                    ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20'
+                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
                     }`}
                 >
                   Новостройка
@@ -126,8 +126,8 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
                 <button
                   onClick={() => setType('secondary')}
                   className={`py-4 rounded-2xl font-bold text-sm transition-all border ${type === 'secondary'
-                      ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20'
-                      : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                    ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20'
+                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
                     }`}
                 >
                   Вторичка
@@ -148,8 +148,8 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
                     key={lvl.id}
                     onClick={() => setLevel(lvl.id as any)}
                     className={`w-full p-4 rounded-3xl flex items-center justify-between border transition-all ${level === lvl.id
-                        ? 'border-[#FFB800] bg-slate-50'
-                        : 'border-slate-100 bg-white hover:border-slate-300'
+                      ? 'border-[#FFB800] bg-slate-50'
+                      : 'border-slate-100 bg-white hover:border-slate-300'
                       }`}
                   >
                     <div className="text-left">

@@ -21,12 +21,15 @@ export const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
           </span>
         </div>
 
-        {/* Lang Switcher */}
+        {/* Lang Switcher - Cycle through ru -> uz -> en -> ru */}
         <button
-          onClick={() => setLang(lang === 'ru' ? 'uz' : 'ru')}
-          className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-[10px] shadow-sm active:scale-95 transition-transform"
+          onClick={() => {
+            const nextLang = lang === 'ru' ? 'uz' : lang === 'uz' ? 'en' : 'ru';
+            setLang(nextLang);
+          }}
+          className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-[10px] shadow-sm active:scale-95 transition-transform uppercase"
         >
-          {lang === 'ru' ? 'RU' : 'UZ'}
+          {lang}
         </button>
       </div>
     </header>
