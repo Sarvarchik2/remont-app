@@ -41,25 +41,25 @@ export default function App() {
   const [loginError, setLoginError] = useState('');
 
   // Leads State
-  const [leads, setLeads] = useState<Lead[]>(MOCK_LEADS);
+  const [leads, setLeads] = useState<Lead[]>([]);
 
   // Calculator Prices State
   const [calculatorPrices, setCalculatorPrices] = useState(INITIAL_CALCULATOR_PRICES);
 
   // Stories State
-  const [stories, setStories] = useState<Story[]>(STORIES_DATA);
+  const [stories, setStories] = useState<Story[]>([]);
 
   // Projects State
-  const [projects, setProjects] = useState<Project[]>(MOCK_PROJECTS);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   // Portfolio State
-  const [portfolio, setPortfolio] = useState<PortfolioItem[]>(MOCK_PORTFOLIO);
+  const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
 
   // Services State
-  const [services, setServices] = useState<ServiceCategory[]>(MOCK_SERVICES);
+  const [services, setServices] = useState<ServiceCategory[]>([]);
 
   // Catalog State
-  const [catalog, setCatalog] = useState<CatalogItem[]>(MOCK_CATALOG);
+  const [catalog, setCatalog] = useState<CatalogItem[]>([]);
 
   // --- Backend Sync Logic ---
   useEffect(() => {
@@ -156,11 +156,11 @@ export default function App() {
       });
     } catch (e) { console.error('Error posting lead:', e); }
 
-    setLeads(prev => [newLead, ...prev]);
+    setLeads((prev: Lead[]) => [newLead, ...prev]);
   };
 
   const handleUpdateLeadStatus = async (leadId: string, status: Lead['status']) => {
-    const lead = leads.find(l => l.id === leadId);
+    const lead = leads.find((l: Lead) => l.id === leadId);
     if (lead) {
       try {
         fetch('http://localhost:8000/api/v1/leads/', {
@@ -170,7 +170,7 @@ export default function App() {
         });
       } catch (e) { }
     }
-    setLeads(prev => prev.map(l => l.id === leadId ? { ...l, status } : l));
+    setLeads((prev: Lead[]) => prev.map((l: Lead) => l.id === leadId ? { ...l, status } : l));
   };
 
   // --- Admin Logic ---
@@ -189,15 +189,45 @@ export default function App() {
     setAdminTab(tab);
   };
 
+  // Helper for proxying React state updates directly to the FastAPI backend
+  // Replicates SetStateAction behavior (accepting values or updater functions)
+  const createProxySetter = <T,>(
+    originalSetter: React.Dispatch<React.SetStateAction<T>>,
+    endpoint: string,
+    isBatch: boolean = true
+  ): React.Dispatch<React.SetStateAction<T>> => {
+    return (action: React.SetStateAction<T>) => {
+      originalSetter((prevState: T) => {
+        const newState = typeof action === 'function' ? (action as Function)(prevState) : action;
+
+        try {
+          fetch(`http://localhost:8000/api/v1/${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(isBatch ? newState : { id: 1, prices: newState })
+          });
+        } catch (e) { }
+
+        return newState;
+      });
+    };
+  };
+
+  const proxySetProjects = createProxySetter(setProjects, 'projects/batch');
+  const proxySetPortfolio = createProxySetter(setPortfolio, 'portfolio/batch');
+  const proxySetStories = createProxySetter(setStories, 'stories/batch');
+  const proxySetServices = createProxySetter(setServices, 'services/batch');
+  const proxySetPrices = createProxySetter(setCalculatorPrices, 'settings/', false);
+
   const renderAdminScreen = () => {
     switch (adminTab) {
       case 'dashboard': return <AdminDashboard lang={lang} onNavigate={handleAdminNavigate} leads={leads} />;
       case 'crm': return <AdminCRM lang={lang} leads={leads} onUpdateLeadStatus={handleUpdateLeadStatus} />;
-      case 'projects': return <AdminProjects lang={lang} projects={projects} onUpdateProjects={setProjects} />;
-      case 'portfolio': return <AdminPortfolio lang={lang} portfolio={portfolio} onUpdatePortfolio={setPortfolio} />;
-      case 'stories': return <AdminStories lang={lang} stories={stories} onUpdateStories={setStories} />;
-      case 'services': return <AdminServices lang={lang} categories={services} onUpdateCategories={setServices} />;
-      case 'settings': return <AdminSettings lang={lang} prices={calculatorPrices} onUpdatePrices={setCalculatorPrices} />;
+      case 'projects': return <AdminProjects lang={lang} projects={projects} onUpdateProjects={proxySetProjects} />;
+      case 'portfolio': return <AdminPortfolio lang={lang} portfolio={portfolio} onUpdatePortfolio={proxySetPortfolio} />;
+      case 'stories': return <AdminStories lang={lang} stories={stories} onUpdateStories={proxySetStories} />;
+      case 'services': return <AdminServices lang={lang} categories={services} onUpdateCategories={proxySetServices} />;
+      case 'settings': return <AdminSettings lang={lang} prices={calculatorPrices} onUpdatePrices={proxySetPrices} />;
       default: return (
         <div className="flex flex-col items-center justify-center h-64 text-slate-400">
           <div className="text-4xl mb-4">🚧</div>

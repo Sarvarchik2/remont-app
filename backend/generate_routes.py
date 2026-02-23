@@ -27,23 +27,19 @@ async def get_all_{feature}(db: AsyncSession = Depends(get_db)):
     return items
 
 @router.post("/")
-async def create_{feature}(data: dict, db: AsyncSession = Depends(get_db)):
-    item_id = data.get("id") or (data.get("id", "new") if "id" in data else None)
-    
-    # Simple object creation without complex schema validation
+async def create_or_update_{feature}(data: dict, db: AsyncSession = Depends(get_db)):
     new_item = {model}(**data)
-    
-    db.add(new_item)
+    await db.merge(new_item)
     await db.commit()
-    await db.refresh(new_item)
-    return new_item
+    return {{"message": "Saved successfully"}}
 
 @router.post("/batch")
 async def create_batch_{feature}(data_list: list[dict], db: AsyncSession = Depends(get_db)):
-    items = [{model}(**data) for data in data_list]
-    db.add_all(items)
+    for data in data_list:
+        item = {model}(**data)
+        await db.merge(item)
     await db.commit()
-    return {{"message": "Batch inserted"}}
+    return {{"message": "Batch upserted"}}
 
 '''
     with open(f"app/features/{feature}/router.py", "w") as f:

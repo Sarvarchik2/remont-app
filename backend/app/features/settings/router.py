@@ -14,21 +14,17 @@ async def get_all_settings(db: AsyncSession = Depends(get_db)):
     return items
 
 @router.post("/")
-async def create_settings(data: dict, db: AsyncSession = Depends(get_db)):
-    item_id = data.get("id") or (data.get("id", "new") if "id" in data else None)
-    
-    # Simple object creation without complex schema validation
+async def create_or_update_settings(data: dict, db: AsyncSession = Depends(get_db)):
     new_item = CalculatorSetting(**data)
-    
-    db.add(new_item)
+    await db.merge(new_item)
     await db.commit()
-    await db.refresh(new_item)
-    return new_item
+    return {"message": "Saved successfully"}
 
 @router.post("/batch")
 async def create_batch_settings(data_list: list[dict], db: AsyncSession = Depends(get_db)):
-    items = [CalculatorSetting(**data) for data in data_list]
-    db.add_all(items)
+    for data in data_list:
+        item = CalculatorSetting(**data)
+        await db.merge(item)
     await db.commit()
-    return {"message": "Batch inserted"}
+    return {"message": "Batch upserted"}
 
