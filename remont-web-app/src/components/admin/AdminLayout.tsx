@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../utils/translations';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Briefcase, 
-  Image, 
-  Settings, 
-  LogOut, 
-  Menu, 
+import {
+  LayoutDashboard,
+  Users,
+  Briefcase,
+  Image,
+  Settings,
+  LogOut,
+  Menu,
   X,
   Ruler,
   Hammer,
-  LayoutTemplate
+  LayoutTemplate,
+  ShoppingCart
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -22,10 +23,10 @@ interface AdminLayoutProps {
   onLogout: () => void;
 }
 
-export const AdminLayout: React.FC<AdminLayoutProps> = ({ 
-  children, 
-  activeTab, 
-  onNavigate, 
+export const AdminLayout: React.FC<AdminLayoutProps> = ({
+  children,
+  activeTab,
+  onNavigate,
   lang,
   onLogout
 }) => {
@@ -38,6 +39,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
     { id: 'projects', label: t.projects, icon: Briefcase },
     { id: 'portfolio', label: t.portfolio, icon: Image },
     { id: 'stories', label: t.stories, icon: LayoutTemplate },
+    { id: 'catalog', label: t.catalog, icon: ShoppingCart },
     { id: 'services', label: t.services, icon: Hammer },
     { id: 'settings', label: t.settings, icon: Settings },
   ];
@@ -52,10 +54,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       {/* Mobile Header */}
       <div className="md:hidden bg-white text-slate-900 p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm border-b border-slate-100">
         <div className="flex items-center space-x-2">
-           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
-             <span className="font-bold text-sm">R</span>
-           </div>
-           <span className="font-extrabold text-lg">Admin<span className="text-slate-400">Panel</span></span>
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
+            <span className="font-bold text-sm">R</span>
+          </div>
+          <span className="font-extrabold text-lg">Admin<span className="text-slate-400">Panel</span></span>
         </div>
         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 bg-slate-50 rounded-full hover:bg-slate-100 transition-colors">
           {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -69,10 +71,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="p-8 hidden md:flex items-center space-x-3 mb-4">
-           <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20">
-             <Ruler size={20} />
-           </div>
-           <span className="font-black text-2xl tracking-tight">Remont<span className="text-slate-300">Uz</span></span>
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20">
+            <Ruler size={20} />
+          </div>
+          <span className="font-black text-2xl tracking-tight">Remont<span className="text-slate-300">Uz</span></span>
         </div>
 
         <nav className="p-4 space-y-2">
@@ -80,11 +82,10 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             <button
               key={item.id}
               onClick={() => handleNavClick(item.id)}
-              className={`w-full flex items-center space-x-4 px-6 py-4 rounded-[24px] transition-all duration-200 ${
-                activeTab === item.id 
-                  ? 'bg-primary text-primary-foreground shadow-xl shadow-primary/20 font-bold scale-[1.02]' 
+              className={`w-full flex items-center space-x-4 px-6 py-4 rounded-[24px] transition-all duration-200 ${activeTab === item.id
+                  ? 'bg-primary text-primary-foreground shadow-xl shadow-primary/20 font-bold scale-[1.02]'
                   : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900 font-medium'
-              }`}
+                }`}
             >
               <item.icon size={20} strokeWidth={activeTab === item.id ? 2.5 : 2} />
               <span className="text-sm">{item.label}</span>
@@ -93,7 +94,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-50">
-          <button 
+          <button
             onClick={onLogout}
             className="w-full flex items-center space-x-3 px-6 py-4 rounded-[24px] text-slate-400 hover:bg-slate-50 hover:text-slate-900 transition-colors font-bold text-sm"
           >
@@ -112,7 +113,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
       {/* Overlay for mobile */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />

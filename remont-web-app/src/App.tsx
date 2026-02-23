@@ -12,7 +12,8 @@ import { CatalogScreen } from './components/screens/CatalogScreen';
 import { ProductDetailScreen } from './components/screens/ProductDetailScreen';
 import { PortfolioDetailScreen } from './components/screens/PortfolioDetailScreen';
 import { translations, Language } from './utils/translations';
-import { MOCK_LEADS, Lead, INITIAL_CALCULATOR_PRICES, STORIES_DATA, Story, MOCK_PROJECTS, Project, MOCK_PORTFOLIO, PortfolioItem, MOCK_SERVICES, ServiceCategory, MOCK_CATALOG, CatalogItem } from './utils/mockData';
+import { Lead, INITIAL_CALCULATOR_PRICES, Story, Project, PortfolioItem, ServiceCategory, CatalogItem } from './utils/mockData';
+import { Toaster, toast } from 'sonner';
 
 // Admin Components
 import { AdminLayout } from './components/admin/AdminLayout';
@@ -23,11 +24,13 @@ import { AdminPortfolio } from './components/admin/screens/AdminPortfolio';
 import { AdminServices } from './components/admin/screens/AdminServices';
 import { AdminSettings } from './components/admin/screens/AdminSettings';
 import { AdminStories } from './components/admin/screens/AdminStories';
+import { AdminCatalog } from './components/admin/screens/AdminCatalog';
 import { Lock, ArrowLeft } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ru');
-  const [viewMode, setViewMode] = useState<'client' | 'admin_login' | 'admin'>('client');
+  const initialViewMode = window.location.pathname === '/admin' || window.location.hash === '#admin' || window.location.search.includes('admin=true') ? 'admin_login' : 'client';
+  const [viewMode, setViewMode] = useState<'client' | 'admin_login' | 'admin'>(initialViewMode);
 
   // Client State
   const [activeTab, setActiveTab] = useState('home');
@@ -76,32 +79,27 @@ export default function App() {
           setCalculatorPrices(settingsData[0].prices);
         }
 
-        const syncFeature = async (path: string, mockData: any[], setState: React.Dispatch<any>) => {
+        const fetchFeature = async (path: string, setState: React.Dispatch<any>) => {
           const res = await fetch(`${url}/${path}/`);
           const data = await res.json();
-          if (data.length === 0) {
-            await fetch(`${url}/${path}/batch`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(mockData)
-            });
-            setState(mockData);
-          } else {
-            setState(data);
-          }
+          setState(data);
         };
 
         await Promise.all([
-          syncFeature('leads', MOCK_LEADS, setLeads),
-          syncFeature('stories', STORIES_DATA, setStories),
-          syncFeature('projects', MOCK_PROJECTS, setProjects),
-          syncFeature('portfolio', MOCK_PORTFOLIO, setPortfolio),
-          syncFeature('services', MOCK_SERVICES, setServices),
-          syncFeature('catalog', MOCK_CATALOG, setCatalog)
+          fetchFeature('leads', setLeads),
+          fetchFeature('stories', setStories),
+          fetchFeature('projects', setProjects),
+          fetchFeature('portfolio', setPortfolio),
+          fetchFeature('services', setServices),
+          fetchFeature('catalog', setCatalog)
         ]);
 
       } catch (error) {
         console.error("Backend sync failed. Using offline mocks.", error);
+        toast.error('Ошибка соединения с сервером', {
+          description: 'Приложение работает в демо-режиме',
+          duration: 5000,
+        });
       }
     };
     initData();
@@ -217,6 +215,7 @@ export default function App() {
   const proxySetPortfolio = createProxySetter(setPortfolio, 'portfolio/batch');
   const proxySetStories = createProxySetter(setStories, 'stories/batch');
   const proxySetServices = createProxySetter(setServices, 'services/batch');
+  const proxySetCatalog = createProxySetter(setCatalog, 'catalog/batch');
   const proxySetPrices = createProxySetter(setCalculatorPrices, 'settings/', false);
 
   const renderAdminScreen = () => {
@@ -226,6 +225,7 @@ export default function App() {
       case 'projects': return <AdminProjects lang={lang} projects={projects} onUpdateProjects={proxySetProjects} />;
       case 'portfolio': return <AdminPortfolio lang={lang} portfolio={portfolio} onUpdatePortfolio={proxySetPortfolio} />;
       case 'stories': return <AdminStories lang={lang} stories={stories} onUpdateStories={proxySetStories} />;
+      case 'catalog': return <AdminCatalog lang={lang} catalog={catalog} onUpdateCatalog={proxySetCatalog} />;
       case 'services': return <AdminServices lang={lang} categories={services} onUpdateCategories={proxySetServices} />;
       case 'settings': return <AdminSettings lang={lang} prices={calculatorPrices} onUpdatePrices={proxySetPrices} />;
       default: return (
@@ -306,7 +306,7 @@ export default function App() {
       case 'portfolio': return <PortfolioScreen lang={lang} onNavigate={handleClientNavigate} portfolio={portfolio} />;
       case 'portfolio_detail': return <PortfolioDetailScreen lang={lang} onNavigate={handleClientNavigate} projectId={currentPortfolioId!} portfolio={portfolio} />;
       case 'project_detail': return <ProjectDetailScreen lang={lang} onNavigate={handleClientNavigate} projectId={currentProjectId} projects={projects} />;
-      case 'dashboard': return <DashboardScreen lang={lang} onNavigate={handleClientNavigate} />;
+      case 'dashboard': return <DashboardScreen lang={lang} onNavigate={handleClientNavigate} projects={projects} />;
       case 'booking': return <BookingScreen lang={lang} onNavigate={handleClientNavigate} />;
       default: return <HomeScreen lang={lang} onNavigate={handleClientNavigate} />;
     }
@@ -347,7 +347,6 @@ export default function App() {
           <Header
             lang={lang}
             setLang={setLang}
-            onAdminClick={() => setViewMode('admin_login')}
           />
         )}
 
@@ -364,6 +363,7 @@ export default function App() {
           />
         )}
       </div>
+      <Toaster position="top-center" richColors />
     </>
   );
 }

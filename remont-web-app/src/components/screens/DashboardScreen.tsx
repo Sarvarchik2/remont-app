@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { translations, Language } from '../../utils/translations';
-import { MOCK_PROJECTS, Project } from '../../utils/mockData';
-import { 
-  Lock, 
-  ChevronRight, 
-  Package, 
+import { Project } from '../../utils/mockData';
+import {
+  Lock,
+  ChevronRight,
+  Package,
   Phone,
   LogOut,
   MapPin,
@@ -15,17 +15,36 @@ import {
 interface DashboardScreenProps {
   lang: Language;
   onNavigate?: (tab: string, projectId?: string) => void;
+  projects?: Project[];
 }
 
-export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNavigate }) => {
+export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNavigate, projects = [] }) => {
   const t = translations[lang].dashboard;
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [contractId, setContractId] = useState('');
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [loginError, setLoginError] = useState('');
+  const [tgUser, setTgUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Check if running inside Telegram Web App
+    const initDataUnsafe = (window as any)?.Telegram?.WebApp?.initDataUnsafe;
+
+    if (initDataUnsafe && initDataUnsafe.user) {
+      setTgUser(initDataUnsafe.user);
+    } else {
+      // Fallback for local testing in normal browser
+      setTgUser({
+        id: 123456789,
+        first_name: 'Тестовый',
+        last_name: 'Пользователь',
+        username: 'test_user'
+      });
+    }
+  }, []);
 
   const handleLogin = () => {
-    const project = MOCK_PROJECTS.find(p => p.contractNumber === contractId);
+    const project = projects.find(p => p.contractNumber === contractId);
     if (project) {
       setCurrentProject(project);
       setIsAuthenticated(true);
@@ -50,25 +69,27 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNaviga
     return (
       <div className="flex flex-col min-h-[80vh] px-6 pt-12 bg-[#F9F9F7]">
         <h1 className="text-3xl font-extrabold text-slate-900 mb-12">профиль</h1>
-        
+
         <div className="bg-white rounded-[32px] p-8 shadow-sm border border-slate-100 flex flex-col items-center text-center">
           <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center text-slate-900 mb-6 border border-slate-100">
             <Lock size={32} />
           </div>
-          
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Вход в кабинет</h2>
+
+          <h2 className="text-xl font-bold text-slate-900 mb-2">
+            {tgUser ? `Привет, ${tgUser.first_name}!` : 'Вход в кабинет'}
+          </h2>
           <p className="text-slate-400 text-sm mb-8">Введите номер вашего договора для доступа к материалам проекта</p>
-          
+
           <div className="w-full space-y-4">
-            <input 
+            <input
               placeholder="Номер договора (145)"
               value={contractId}
               onChange={(e) => setContractId(e.target.value)}
               className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-center text-lg font-bold outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300"
             />
             {loginError && <p className="text-red-500 text-xs font-bold">{loginError}</p>}
-            
-            <button 
+
+            <button
               onClick={handleLogin}
               disabled={contractId.length < 2}
               className="w-full bg-primary text-primary-foreground rounded-2xl py-4 font-bold text-lg active:scale-95 transition-transform disabled:opacity-50 hover:bg-primary/90 shadow-lg shadow-primary/20"
@@ -86,10 +107,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNaviga
     <div className="pb-32 px-4 pt-4 bg-[#F9F9F7] min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-         <h1 className="text-3xl font-extrabold text-slate-900">профиль</h1>
-         <button onClick={() => setIsAuthenticated(false)} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-900 hover:bg-slate-50 transition-colors border border-slate-100">
-           <LogOut size={18} />
-         </button>
+        <h1 className="text-3xl font-extrabold text-slate-900">профиль</h1>
+        <button onClick={() => setIsAuthenticated(false)} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-900 hover:bg-slate-50 transition-colors border border-slate-100">
+          <LogOut size={18} />
+        </button>
       </div>
 
       {/* Avatar & Stats */}
@@ -156,7 +177,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNaviga
           {/* Progress Bar */}
           <div className="px-6 pb-6">
             <div className="bg-slate-100 rounded-full h-2 overflow-hidden">
-              <div 
+              <div
                 className="bg-primary h-full rounded-full transition-all duration-500"
                 style={{ width: `${currentProject.finance ? Math.round((currentProject.finance.paid / currentProject.finance.total) * 100) : 0}%` }}
               />
