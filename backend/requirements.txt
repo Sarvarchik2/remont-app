@@ -3,5 +3,5 @@ uvicorn
 sqlalchemy[asyncio]
 pydantic
 pydantic-settings
-aiosqlite
+asyncpg
 python-dotenv

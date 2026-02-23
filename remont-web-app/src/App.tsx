@@ -65,7 +65,7 @@ export default function App() {
   useEffect(() => {
     const initData = async () => {
       try {
-        const url = 'http://localhost:8000/api/v1';
+        const url = '/api/v1';
 
         // Settings Sync
         const settingsRes = await fetch(`${url}/settings/`);
@@ -149,7 +149,7 @@ export default function App() {
     };
 
     try {
-      fetch('http://localhost:8000/api/v1/leads/', {
+      fetch('/api/v1/leads/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newLead)
@@ -163,7 +163,7 @@ export default function App() {
     const lead = leads.find((l: Lead) => l.id === leadId);
     if (lead) {
       try {
-        fetch('http://localhost:8000/api/v1/leads/', {
+        fetch('/api/v1/leads/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...lead, status })
@@ -201,7 +201,7 @@ export default function App() {
         const newState = typeof action === 'function' ? (action as Function)(prevState) : action;
 
         try {
-          fetch(`http://localhost:8000/api/v1/${endpoint}`, {
+          fetch(`/api/v1/${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(isBatch ? newState : { id: 1, prices: newState })

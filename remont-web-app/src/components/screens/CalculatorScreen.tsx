@@ -19,16 +19,17 @@ interface CalculatorScreenProps {
     phone?: string;
   }) => void;
   prices?: CalculatorPrices;
+  onNavigate: (tab: string, params?: any) => void;
 }
 
-export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubmitLead, prices = INITIAL_CALCULATOR_PRICES }) => {
+export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubmitLead, prices = INITIAL_CALCULATOR_PRICES, onNavigate }) => {
   const t = translations[lang].calc;
-  
+
   const [area, setArea] = useState<number>(60);
   const [type, setType] = useState<'new' | 'secondary'>('new');
   const [level, setLevel] = useState<'economy' | 'standard' | 'premium'>('standard');
   const [total, setTotal] = useState<number>(0);
-  
+
   // Modal states
   const [showContactModal, setShowContactModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -81,25 +82,25 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
           <div className="text-center py-6">
             <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">Примерная стоимость</p>
             <div className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
-              {formatPrice(total)} 
+              {formatPrice(total)}
               <span className="text-lg text-slate-400 ml-1 font-bold">UZS</span>
             </div>
           </div>
 
           {/* Sliders / Inputs */}
           <div className="space-y-8 mt-4">
-            
+
             {/* Area */}
             <div>
               <div className="flex justify-between mb-4">
-                 <label className="text-sm font-bold text-slate-900">Площадь квартиры</label>
-                 <span className="text-sm font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded-full">{area} м²</span>
+                <label className="text-sm font-bold text-slate-900">Площадь квартиры</label>
+                <span className="text-sm font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded-full">{area} м²</span>
               </div>
-              <input 
-                type="range" 
-                min="20" 
-                max="200" 
-                value={area} 
+              <input
+                type="range"
+                min="20"
+                max="200"
+                value={area}
                 onChange={(e) => setArea(Number(e.target.value))}
                 className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#FFB800]"
               />
@@ -113,23 +114,21 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
             <div>
               <label className="text-sm font-bold text-slate-900 mb-3 block">Тип помещения</label>
               <div className="grid grid-cols-2 gap-3">
-                <button 
+                <button
                   onClick={() => setType('new')}
-                  className={`py-4 rounded-2xl font-bold text-sm transition-all border ${
-                    type === 'new' 
-                    ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20' 
-                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
-                  }`}
+                  className={`py-4 rounded-2xl font-bold text-sm transition-all border ${type === 'new'
+                      ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20'
+                      : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                    }`}
                 >
                   Новостройка
                 </button>
-                <button 
+                <button
                   onClick={() => setType('secondary')}
-                  className={`py-4 rounded-2xl font-bold text-sm transition-all border ${
-                    type === 'secondary' 
-                    ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20' 
-                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
-                  }`}
+                  className={`py-4 rounded-2xl font-bold text-sm transition-all border ${type === 'secondary'
+                      ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20'
+                      : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                    }`}
                 >
                   Вторичка
                 </button>
@@ -145,22 +144,20 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
                   { id: 'standard', label: 'Стандарт', desc: 'Оптимальное качество' },
                   { id: 'premium', label: 'Премиум', desc: 'Дизайн и сложные работы' }
                 ].map((lvl) => (
-                  <button 
+                  <button
                     key={lvl.id}
                     onClick={() => setLevel(lvl.id as any)}
-                    className={`w-full p-4 rounded-3xl flex items-center justify-between border transition-all ${
-                      level === lvl.id 
-                        ? 'border-[#FFB800] bg-slate-50' 
+                    className={`w-full p-4 rounded-3xl flex items-center justify-between border transition-all ${level === lvl.id
+                        ? 'border-[#FFB800] bg-slate-50'
                         : 'border-slate-100 bg-white hover:border-slate-300'
-                    }`}
+                      }`}
                   >
                     <div className="text-left">
                       <div className={`font-bold ${level === lvl.id ? 'text-slate-900' : 'text-slate-500'}`}>{lvl.label}</div>
                       <div className="text-xs text-slate-400 font-medium">{lvl.desc}</div>
                     </div>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      level === lvl.id ? 'border-[#FFB800]' : 'border-slate-200'
-                    }`}>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${level === lvl.id ? 'border-[#FFB800]' : 'border-slate-200'
+                      }`}>
                       {level === lvl.id && <div className="w-2.5 h-2.5 bg-[#FFB800] rounded-full" />}
                     </div>
                   </button>
@@ -171,7 +168,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
         </div>
 
         {/* Action Button */}
-        <button 
+        <button
           onClick={handleOrderClick}
           className="w-full bg-[#FFB800] text-black rounded-[24px] py-5 font-bold text-lg shadow-xl shadow-[#FFB800]/20 flex items-center justify-center space-x-2 active:scale-[0.98] transition-transform hover:bg-[#E5A600]"
         >
@@ -192,7 +189,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
           <div className="bg-white rounded-t-[40px] max-w-md w-full p-6 animate-slide-up">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-slate-900">Оставьте контакты</h3>
-              <button 
+              <button
                 onClick={() => setShowContactModal(false)}
                 className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors"
               >
@@ -203,7 +200,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
             <div className="space-y-4 mb-6">
               <div>
                 <label className="text-sm font-bold text-slate-700 mb-2 block">Ваше имя</label>
-                <input 
+                <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -213,7 +210,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
               </div>
               <div>
                 <label className="text-sm font-bold text-slate-700 mb-2 block">Телефон</label>
-                <input 
+                <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -248,7 +245,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
               </div>
             </div>
 
-            <button 
+            <button
               onClick={handleSubmit}
               className="w-full bg-[#FFB800] text-black rounded-2xl py-4 font-bold text-lg shadow-lg shadow-[#FFB800]/20 active:scale-95 transition-transform hover:bg-[#E5A600]"
             >
@@ -272,7 +269,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
             <p className="text-slate-600 mb-6">
               Наш менеджер свяжется с вами в ближайшее время для уточнения деталей
             </p>
-            <button 
+            <button
               onClick={() => setShowSuccessModal(false)}
               className="w-full bg-[#FFB800] text-black rounded-2xl py-4 font-bold shadow-lg shadow-[#FFB800]/20 active:scale-95 transition-transform hover:bg-[#E5A600]"
             >
