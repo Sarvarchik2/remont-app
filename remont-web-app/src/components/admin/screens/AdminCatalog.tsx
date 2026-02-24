@@ -19,6 +19,7 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
+    const [inputLang, setInputLang] = useState<Language>('ru');
 
     const defaultItem: Partial<CatalogItem> = {
         category: 'materials',
@@ -184,38 +185,50 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                         </div>
 
                         <form onSubmit={handleSave} className="space-y-5">
+                            {/* Language Switcher for Inputs */}
+                            <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+                                {(['ru', 'uz', 'en'] as const).map(l => (
+                                    <button
+                                        type="button"
+                                        key={l}
+                                        onClick={() => setInputLang(l)}
+                                        className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+                                    >
+                                        {l}
+                                    </button>
+                                ))}
+                            </div>
+
                             <div>
-                                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Название (RU)</label>
+                                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                                    Название <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                                </label>
                                 <input
                                     placeholder="Например: Люстра Kristall"
-                                    value={newItem.title?.ru || ''}
-                                    onChange={(e) => handleTitleChange('ru', e.target.value)}
+                                    value={newItem.title?.[inputLang] || ''}
+                                    onChange={(e) => handleTitleChange(inputLang, e.target.value)}
                                     required
+                                    autoFocus
                                     className="w-full bg-white border-none rounded-2xl py-4 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Название (UZ)</label>
-                                    <input
-                                        placeholder="Masalan: Kristall qandil"
-                                        value={newItem.title?.uz || ''}
-                                        onChange={(e) => handleTitleChange('uz', e.target.value)}
-                                        required
-                                        className="w-full bg-white border-none rounded-2xl py-4 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Название (EN)</label>
-                                    <input
-                                        placeholder="E.g: Kristall chandelier"
-                                        value={newItem.title?.en || ''}
-                                        onChange={(e) => handleTitleChange('en', e.target.value)}
-                                        required
-                                        className="w-full bg-white border-none rounded-2xl py-4 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                                    />
-                                </div>
+                            <div>
+                                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                                    Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                                </label>
+                                <textarea
+                                    placeholder="Подробное описание товара..."
+                                    value={newItem.description?.[inputLang] || ''}
+                                    onChange={(e) => {
+                                        setNewItem(prev => ({
+                                            ...prev,
+                                            description: { ...prev.description, [inputLang]: e.target.value } as Record<Language, string>
+                                        }));
+                                    }}
+                                    className="w-full bg-white border-none rounded-2xl py-4 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5 min-h-[100px] resize-none"
+                                />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">

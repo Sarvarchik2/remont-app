@@ -96,9 +96,9 @@ export default function App() {
         ]);
 
       } catch (error) {
-        console.error("Backend sync failed. Using offline mocks.", error);
+        console.error("Backend sync failed", error);
         toast.error('Ошибка соединения с сервером', {
-          description: 'Приложение работает в демо-режиме',
+          description: 'Не удалось загрузить данные',
           duration: 5000,
         });
       }

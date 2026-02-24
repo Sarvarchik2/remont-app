@@ -72,6 +72,7 @@ export interface Project {
     // New fields for compatibility
     stage?: Record<Language, string> | string; // Alias for currentStage
     forecast?: string;
+    telegramId?: string; // Links project to a specific tgUser
     finance?: {
         total: number;
         paid: number;

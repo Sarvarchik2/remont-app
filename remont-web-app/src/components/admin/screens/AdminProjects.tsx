@@ -15,6 +15,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [inputLang, setInputLang] = useState<Language>('ru');
 
   // Form State
   const [formData, setFormData] = useState<Partial<Project>>({
@@ -22,6 +23,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
     address: '',
     phone: '+998 ',
     contractNumber: '',
+    telegramId: '',
     totalEstimate: 0,
     startDate: '',
     deadline: '',
@@ -38,6 +40,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
       address: formData.address || '',
       phone: formData.phone || '',
       contractNumber: formData.contractNumber || '',
+      telegramId: formData.telegramId || '',
       totalEstimate: formData.totalEstimate || 0,
       startDate: formData.startDate || new Date().toISOString().split('T')[0],
       deadline: formData.deadline || '',
@@ -70,6 +73,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
       address: '',
       phone: '+998 ',
       contractNumber: '',
+      telegramId: '',
       totalEstimate: 0,
       startDate: '',
       deadline: '',
@@ -224,9 +228,25 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors"
+                type="button"
               >
                 <X size={20} />
               </button>
+            </div>
+
+            {/* Language Switcher for Inputs */}
+            <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+              {(['ru', 'uz', 'en'] as const).map(l => (
+                <button
+                  type="button"
+                  key={l}
+                  onClick={() => setInputLang(l)}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+                >
+                  {l}
+                </button>
+              ))}
             </div>
 
             <form onSubmit={handleCreateProject} className="space-y-6">
@@ -235,14 +255,19 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 <div className="space-y-4">
                   <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Клиент</h4>
                   <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">ФИО Клиента</label>
+                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-2">ФИО Клиента <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span></label>
                     <div className="relative">
                       <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                       <input
                         required
                         type="text"
-                        value={typeof formData.clientName === 'string' ? formData.clientName : formData.clientName?.[lang] || (formData.clientName as any)?.ru || ''}
-                        onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
+                        value={typeof formData.clientName === 'string' ? formData.clientName : formData.clientName?.[inputLang] || ''}
+                        onChange={(e) => {
+                          const newName = typeof formData.clientName === 'string'
+                            ? { ru: formData.clientName, uz: formData.clientName, en: formData.clientName, [inputLang]: e.target.value }
+                            : { ...(formData.clientName as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                          setFormData({ ...formData, clientName: newName });
+                        }}
                         className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
                         placeholder="Иванов Иван"
                       />
@@ -268,14 +293,19 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 <div className="space-y-4">
                   <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Объект</h4>
                   <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Адрес</label>
+                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-2">Адрес <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span></label>
                     <div className="relative">
                       <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                       <input
                         required
                         type="text"
-                        value={typeof formData.address === 'string' ? formData.address : formData.address?.[lang] || (formData.address as any)?.ru || ''}
-                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                        value={typeof formData.address === 'string' ? formData.address : formData.address?.[inputLang] || ''}
+                        onChange={(e) => {
+                          const newAddr = typeof formData.address === 'string'
+                            ? { ru: formData.address, uz: formData.address, en: formData.address, [inputLang]: e.target.value }
+                            : { ...(formData.address as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                          setFormData({ ...formData, address: newAddr });
+                        }}
                         className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
                         placeholder="Улица, Дом, Квартира"
                       />
@@ -292,6 +322,22 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                         onChange={(e) => setFormData({ ...formData, contractNumber: e.target.value })}
                         className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
                         placeholder="№ 123"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block flex justify-between">
+                      Telegram ID
+                      <span className="text-[10px] text-slate-400 normal-case font-normal">(опционально)</span>
+                    </label>
+                    <div className="relative">
+                      <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        type="text"
+                        value={formData.telegramId || ''}
+                        onChange={(e) => setFormData({ ...formData, telegramId: e.target.value })}
+                        className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                        placeholder="Например: 123456789"
                       />
                     </div>
                   </div>

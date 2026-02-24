@@ -5,18 +5,19 @@ class Project(Base):
     __tablename__ = "projects"
 
     id = Column(String, primary_key=True, index=True)
-    clientName = Column(String, nullable=False)
-    address = Column(String)
+    clientName = Column(JSON, nullable=False)
+    address = Column(JSON)
     phone = Column(String)
     totalEstimate = Column(Float)
     startDate = Column(String)
     deadline = Column(String)
     status = Column(String) # 'new' | 'process' | 'finished'
-    currentStage = Column(String)
+    currentStage = Column(JSON)
     contractNumber = Column(String)
+    telegramId = Column(String, nullable=True)
     
-    stage = Column(String, nullable=True)
-    forecast = Column(String, nullable=True)
+    stage = Column(JSON, nullable=True)
+    forecast = Column(JSON, nullable=True)
     finance = Column(JSON, nullable=True)
 
     # Convert relations to JSON to easily serialize/deserialize complex nested types
