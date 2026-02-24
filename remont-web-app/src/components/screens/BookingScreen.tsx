@@ -2,23 +2,42 @@ import React, { useState } from 'react';
 import { translations, Language } from '../../utils/translations';
 import { Check, ArrowLeft, Send } from 'lucide-react';
 
+import { Lead } from '../../utils/types';
+
 interface BookingScreenProps {
   lang: Language;
   onNavigate: (tab: string) => void;
+  onSubmitLead?: (lead: Lead) => void;
 }
 
-export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate }) => {
+export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate, onSubmitLead }) => {
   const t = translations[lang].booking;
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setSubmitted(true);
-    }, 1500);
+
+    const now = new Date();
+    const newLead: Lead = {
+      id: `lead-${Date.now()}`,
+      name: name,
+      phone: phone,
+      source: 'booking',
+      status: 'new',
+      date: now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+      time: now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+    };
+
+    if (onSubmitLead) {
+      await onSubmitLead(newLead);
+    }
+
+    setIsLoading(false);
+    setSubmitted(true);
   };
 
   if (submitted) {
@@ -72,6 +91,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate }
           <input
             placeholder={lang === 'ru' ? 'Алишер' : lang === 'en' ? 'Alisher' : 'Alisher'}
             required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 font-bold outline-none focus:ring-2 focus:ring-[#FFB800]/20"
           />
         </div>
@@ -82,6 +103,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate }
             placeholder="+998 90 123 45 67"
             required
             type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 font-bold outline-none focus:ring-2 focus:ring-[#FFB800]/20"
           />
         </div>

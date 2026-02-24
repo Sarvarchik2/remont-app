@@ -45,7 +45,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         <ImageWithFallback
           src="https://images.unsplash.com/photo-1687669930011-65755484a0a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBwcm9ncmVzcyUyMHRpbWVsaW5lfGVufDF8fHx8MTc3MTAwNTI4Mnww&ixlib=rb-4.1.0&q=80&w=1080"
           alt="Project"
-          className="w-full h-full object-cover grayscale"
+          className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
@@ -60,14 +60,14 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         {/* Project Info Overlay */}
         <div className="absolute bottom-6 left-4 right-4 text-white">
           <div className="flex items-center space-x-2 mb-2">
-            <span className="bg-white text-black text-[10px] font-bold px-3 py-1.5 rounded-full">
+            <span className="bg-primary text-black text-[10px] font-bold px-3 py-1.5 rounded-full">
               {lang === 'ru' ? 'В РАБОТЕ' : lang === 'en' ? 'IN PROGRESS' : 'JARAYONDA'}
             </span>
             <span className="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/20">
               {lang === 'ru' ? 'Договор №' : lang === 'en' ? 'Contract #' : 'Shartnoma №'}{project.contractNumber}
             </span>
           </div>
-          <h1 className="text-2xl font-bold mb-1">{lang === 'ru' ? 'Мой проект' : lang === 'en' ? 'My Project' : 'Mening loyiham'}</h1>
+          <h1 className="text-2xl font-bold mb-1">{typeof project.clientName === 'string' ? project.clientName : project.clientName?.[lang] || (project.clientName as any)?.ru}</h1>
           <p className="text-white/70 text-sm">{typeof project.address === 'string' ? project.address : (project.address as any)?.[lang] || (project.address as any)?.ru}</p>
         </div>
       </div>

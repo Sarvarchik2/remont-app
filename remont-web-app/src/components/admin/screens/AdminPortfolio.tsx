@@ -1,6 +1,8 @@
 import React, { useState, Dispatch, SetStateAction } from 'react';
 import { translations, Language } from '../../../utils/translations';
 import { PortfolioItem } from '../../../utils/types';
+import { AdminModal } from '../AdminModal';
+import { ImageUpload } from '../ImageUpload';
 import { Plus, Trash2, MapPin, Ruler, Clock, X, Image as ImageIcon, Pencil, CheckSquare, List, Type } from 'lucide-react';
 
 interface AdminPortfolioProps {
@@ -180,239 +182,209 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
       </div>
 
       {/* Add/Edit Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
-          <div className="bg-[#F9F9F7] rounded-t-[40px] sm:rounded-[40px] w-full max-w-2xl p-8 animate-slide-up sm:animate-fade-in max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-black text-slate-900">
-                {editingId ? 'Редактировать проект' : 'Новый проект'}
-              </h3>
-              <button onClick={handleClose} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-900 hover:bg-slate-100 transition-colors">
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Tabs */}
-            <div className="flex space-x-2 mb-6 bg-slate-200 p-1 rounded-2xl w-fit">
-              <button
-                onClick={() => setActiveTab('general')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'general' ? 'bg-white text-black shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                Основное
-              </button>
-              <button
-                onClick={() => setActiveTab('details')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'details' ? 'bg-white text-black shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                Детали
-              </button>
-              <button
-                onClick={() => setActiveTab('media')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'media' ? 'bg-white text-black shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                Медиа
-              </button>
-            </div>
-
-            {/* Language Switcher for Inputs */}
-            <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
-              {(['ru', 'uz', 'en'] as const).map(l => (
-                <button
-                  key={l}
-                  onClick={() => setInputLang(l)}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-
-            <form onSubmit={handleSave} className="space-y-6">
-
-              {/* GENERAL TAB */}
-              {activeTab === 'general' && (
-                <div className="space-y-4 animate-fade-in">
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                      Название ЖК <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
-                    </label>
-                    <input
-                      placeholder="ЖК Infinity"
-                      value={typeof newItem.title === 'string' ? newItem.title : (newItem.title as any)?.[inputLang] || ''}
-                      onChange={(e) => {
-                        const newTitle = typeof newItem.title === 'string'
-                          ? { ru: newItem.title, uz: newItem.title, en: newItem.title, [inputLang]: e.target.value }
-                          : { ...(newItem.title as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
-                        setNewItem({ ...newItem, title: newTitle });
-                      }}
-                      required
-                      className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Тип помещения</label>
-                      <div className="relative">
-                        <select
-                          className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-base outline-none shadow-sm appearance-none focus:ring-2 focus:ring-black/5"
-                          value={newItem.type}
-                          onChange={(e) => setNewItem({ ...newItem, type: e.target.value as any })}
-                        >
-                          <option value="living">Гостиная</option>
-                          <option value="kitchen">Кухня</option>
-                          <option value="bath">Ванная</option>
-                          <option value="bedroom">Спальня</option>
-                        </select>
-                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                          <ChevronRight className="rotate-90" size={16} />
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Площадь (м²)</label>
-                      <input
-                        type="number"
-                        placeholder="85"
-                        value={newItem.area}
-                        onChange={(e) => setNewItem({ ...newItem, area: e.target.value })}
-                        required
-                        className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Срок</label>
-                      <input
-                        placeholder="2 мес"
-                        value={newItem.term}
-                        onChange={(e) => setNewItem({ ...newItem, term: e.target.value })}
-                        className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Бюджет</label>
-                      <input
-                        placeholder="150М"
-                        value={newItem.cost}
-                        onChange={(e) => setNewItem({ ...newItem, cost: e.target.value })}
-                        className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Локация</label>
-                    <input
-                      placeholder="Ташкент, Шайхантахур"
-                      value={newItem.location}
-                      onChange={(e) => setNewItem({ ...newItem, location: e.target.value })}
-                      className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* DETAILS TAB */}
-              {activeTab === 'details' && (
-                <div className="space-y-4 animate-fade-in">
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                      Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
-                    </label>
-                    <textarea
-                      placeholder="Подробное описание проекта..."
-                      value={typeof newItem.description === 'string' ? newItem.description : (newItem.description as any)?.[inputLang] || ''}
-                      onChange={(e) => {
-                        const newDesc = typeof newItem.description === 'string'
-                          ? { ru: newItem.description, uz: newItem.description, en: newItem.description, [inputLang]: e.target.value }
-                          : { ...(newItem.description as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
-                        setNewItem({ ...newItem, description: newDesc });
-                      }}
-                      className="w-full bg-white border-none rounded-2xl py-5 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5 min-h-[120px] resize-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Теги (через запятую)</label>
-                    <input
-                      placeholder="Минимализм, Лофт, Светлый"
-                      value={newItem.tags?.join(', ')}
-                      onChange={(e) => handleArrayInput('tags', e.target.value)}
-                      className="w-full bg-white border-none rounded-2xl py-5 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Материалы (через запятую)</label>
-                    <input
-                      placeholder="Knauf, Dulux, Egger"
-                      value={newItem.materials?.join(', ')}
-                      onChange={(e) => handleArrayInput('materials', e.target.value)}
-                      className="w-full bg-white border-none rounded-2xl py-5 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                    />
-                  </div>
-
-                  <div className="flex items-center space-x-3 bg-white p-4 rounded-2xl border border-slate-100">
-                    <button
-                      type="button"
-                      onClick={() => setNewItem({ ...newItem, isNewBuilding: !newItem.isNewBuilding })}
-                      className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors ${newItem.isNewBuilding ? 'bg-primary border-primary text-primary-foreground' : 'border-slate-300 text-transparent'}`}
-                    >
-                      <CheckSquare size={16} />
-                    </button>
-                    <span className="font-bold text-slate-900">Это новостройка</span>
-                  </div>
-                </div>
-              )}
-
-              {/* MEDIA TAB */}
-              {activeTab === 'media' && (
-                <div className="space-y-4 animate-fade-in">
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Фото ДО (URL)</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        placeholder="https://..."
-                        value={newItem.imgBefore}
-                        onChange={(e) => setNewItem({ ...newItem, imgBefore: e.target.value })}
-                        className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-sm outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                      />
-                      <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm text-slate-400 overflow-hidden">
-                        {newItem.imgBefore ? <img src={newItem.imgBefore} alt="preview" className="w-full h-full object-cover" /> : <ImageIcon size={24} />}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Фото ПОСЛЕ (URL)</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        placeholder="https://..."
-                        value={newItem.imgAfter}
-                        onChange={(e) => setNewItem({ ...newItem, imgAfter: e.target.value })}
-                        className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-sm outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                      />
-                      <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm text-slate-400 overflow-hidden">
-                        {newItem.imgAfter ? <img src={newItem.imgAfter} alt="preview" className="w-full h-full object-cover" /> : <ImageIcon size={24} />}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="pt-4 mt-8 border-t border-slate-100">
-                <button type="submit" className="w-full bg-primary text-primary-foreground rounded-2xl py-5 font-bold text-xl shadow-xl shadow-primary/20 active:scale-[0.98] transition-transform hover:bg-primary/90">
-                  {editingId ? 'Сохранить изменения' : 'Добавить проект'}
-                </button>
-              </div>
-            </form>
-          </div>
+      <AdminModal
+        isOpen={isModalOpen}
+        onClose={handleClose}
+        title={editingId ? "Редактировать проект" : "Новый проект"}
+      >
+        {/* Tabs */}
+        <div className="flex space-x-2 mb-6 bg-slate-100 p-1 rounded-2xl w-fit">
+          <button
+            onClick={() => setActiveTab('general')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'general' ? 'bg-white text-black shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+          >
+            Основное
+          </button>
+          <button
+            onClick={() => setActiveTab('details')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'details' ? 'bg-white text-black shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+          >
+            Детали
+          </button>
+          <button
+            onClick={() => setActiveTab('media')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === 'media' ? 'bg-white text-black shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+          >
+            Медиа
+          </button>
         </div>
-      )}
+
+        {/* Language Switcher for Inputs */}
+        <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+          {(['ru', 'uz', 'en'] as const).map(l => (
+            <button
+              key={l}
+              type="button"
+              onClick={() => setInputLang(l)}
+              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+
+        <form onSubmit={handleSave} className="space-y-6">
+
+          {/* GENERAL TAB */}
+          {activeTab === 'general' && (
+            <div className="space-y-4 animate-fade-in">
+              <div>
+                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                  Название ЖК <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                </label>
+                <input
+                  placeholder="ЖК Infinity"
+                  value={typeof newItem.title === 'string' ? newItem.title : (newItem.title as any)?.[inputLang] || ''}
+                  onChange={(e) => {
+                    const newTitle = typeof newItem.title === 'string'
+                      ? { ru: newItem.title, uz: newItem.title, en: newItem.title, [inputLang]: e.target.value }
+                      : { ...(newItem.title as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                    setNewItem({ ...newItem, title: newTitle });
+                  }}
+                  required
+                  className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Тип помещения</label>
+                  <div className="relative">
+                    <select
+                      className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-base outline-none shadow-sm appearance-none focus:ring-2 focus:ring-black/5"
+                      value={newItem.type}
+                      onChange={(e) => setNewItem({ ...newItem, type: e.target.value as any })}
+                    >
+                      <option value="living">Гостиная</option>
+                      <option value="kitchen">Кухня</option>
+                      <option value="bath">Ванная</option>
+                      <option value="bedroom">Спальня</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Площадь (м²)</label>
+                  <input
+                    type="number"
+                    placeholder="85"
+                    value={newItem.area}
+                    onChange={(e) => setNewItem({ ...newItem, area: e.target.value })}
+                    required
+                    className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Срок</label>
+                  <input
+                    placeholder="2 мес"
+                    value={newItem.term}
+                    onChange={(e) => setNewItem({ ...newItem, term: e.target.value })}
+                    className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Бюджет</label>
+                  <input
+                    placeholder="150М"
+                    value={newItem.cost}
+                    onChange={(e) => setNewItem({ ...newItem, cost: e.target.value })}
+                    className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Локация</label>
+                <input
+                  placeholder="Ташкент, Шайхантахур"
+                  value={newItem.location}
+                  onChange={(e) => setNewItem({ ...newItem, location: e.target.value })}
+                  className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* DETAILS TAB */}
+          {activeTab === 'details' && (
+            <div className="space-y-4 animate-fade-in">
+              <div>
+                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                  Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                </label>
+                <textarea
+                  placeholder="Подробное описание проекта..."
+                  value={typeof newItem.description === 'string' ? newItem.description : (newItem.description as any)?.[inputLang] || ''}
+                  onChange={(e) => {
+                    const newDesc = typeof newItem.description === 'string'
+                      ? { ru: newItem.description, uz: newItem.description, en: newItem.description, [inputLang]: e.target.value }
+                      : { ...(newItem.description as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                    setNewItem({ ...newItem, description: newDesc });
+                  }}
+                  className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5 min-h-[120px] resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Теги (через запятую)</label>
+                <input
+                  placeholder="Минимализм, Лофт, Светлый"
+                  value={newItem.tags?.join(', ')}
+                  onChange={(e) => handleArrayInput('tags', e.target.value)}
+                  className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Материалы (через запятую)</label>
+                <input
+                  placeholder="Knauf, Dulux, Egger"
+                  value={newItem.materials?.join(', ')}
+                  onChange={(e) => handleArrayInput('materials', e.target.value)}
+                  className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                />
+              </div>
+
+              <div className="flex items-center space-x-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setNewItem({ ...newItem, isNewBuilding: !newItem.isNewBuilding })}
+                  className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors ${newItem.isNewBuilding ? 'bg-primary border-primary text-black' : 'border-slate-300 text-transparent'}`}
+                >
+                  <CheckSquare size={16} />
+                </button>
+                <span className="font-bold text-slate-900">Это новостройка</span>
+              </div>
+            </div>
+          )}
+
+          {/* MEDIA TAB */}
+          {activeTab === 'media' && (
+            <div className="space-y-6 animate-fade-in">
+              <ImageUpload
+                label="Фото ДО"
+                value={newItem.imgBefore}
+                onUpload={(url) => setNewItem({ ...newItem, imgBefore: url })}
+              />
+              <ImageUpload
+                label="Фото ПОСЛЕ"
+                value={newItem.imgAfter}
+                onUpload={(url) => setNewItem({ ...newItem, imgAfter: url })}
+              />
+            </div>
+          )}
+
+          <div className="pt-4 mt-8 border-t border-slate-100">
+            <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 active:scale-[0.98] transition-transform hover:bg-slate-900">
+              {editingId ? 'Сохранить изменения' : 'Добавить проект'}
+            </button>
+          </div>
+        </form>
+      </AdminModal>
     </div>
   );
 };

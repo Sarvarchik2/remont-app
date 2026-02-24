@@ -22,14 +22,22 @@ from app.features.catalog.router import router as catalog_router
 from app.features.services.router import router as services_router
 from app.features.stories.router import router as stories_router
 from app.features.settings.router import router as settings_router
+from app.features.media_router import router as media_router
+from fastapi.staticfiles import StaticFiles
+import os
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    # Ensure static directory exists
+    os.makedirs("static/uploads", exist_ok=True)
     yield
 
 app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
@@ -47,6 +55,7 @@ app.include_router(catalog_router, prefix="/api/v1/catalog", tags=["catalog"])
 app.include_router(services_router, prefix="/api/v1/services", tags=["services"])
 app.include_router(stories_router, prefix="/api/v1/stories", tags=["stories"])
 app.include_router(settings_router, prefix="/api/v1/settings", tags=["settings"])
+app.include_router(media_router, prefix="/api/v1/media", tags=["media"])
 
 @app.get("/")
 async def root():

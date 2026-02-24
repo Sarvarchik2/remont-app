@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { translations, Language } from '../../../utils/translations';
 import { Project } from '../../../utils/types';
 import { AdminProjectDetail } from './AdminProjectDetail';
+import { AdminModal } from '../AdminModal';
 import { Search, Plus, MapPin, Calendar, X, DollarSign, User, Phone, FileText } from 'lucide-react';
 
 interface AdminProjectsProps {
@@ -89,6 +90,10 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
         lang={lang}
         projects={projects}
         onBack={() => setSelectedProjectId(null)}
+        onUpdateProject={(updatedProject) => {
+          const newProjects = projects.map(p => p.id === updatedProject.id ? updatedProject : p);
+          onUpdateProjects(newProjects);
+        }}
       />
     );
   }
@@ -218,192 +223,179 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
       </div>
 
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-white rounded-[32px] w-full max-w-2xl p-8 shadow-2xl animate-scale-up max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold text-slate-900">
-                Новый проект
-              </h3>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors"
-                type="button"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Language Switcher for Inputs */}
-            <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
-              {(['ru', 'uz', 'en'] as const).map(l => (
-                <button
-                  type="button"
-                  key={l}
-                  onClick={() => setInputLang(l)}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-
-            <form onSubmit={handleCreateProject} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Client Info */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Клиент</h4>
-                  <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-2">ФИО Клиента <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span></label>
-                    <div className="relative">
-                      <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <input
-                        required
-                        type="text"
-                        value={typeof formData.clientName === 'string' ? formData.clientName : formData.clientName?.[inputLang] || ''}
-                        onChange={(e) => {
-                          const newName = typeof formData.clientName === 'string'
-                            ? { ru: formData.clientName, uz: formData.clientName, en: formData.clientName, [inputLang]: e.target.value }
-                            : { ...(formData.clientName as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
-                          setFormData({ ...formData, clientName: newName });
-                        }}
-                        className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                        placeholder="Иванов Иван"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Телефон</label>
-                    <div className="relative">
-                      <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <input
-                        required
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                        placeholder="+998 90 123 45 67"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Object Info */}
-                <div className="space-y-4">
-                  <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Объект</h4>
-                  <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-2">Адрес <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span></label>
-                    <div className="relative">
-                      <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <input
-                        required
-                        type="text"
-                        value={typeof formData.address === 'string' ? formData.address : formData.address?.[inputLang] || ''}
-                        onChange={(e) => {
-                          const newAddr = typeof formData.address === 'string'
-                            ? { ru: formData.address, uz: formData.address, en: formData.address, [inputLang]: e.target.value }
-                            : { ...(formData.address as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
-                          setFormData({ ...formData, address: newAddr });
-                        }}
-                        className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                        placeholder="Улица, Дом, Квартира"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Номер договора</label>
-                    <div className="relative">
-                      <FileText size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <input
-                        required
-                        type="text"
-                        value={formData.contractNumber}
-                        onChange={(e) => setFormData({ ...formData, contractNumber: e.target.value })}
-                        className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                        placeholder="№ 123"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block flex justify-between">
-                      Telegram ID
-                      <span className="text-[10px] text-slate-400 normal-case font-normal">(опционально)</span>
-                    </label>
-                    <div className="relative">
-                      <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <input
-                        type="text"
-                        value={formData.telegramId || ''}
-                        onChange={(e) => setFormData({ ...formData, telegramId: e.target.value })}
-                        className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                        placeholder="Например: 123456789"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Finance & Dates */}
-              <div className="space-y-4">
-                <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Финансы и Сроки</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Сумма сметы</label>
-                    <div className="relative">
-                      <DollarSign size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <input
-                        required
-                        type="number"
-                        value={formData.totalEstimate || ''}
-                        onChange={(e) => setFormData({ ...formData, totalEstimate: Number(e.target.value) })}
-                        className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                        placeholder="0"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Дата начала</label>
-                    <input
-                      required
-                      type="date"
-                      value={formData.startDate}
-                      onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                      className="w-full bg-slate-50 border-none rounded-xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Дедлайн</label>
-                    <input
-                      required
-                      type="date"
-                      value={formData.deadline}
-                      onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                      className="w-full bg-slate-50 border-none rounded-xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 flex gap-4">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="flex-1 bg-slate-100 text-slate-900 rounded-2xl py-4 font-bold text-lg hover:bg-slate-200 transition-colors"
-                >
-                  Отмена
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 bg-primary text-primary-foreground rounded-2xl py-4 font-bold text-lg shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-95 transition-transform"
-                >
-                  Создать проект
-                </button>
-              </div>
-            </form>
-          </div>
+      <AdminModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Новый проект"
+      >
+        {/* Language Switcher for Inputs */}
+        <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+          {(['ru', 'uz', 'en'] as const).map(l => (
+            <button
+              type="button"
+              key={l}
+              onClick={() => setInputLang(l)}
+              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+            >
+              {l}
+            </button>
+          ))}
         </div>
-      )}
+
+        <form onSubmit={handleCreateProject} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Client Info */}
+            <div className="space-y-4">
+              <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Клиент</h4>
+              <div>
+                <label className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-2">ФИО Клиента <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span></label>
+                <div className="relative">
+                  <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    required
+                    type="text"
+                    value={typeof formData.clientName === 'string' ? formData.clientName : formData.clientName?.[inputLang] || ''}
+                    onChange={(e) => {
+                      const newName = typeof formData.clientName === 'string'
+                        ? { ru: formData.clientName, uz: formData.clientName, en: formData.clientName, [inputLang]: e.target.value }
+                        : { ...(formData.clientName as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                      setFormData({ ...formData, clientName: newName });
+                    }}
+                    className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                    placeholder="Иванов Иван"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Телефон</label>
+                <div className="relative">
+                  <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    required
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                    placeholder="+998 90 123 45 67"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Object Info */}
+            <div className="space-y-4">
+              <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Объект</h4>
+              <div>
+                <label className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-2">Адрес <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span></label>
+                <div className="relative">
+                  <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    required
+                    type="text"
+                    value={typeof formData.address === 'string' ? formData.address : formData.address?.[inputLang] || ''}
+                    onChange={(e) => {
+                      const newAddr = typeof formData.address === 'string'
+                        ? { ru: formData.address, uz: formData.address, en: formData.address, [inputLang]: e.target.value }
+                        : { ...(formData.address as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                      setFormData({ ...formData, address: newAddr });
+                    }}
+                    className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                    placeholder="Улица, Дом, Квартира"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Номер договора</label>
+                <div className="relative">
+                  <FileText size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    required
+                    type="text"
+                    value={formData.contractNumber}
+                    onChange={(e) => setFormData({ ...formData, contractNumber: e.target.value })}
+                    className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                    placeholder="№ 123"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block flex justify-between">
+                  Telegram ID
+                  <span className="text-[10px] text-slate-400 normal-case font-normal">(опционально)</span>
+                </label>
+                <div className="relative">
+                  <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={formData.telegramId || ''}
+                    onChange={(e) => setFormData({ ...formData, telegramId: e.target.value })}
+                    className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                    placeholder="Например: 123456789"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Finance & Dates */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Финансы и Сроки</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Сумма сметы</label>
+                <div className="relative">
+                  <DollarSign size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    required
+                    type="number"
+                    value={formData.totalEstimate || ''}
+                    onChange={(e) => setFormData({ ...formData, totalEstimate: Number(e.target.value) })}
+                    className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Дата начала</label>
+                <input
+                  required
+                  type="date"
+                  value={formData.startDate}
+                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                  className="w-full bg-slate-50 border-none rounded-xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Дедлайн</label>
+                <input
+                  required
+                  type="date"
+                  value={formData.deadline}
+                  onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                  className="w-full bg-slate-50 border-none rounded-xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4 flex gap-4">
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(false)}
+              className="flex-1 bg-slate-100 text-slate-900 rounded-2xl py-4 font-bold text-lg hover:bg-slate-200 transition-colors"
+            >
+              Отмена
+            </button>
+            <button
+              type="submit"
+              className="flex-1 bg-primary text-black rounded-2xl py-4 font-bold text-lg shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-95 transition-transform"
+            >
+              Создать проект
+            </button>
+          </div>
+        </form>
+      </AdminModal>
     </div>
   );
 };

@@ -14,49 +14,29 @@ import {
 
 interface DashboardScreenProps {
   lang: Language;
-  onNavigate?: (tab: string, projectId?: string) => void;
+  onNavigate?: (tab: string, params?: any) => void;
   projects?: Project[];
+  tgUser: any;
 }
 
-export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNavigate, projects = [] }) => {
+export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNavigate, projects = [], tgUser }) => {
   const t = translations[lang].dashboard;
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
-  const [tgUser, setTgUser] = useState<any>(null);
 
+  // Auto-login logic
   useEffect(() => {
-    // Check if running inside Telegram Web App
-    const initDataUnsafe = (window as any)?.Telegram?.WebApp?.initDataUnsafe;
-    let user = null;
-
-    if (initDataUnsafe && initDataUnsafe.user) {
-      user = initDataUnsafe.user;
-    } else {
-      // Fallback for local testing in normal browser
-      user = {
-        id: 123456789,
-        first_name: lang === 'ru' ? 'Тестовый' : lang === 'en' ? 'Test' : 'Sinov',
-        last_name: lang === 'ru' ? 'Пользователь' : lang === 'en' ? 'User' : 'Foydalanuvchi',
-        username: 'test_user'
-      };
-    }
-    setTgUser(user);
-  }, [lang]);
-
-  // Auto-login effect
-  useEffect(() => {
-    if (tgUser && projects.length > 0 && !currentProject) {
-      // 1. Check if backend already linked this project to the Telegram User
-      let project = projects.find(p => p.telegramId === String(tgUser.id));
-
-      if (project) {
-        setCurrentProject(project);
+    if (tgUser && projects.length > 0) {
+      // Find project by telegramId
+      const matchedProject = projects.find(p => p.telegramId === String(tgUser.id));
+      if (matchedProject) {
+        setCurrentProject(matchedProject);
       }
     }
-  }, [tgUser, projects, currentProject]);
+  }, [tgUser, projects]);
 
   const handleProjectClick = () => {
     if (currentProject && onNavigate) {
-      onNavigate('project_detail', currentProject.id);
+      onNavigate('project_detail', { id: currentProject.id });
     }
   };
 

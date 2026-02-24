@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { ArrowLeft, Calendar, DollarSign, Plus, Upload, CheckCircle, Clock, FileText, X, ChevronRight, MapPin } from 'lucide-react';
 import { Language, translations } from '../../../utils/translations';
 import { Project } from '../../../utils/types';
+import { AdminModal } from '../AdminModal';
+import { ImageUpload } from '../ImageUpload';
 
 interface AdminProjectDetailProps {
   projectId: string;
   lang: Language;
   projects?: Project[];
   onBack: () => void;
+  onUpdateProject?: (project: Project) => void;
 }
 
-export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectId, lang, projects = [], onBack }) => {
+export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectId, lang, projects = [], onBack, onUpdateProject }) => {
   const t = translations[lang].admin.project;
   const initialProject = projects?.find(p => p.id === projectId) || projects?.[0];
 
@@ -30,6 +33,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
 
   const [eventTitle, setEventTitle] = useState('');
   const [eventDesc, setEventDesc] = useState('');
+  const [eventImageUrl, setEventImageUrl] = useState('');
   const [eventType, setEventType] = useState<'photo' | 'doc' | 'info'>('info');
 
   const totalPaid = project.finance?.paid || project.payments.reduce((sum, p) => sum + p.amount, 0);
@@ -46,13 +50,20 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
       comment: paymentComment
     };
 
+    let updatedProject: Project = { ...project };
+
     setProject(prev => {
       const updatedPaid = (prev.finance?.paid || 0) + Number(paymentAmount);
-      return {
+      updatedProject = {
         ...prev,
         payments: [newPayment, ...prev.payments],
         finance: prev.finance ? { ...prev.finance, paid: updatedPaid, remaining: (prev.finance.total - updatedPaid) } : undefined
       };
+
+      if (onUpdateProject) {
+        onUpdateProject(updatedProject);
+      }
+      return updatedProject;
     });
 
     setPaymentAmount('');
@@ -68,11 +79,20 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
       title: eventTitle,
       description: eventDesc,
       type: eventType,
-      fileUrl: eventType === 'photo' ? 'https://images.unsplash.com/photo-1581094794329-cd1361ddee2d?auto=format&fit=crop&q=80&w=600' : undefined
+      fileUrl: eventType === 'photo' ? eventImageUrl : undefined
     };
-    setProject(prev => ({ ...prev, timeline: [newEvent, ...prev.timeline] }));
+
+    setProject(prev => {
+      const updatedProject = { ...prev, timeline: [newEvent, ...prev.timeline] };
+      if (onUpdateProject) {
+        onUpdateProject(updatedProject);
+      }
+      return updatedProject;
+    });
+
     setEventTitle('');
     setEventDesc('');
+    setEventImageUrl('');
     setIsEventModalOpen(false);
   };
 
@@ -264,101 +284,104 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
       </div>
 
       {/* MODALS */}
-      {isPaymentModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
-          <div className="bg-[#F9F9F7] rounded-t-[40px] sm:rounded-[40px] w-full max-w-md p-8 animate-slide-up shadow-2xl">
-            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-black text-slate-900">Внести платеж</h3>
-              <button onClick={() => setIsPaymentModalOpen(false)} className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-900 hover:bg-slate-100 transition-colors"><X size={20} /></button>
-            </div>
-            <form onSubmit={handleAddPayment} className="space-y-6">
-              <div>
-                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Сумма (UZS)</label>
-                <input
-                  type="number"
-                  placeholder="10 000 000"
-                  value={paymentAmount}
-                  onChange={(e) => setPaymentAmount(e.target.value)}
-                  required
-                  className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm focus:ring-2 focus:ring-black/5 placeholder:text-slate-300"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Дата</label>
-                <input
-                  type="date"
-                  value={paymentDate}
-                  onChange={(e) => setPaymentDate(e.target.value)}
-                  required
-                  className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm focus:ring-2 focus:ring-black/5"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Комментарий</label>
-                <input
-                  placeholder="Например: Аванс"
-                  value={paymentComment}
-                  onChange={(e) => setPaymentComment(e.target.value)}
-                  required
-                  className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm focus:ring-2 focus:ring-black/5 placeholder:text-slate-300"
-                />
-              </div>
-              <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 hover:bg-slate-900 transition-colors active:scale-[0.98]">Сохранить</button>
-            </form>
+      <AdminModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        title="Внести платеж"
+        maxWidth="max-w-md"
+      >
+        <form onSubmit={handleAddPayment} className="space-y-6">
+          <div>
+            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Сумма (UZS)</label>
+            <input
+              type="number"
+              placeholder="10 000 000"
+              value={paymentAmount}
+              onChange={(e) => setPaymentAmount(e.target.value)}
+              required
+              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 shadow-sm"
+            />
           </div>
-        </div>
-      )}
+          <div>
+            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Дата</label>
+            <input
+              type="date"
+              value={paymentDate}
+              onChange={(e) => setPaymentDate(e.target.value)}
+              required
+              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 shadow-sm"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Комментарий</label>
+            <input
+              placeholder="Например: Аванс"
+              value={paymentComment}
+              onChange={(e) => setPaymentComment(e.target.value)}
+              required
+              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 shadow-sm"
+            />
+          </div>
+          <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 hover:bg-slate-900 transition-colors active:scale-[0.98]">Сохранить</button>
+        </form>
+      </AdminModal>
 
-      {isEventModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
-          <div className="bg-[#F9F9F7] rounded-t-[40px] sm:rounded-[40px] w-full max-w-md p-8 animate-slide-up shadow-2xl">
-            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-black text-slate-900">Новое событие</h3>
-              <button onClick={() => setIsEventModalOpen(false)} className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-900 hover:bg-slate-100 transition-colors"><X size={20} /></button>
+      <AdminModal
+        isOpen={isEventModalOpen}
+        onClose={() => setIsEventModalOpen(false)}
+        title="Новое событие"
+        maxWidth="max-w-md"
+      >
+        <form onSubmit={handleAddEvent} className="space-y-6">
+          <div>
+            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Тип события</label>
+            <div className="flex gap-3">
+              {['info', 'photo', 'doc'].map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setEventType(t as any)}
+                  className={`flex-1 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all border ${eventType === t
+                    ? 'bg-black text-white border-black shadow-lg shadow-black/20'
+                    : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300'
+                    }`}
+                >
+                  {t === 'info' ? 'Инфо' : t === 'photo' ? 'Фото' : 'Док'}
+                </button>
+              ))}
             </div>
-            <form onSubmit={handleAddEvent} className="space-y-6">
-              <div>
-                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Тип события</label>
-                <div className="flex gap-3">
-                  {['info', 'photo', 'doc'].map((t) => (
-                    <button
-                      key={t}
-                      type="button"
-                      onClick={() => setEventType(t as any)}
-                      className={`flex-1 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all border ${eventType === t
-                        ? 'bg-black text-white border-black shadow-lg shadow-black/20'
-                        : 'bg-white text-slate-400 border-transparent hover:border-slate-200'
-                        }`}
-                    >
-                      {t === 'info' ? 'Инфо' : t === 'photo' ? 'Фото' : 'Док'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Заголовок</label>
-                <input
-                  placeholder="Стяжка пола завершена"
-                  value={eventTitle}
-                  onChange={(e) => setEventTitle(e.target.value)}
-                  required
-                  className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm focus:ring-2 focus:ring-black/5 placeholder:text-slate-300"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Описание</label>
-                <textarea
-                  placeholder="Детали..."
-                  value={eventDesc}
-                  onChange={(e) => setEventDesc(e.target.value)}
-                  className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 min-h-[100px] resize-none"
-                />
-              </div>
-              <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 hover:bg-slate-900 transition-colors active:scale-[0.98]">Добавить</button>
-            </form>
           </div>
-        </div>
-      )}
+
+          {eventType === 'photo' && (
+            <ImageUpload
+              label="Фото события"
+              value={eventImageUrl}
+              onUpload={(url) => setEventImageUrl(url)}
+            />
+          )}
+
+          <div>
+            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Заголовок</label>
+            <input
+              placeholder="Стяжка пола завершена"
+              value={eventTitle}
+              onChange={(e) => setEventTitle(e.target.value)}
+              required
+              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 shadow-sm"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Описание</label>
+            <textarea
+              placeholder="Детали..."
+              value={eventDesc}
+              onChange={(e) => setEventDesc(e.target.value)}
+              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 min-h-[100px] resize-none shadow-sm"
+            />
+          </div>
+          <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 hover:bg-slate-900 transition-colors active:scale-[0.98]">Добавить</button>
+        </form>
+      </AdminModal>
     </div>
   );
 };

@@ -65,6 +65,27 @@ export default function App() {
   // Catalog State
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
 
+  // User State
+  const [tgUser, setTgUser] = useState<any>(null);
+
+  useEffect(() => {
+    const initDataUnsafe = (window as any)?.Telegram?.WebApp?.initDataUnsafe;
+    let user = null;
+
+    if (initDataUnsafe && initDataUnsafe.user) {
+      user = initDataUnsafe.user;
+    } else {
+      // Fallback for local testing
+      user = {
+        id: 123456789,
+        first_name: lang === 'ru' ? 'Тестовый' : lang === 'en' ? 'Test' : 'Sinov',
+        last_name: lang === 'ru' ? 'Пользователь' : lang === 'en' ? 'User' : 'Foydalanuvchi',
+        username: 'test_user'
+      };
+    }
+    setTgUser(user);
+  }, [lang]);
+
   // --- Backend Sync Logic ---
   useEffect(() => {
     const initData = async () => {
@@ -122,54 +143,34 @@ export default function App() {
   };
 
   // --- Lead Management ---
-  const handleSubmitLead = (data: {
-    area: number;
-    type: 'new' | 'secondary';
-    level: 'economy' | 'standard' | 'premium';
-    estimatedCost: number;
-    name?: string;
-    phone?: string;
-  }) => {
-    const now = new Date();
-    const newLead: Lead = {
-      id: `lead-${Date.now()}`,
-      name: data.name,
-      phone: data.phone,
-      source: 'calculator',
-      status: 'new',
-      date: now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-      time: now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
-      calculatorData: {
-        area: data.area,
-        type: data.type,
-        level: data.level,
-        estimatedCost: data.estimatedCost
-      }
-    };
-
+  const handleSubmitLead = async (lead: Lead) => {
     try {
-      fetch('/api/v1/leads/', {
+      await fetch('/api/v1/leads/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
+        body: JSON.stringify(lead)
       });
-    } catch (e) { console.error('Error posting lead:', e); }
-
-    setLeads((prev: Lead[]) => [newLead, ...prev]);
+      setLeads((prev: Lead[]) => {
+        // If lead already exists (by ID), update it, otherwise prepend
+        const exists = prev.some(l => l.id === lead.id);
+        if (exists) {
+          return prev.map(l => l.id === lead.id ? lead : l);
+        }
+        return [lead, ...prev];
+      });
+    } catch (e) {
+      console.error('Error posting lead:', e);
+      // Fallback to local state if backend is down
+      setLeads((prev: Lead[]) => [lead, ...prev]);
+    }
   };
 
   const handleUpdateLeadStatus = async (leadId: string, status: Lead['status']) => {
     const lead = leads.find((l: Lead) => l.id === leadId);
     if (lead) {
-      try {
-        fetch('/api/v1/leads/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...lead, status })
-        });
-      } catch (e) { }
+      const updatedLead = { ...lead, status };
+      await handleSubmitLead(updatedLead);
     }
-    setLeads((prev: Lead[]) => prev.map((l: Lead) => l.id === leadId ? { ...l, status } : l));
   };
 
   // --- Admin Logic ---
@@ -307,8 +308,8 @@ export default function App() {
       case 'portfolio': return <PortfolioScreen lang={lang} onNavigate={handleClientNavigate} portfolio={portfolio} />;
       case 'portfolio_detail': return <PortfolioDetailScreen lang={lang} onNavigate={handleClientNavigate} projectId={currentPortfolioId!} portfolio={portfolio} />;
       case 'project_detail': return <ProjectDetailScreen lang={lang} onNavigate={handleClientNavigate} projectId={currentProjectId} projects={projects} />;
-      case 'dashboard': return <DashboardScreen lang={lang} onNavigate={handleClientNavigate} projects={projects} />;
-      case 'booking': return <BookingScreen lang={lang} onNavigate={handleClientNavigate} />;
+      case 'dashboard': return <DashboardScreen lang={lang} onNavigate={handleClientNavigate} projects={projects} tgUser={tgUser} />;
+      case 'booking': return <BookingScreen lang={lang} onNavigate={handleClientNavigate} onSubmitLead={handleSubmitLead} />;
       default: return <HomeScreen lang={lang} onNavigate={handleClientNavigate} />;
     }
   };

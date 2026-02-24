@@ -11,14 +11,7 @@ interface CalculatorPrices {
 
 interface CalculatorScreenProps {
   lang: Language;
-  onSubmitLead?: (data: {
-    area: number;
-    type: 'new' | 'secondary';
-    level: 'economy' | 'standard' | 'premium';
-    estimatedCost: number;
-    name?: string;
-    phone?: string;
-  }) => void;
+  onSubmitLead?: (lead: Lead) => void;
   prices?: CalculatorPrices;
   onNavigate: (tab: string, params?: any) => void;
 }
@@ -50,16 +43,25 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
     setShowContactModal(true);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (onSubmitLead) {
-      onSubmitLead({
-        area,
-        type,
-        level,
-        estimatedCost: total,
+      const now = new Date();
+      const newLead: Lead = {
+        id: `lead-${Date.now()}`,
         name: name || undefined,
-        phone: phone || undefined
-      });
+        phone: phone || undefined,
+        source: 'calculator',
+        status: 'new',
+        date: now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+        time: now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+        calculatorData: {
+          area,
+          type,
+          level,
+          estimatedCost: total
+        }
+      };
+      await onSubmitLead(newLead);
     }
     setShowContactModal(false);
     setShowSuccessModal(true);

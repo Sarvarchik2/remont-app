@@ -1,6 +1,8 @@
 import React, { useState, Dispatch, SetStateAction } from 'react';
 import { translations, Language } from '../../../utils/translations';
 import { CatalogItem } from '../../../utils/types';
+import { AdminModal } from '../AdminModal';
+import { ImageUpload } from '../ImageUpload';
 import { Plus, Trash2, Pencil, Search, X, Image as ImageIcon, Check } from 'lucide-react';
 
 interface AdminCatalogProps {
@@ -172,115 +174,99 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
             </div>
 
             {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
-                    <div className="bg-[#F9F9F7] rounded-t-[40px] sm:rounded-[40px] w-full max-w-lg p-8 animate-slide-up sm:animate-fade-in max-h-[90vh] overflow-y-auto shadow-2xl">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-2xl font-black text-slate-900">
-                                {editingId ? 'Редактировать товар' : 'Новый товар'}
-                            </h3>
-                            <button onClick={handleClose} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-900 hover:bg-slate-100 transition-colors">
-                                <X size={20} />
+            <AdminModal
+                isOpen={isModalOpen}
+                onClose={handleClose}
+                title={editingId ? "Редактировать товар" : "Новый товар"}
+            >
+                <form onSubmit={handleSave} className="space-y-6">
+                    {/* Language Switcher for Inputs */}
+                    <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+                        {(['ru', 'uz', 'en'] as const).map(l => (
+                            <button
+                                type="button"
+                                key={l}
+                                onClick={() => setInputLang(l)}
+                                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+                            >
+                                {l}
                             </button>
-                        </div>
-
-                        <form onSubmit={handleSave} className="space-y-5">
-                            {/* Language Switcher for Inputs */}
-                            <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
-                                {(['ru', 'uz', 'en'] as const).map(l => (
-                                    <button
-                                        type="button"
-                                        key={l}
-                                        onClick={() => setInputLang(l)}
-                                        className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
-                                    >
-                                        {l}
-                                    </button>
-                                ))}
-                            </div>
-
-                            <div>
-                                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                                    Название <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
-                                </label>
-                                <input
-                                    placeholder="Например: Люстра Kristall"
-                                    value={newItem.title?.[inputLang] || ''}
-                                    onChange={(e) => handleTitleChange(inputLang, e.target.value)}
-                                    required
-                                    autoFocus
-                                    className="w-full bg-white border-none rounded-2xl py-4 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                                    Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
-                                </label>
-                                <textarea
-                                    placeholder="Подробное описание товара..."
-                                    value={newItem.description?.[inputLang] || ''}
-                                    onChange={(e) => {
-                                        setNewItem(prev => ({
-                                            ...prev,
-                                            description: { ...prev.description, [inputLang]: e.target.value } as Record<Language, string>
-                                        }));
-                                    }}
-                                    className="w-full bg-white border-none rounded-2xl py-4 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5 min-h-[100px] resize-none"
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Цена (UZS)</label>
-                                    <input
-                                        type="number"
-                                        placeholder="1 500 000"
-                                        value={newItem.price || ''}
-                                        onChange={(e) => setNewItem({ ...newItem, price: Number(e.target.value) })}
-                                        required
-                                        className="w-full bg-white border-none rounded-2xl py-4 px-6 font-bold text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Категория</label>
-                                    <select
-                                        value={newItem.category || 'materials'}
-                                        onChange={(e) => setNewItem({ ...newItem, category: e.target.value as any })}
-                                        className="w-full bg-white border-none rounded-2xl py-4 px-6 font-bold text-base outline-none shadow-sm focus:ring-2 focus:ring-black/5 appearance-none"
-                                    >
-                                        <option value="materials">Материалы</option>
-                                        <option value="furniture">Мебель</option>
-                                        <option value="lighting">Освещение</option>
-                                        <option value="plumbing">Сантехника</option>
-                                        <option value="decor">Декор</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Изображение (URL)</label>
-                                <div className="flex items-center gap-3">
-                                    <input
-                                        placeholder="https://..."
-                                        value={newItem.image || ''}
-                                        onChange={(e) => setNewItem({ ...newItem, image: e.target.value })}
-                                        className="w-full bg-white border-none rounded-2xl py-4 px-6 font-medium text-sm outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                                    />
-                                    <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm text-slate-400 overflow-hidden shrink-0">
-                                        {newItem.image ? <img src={newItem.image} alt="preview" className="w-full h-full object-cover" /> : <ImageIcon size={20} />}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button type="submit" className="w-full bg-primary text-black rounded-2xl py-4 font-bold text-lg shadow-xl shadow-primary/20 mt-4 hover:bg-primary/90 transition-colors">
-                                {editingId ? 'Сохранить изменения' : 'Добавить товар'}
-                            </button>
-                        </form>
+                        ))}
                     </div>
-                </div>
-            )}
+
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                            Название <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                        </label>
+                        <input
+                            placeholder="Например: Люстра Kristall"
+                            value={newItem.title?.[inputLang] || ''}
+                            onChange={(e) => handleTitleChange(inputLang, e.target.value)}
+                            required
+                            autoFocus
+                            className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                            Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                        </label>
+                        <textarea
+                            placeholder="Подробное описание товара..."
+                            value={newItem.description?.[inputLang] || ''}
+                            onChange={(e) => {
+                                setNewItem(prev => ({
+                                    ...prev,
+                                    description: { ...prev.description, [inputLang]: e.target.value } as Record<Language, string>
+                                }));
+                            }}
+                            className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5 min-h-[100px] resize-none"
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Цена (UZS)</label>
+                            <input
+                                type="number"
+                                placeholder="1 500 000"
+                                value={newItem.price || ''}
+                                onChange={(e) => setNewItem({ ...newItem, price: Number(e.target.value) })}
+                                required
+                                className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Категория</label>
+                            <select
+                                value={newItem.category || 'materials'}
+                                onChange={(e) => setNewItem({ ...newItem, category: e.target.value as any })}
+                                className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-base outline-none shadow-sm focus:ring-2 focus:ring-black/5 appearance-none"
+                            >
+                                <option value="materials">Материалы</option>
+                                <option value="furniture">Мебель</option>
+                                <option value="lighting">Освещение</option>
+                                <option value="plumbing">Сантехника</option>
+                                <option value="decor">Декор</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <ImageUpload
+                        label="Фото товара"
+                        value={newItem.image || ''}
+                        onUpload={(url) => setNewItem({ ...newItem, image: url })}
+                    />
+
+                    <div className="pt-4 border-t border-slate-100">
+                        <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/10 transition-transform active:scale-[0.98]">
+                            {editingId ? 'Сохранить изменения' : 'Добавить товар'}
+                        </button>
+                    </div>
+                </form>
+            </AdminModal>
         </div>
     );
 };

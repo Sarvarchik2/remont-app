@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../../utils/translations';
 import { ServiceCategory, ServiceItem } from '../../../utils/types';
+import { AdminModal } from '../AdminModal';
 import { Plus, Trash2, Pencil, ChevronDown, ChevronRight, X, Save, Hammer, Zap, Paintbrush, Grid3x3, Droplet, Home as HomeIcon, Wrench, LucideIcon } from 'lucide-react';
 
 interface AdminServicesProps {
@@ -290,139 +291,133 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
       </div>
 
       {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4">
-          <div className="bg-[#F9F9F7] rounded-t-[40px] sm:rounded-[40px] w-full max-w-lg p-8 animate-slide-up sm:animate-fade-in max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-black text-slate-900">
-                {modalMode === 'category'
-                  ? (editingCategory ? 'Редактировать категорию' : 'Новая категория')
-                  : (editingService ? 'Редактировать услугу' : 'Новая услуга')
-                }
-              </h3>
-              <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-900 hover:bg-slate-100 transition-colors">
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Language Switcher for Inputs */}
-            <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
-              {(['ru', 'uz', 'en'] as const).map(l => (
-                <button
-                  key={l}
-                  onClick={() => setInputLang(l)}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {modalMode === 'category' ? (
-                // Category Form
-                <>
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                      Название <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
-                    </label>
-                    <input
-                      placeholder="Например: Электрика"
-                      value={typeof formData.title === 'string' ? formData.title : (formData.title as any)?.[inputLang] || ''}
-                      onChange={(e) => {
-                        const newTitle = typeof formData.title === 'string'
-                          ? { ru: formData.title, uz: formData.title, en: formData.title, [inputLang]: e.target.value }
-                          : { ...(formData.title as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
-                        setFormData({ ...formData, title: newTitle });
-                      }}
-                      required
-                      autoFocus
-                      className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Иконка</label>
-                    <div className="grid grid-cols-4 gap-2">
-                      {ICON_OPTIONS.map((opt) => (
-                        <button
-                          key={opt.name}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, icon: opt.name })}
-                          className={`p-4 rounded-2xl flex items-center justify-center transition-all ${formData.icon === opt.name
-                            ? 'bg-black text-white shadow-lg scale-105'
-                            : 'bg-white text-slate-400 hover:bg-slate-50'
-                            }`}
-                        >
-                          <opt.icon size={24} />
-                        </button>
-                      ))}
-                    </div>
-                    <p className="text-xs text-slate-400 mt-4 px-2">
-                      * Цены редактируются внутри списка услуг (кнопка редактирования напротив каждой услуги)
-                    </p>
-                  </div>
-                </>
-              ) : (
-                // Service Form
-                <>
-                  <div>
-                    <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                      Название услуги <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
-                    </label>
-                    <input
-                      placeholder="Например: Установка розетки"
-                      value={typeof formData.name === 'string' ? formData.name : (formData.name as any)?.[inputLang] || ''}
-                      onChange={(e) => {
-                        const newName = typeof formData.name === 'string'
-                          ? { ru: formData.name, uz: formData.name, en: formData.name, [inputLang]: e.target.value }
-                          : { ...(formData.name as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
-                        setFormData({ ...formData, name: newName });
-                      }}
-                      required
-                      autoFocus
-                      className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Цена</label>
-                      <input
-                        placeholder="35 000"
-                        value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        required
-                        className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                        Ед. измерения <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
-                      </label>
-                      <input
-                        placeholder="сум/шт"
-                        value={typeof formData.unit === 'string' ? formData.unit : (formData.unit as any)?.[inputLang] || ''}
-                        onChange={(e) => {
-                          const newUnit = typeof formData.unit === 'string'
-                            ? { ru: formData.unit, uz: formData.unit, en: formData.unit, [inputLang]: e.target.value }
-                            : { ...(formData.unit as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
-                          setFormData({ ...formData, unit: newUnit });
-                        }}
-                        required
-                        className="w-full bg-white border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-
-              <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 mt-6 active:scale-[0.98] transition-transform hover:bg-slate-900">
-                Сохранить
-              </button>
-            </form>
-          </div>
+      <AdminModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={modalMode === 'category'
+          ? (editingCategory ? 'Редактировать категорию' : 'Новая категория')
+          : (editingService ? 'Редактировать услугу' : 'Новая услуга')
+        }
+      >
+        {/* Language Switcher for Inputs */}
+        <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+          {(['ru', 'uz', 'en'] as const).map(l => (
+            <button
+              key={l}
+              type="button"
+              onClick={() => setInputLang(l)}
+              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+            >
+              {l}
+            </button>
+          ))}
         </div>
-      )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {modalMode === 'category' ? (
+            // Category Form
+            <>
+              <div>
+                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                  Название <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                </label>
+                <input
+                  placeholder="Например: Электрика"
+                  value={typeof formData.title === 'string' ? formData.title : (formData.title as any)?.[inputLang] || ''}
+                  onChange={(e) => {
+                    const newTitle = typeof formData.title === 'string'
+                      ? { ru: formData.title, uz: formData.title, en: formData.title, [inputLang]: e.target.value }
+                      : { ...(formData.title as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                    setFormData({ ...formData, title: newTitle });
+                  }}
+                  required
+                  autoFocus
+                  className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Иконка</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {ICON_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.name}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, icon: opt.name })}
+                      className={`p-4 rounded-2xl flex items-center justify-center transition-all ${formData.icon === opt.name
+                        ? 'bg-black text-white shadow-lg scale-105'
+                        : 'bg-slate-50 text-slate-400 hover:bg-slate-100'
+                        }`}
+                    >
+                      <opt.icon size={24} />
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-slate-400 mt-4 px-2">
+                  * Цены редактируются внутри списка услуг
+                </p>
+              </div>
+            </>
+          ) : (
+            // Service Form
+            <>
+              <div>
+                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                  Название услуги <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                </label>
+                <input
+                  placeholder="Например: Установка розетки"
+                  value={typeof formData.name === 'string' ? formData.name : (formData.name as any)?.[inputLang] || ''}
+                  onChange={(e) => {
+                    const newName = typeof formData.name === 'string'
+                      ? { ru: formData.name, uz: formData.name, en: formData.name, [inputLang]: e.target.value }
+                      : { ...(formData.name as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                    setFormData({ ...formData, name: newName });
+                  }}
+                  required
+                  autoFocus
+                  className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Цена</label>
+                  <input
+                    placeholder="35 000"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    required
+                    className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
+                    Ед. измерения <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                  </label>
+                  <input
+                    placeholder="сум/шт"
+                    value={typeof formData.unit === 'string' ? formData.unit : (formData.unit as any)?.[inputLang] || ''}
+                    onChange={(e) => {
+                      const newUnit = typeof formData.unit === 'string'
+                        ? { ru: formData.unit, uz: formData.unit, en: formData.unit, [inputLang]: e.target.value }
+                        : { ...(formData.unit as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
+                      setFormData({ ...formData, unit: newUnit });
+                    }}
+                    required
+                    className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
+          <div className="pt-4 border-t border-slate-100">
+            <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 mt-6 active:scale-[0.98] transition-transform hover:bg-slate-900">
+              Сохранить
+            </button>
+          </div>
+        </form>
+      </AdminModal>
     </div>
   );
 };
