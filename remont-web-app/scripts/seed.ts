@@ -9,15 +9,14 @@ register({
     }
 });
 
-import {
-    MOCK_LEADS,
-    INITIAL_CALCULATOR_PRICES,
-    STORIES_DATA,
-    MOCK_PROJECTS,
-    MOCK_PORTFOLIO,
-    MOCK_SERVICES,
-    MOCK_CATALOG
-} from '../src/utils/mockData';
+import { INITIAL_CALCULATOR_PRICES } from '../src/utils/constants';
+
+const MOCK_LEADS: any[] = [];
+const STORIES_DATA: any[] = [];
+const MOCK_PROJECTS: any[] = [];
+const MOCK_PORTFOLIO: any[] = [];
+const MOCK_SERVICES: any[] = [];
+const MOCK_CATALOG: any[] = [];
 
 const BASE_URL = 'http://localhost:8000/api/v1';
 

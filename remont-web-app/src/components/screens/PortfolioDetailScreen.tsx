@@ -160,7 +160,9 @@ export const PortfolioDetailScreen: React.FC<PortfolioDetailScreenProps> = ({
                     <ImageWithFallback src={member.avatar} className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <div className="font-bold text-slate-900 text-sm">{member.name}</div>
+                    <div className="font-bold text-slate-900 text-sm">
+                      {typeof member.name === 'string' ? member.name : member.name?.[lang] || (member.name as any)?.ru}
+                    </div>
                     <div className="text-xs text-slate-400">{member.role}</div>
                   </div>
                 </div>

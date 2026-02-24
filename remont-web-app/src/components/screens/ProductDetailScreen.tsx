@@ -1,6 +1,6 @@
 import React from 'react';
 import { translations, Language } from '../../utils/translations';
-import { CatalogItem } from '../../utils/mockData';
+import { CatalogItem } from '../../utils/types';
 import { ArrowLeft, Share2, MessageCircle, Check } from 'lucide-react';
 
 interface ProductDetailScreenProps {

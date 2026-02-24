@@ -167,7 +167,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 <div className="space-y-2">
                   <div className="flex items-center text-slate-500 text-sm font-medium">
                     <MapPin size={16} className="mr-2 text-slate-300 flex-shrink-0" />
-                    <span className="truncate">{p.address}</span>
+                    <span className="truncate">{displayAddress}</span>
                   </div>
                   <div className="flex items-center text-slate-500 text-sm font-medium">
                     <Calendar size={16} className="mr-2 text-slate-300 flex-shrink-0" />
