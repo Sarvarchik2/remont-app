@@ -35,8 +35,10 @@ export interface TimelineEvent {
     fileUrl?: string;
     comment?: string; // Additional field
     status?: 'completed' | 'in_progress' | 'planned'; // Status for timeline
-    mediaUrl?: string; // For photos and videos
-    videoUrl?: string; // For video content
+    mediaUrl?: string; // For photos and videos (Legacy)
+    videoUrl?: string; // For video content (Legacy)
+    mediaUrls?: string[]; // Multiple files (photos/videos)
+    videoUrls?: string[]; // Multiple videos
     message?: string; // Text message from admin
 }
 

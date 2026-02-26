@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, DollarSign, Plus, Upload, CheckCircle, Clock, FileText, X, ChevronRight, MapPin } from 'lucide-react';
+import { ArrowLeft, Calendar, DollarSign, Plus, Upload, CheckCircle, Clock, FileText, X, ChevronRight, MapPin, Play, Video } from 'lucide-react';
 import { Language, translations } from '../../../utils/translations';
 import { Project } from '../../../utils/types';
 import { AdminModal } from '../AdminModal';
-import { ImageUpload } from '../ImageUpload';
+import { MediaUpload } from '../MediaUpload';
+import { FullscreenMedia } from '../../ui/FullscreenMedia';
 
 interface AdminProjectDetailProps {
   projectId: string;
@@ -39,8 +40,9 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
 
   const [eventTitle, setEventTitle] = useState('');
   const [eventDesc, setEventDesc] = useState('');
-  const [eventImageUrl, setEventImageUrl] = useState('');
-  const [eventType, setEventType] = useState<'photo' | 'doc' | 'info'>('info');
+  const [eventMediaUrls, setEventMediaUrls] = useState<string[]>([]);
+  const [eventType, setEventType] = useState<'photo' | 'doc' | 'info' | 'video'>('info');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const totalPaid = project.finance?.paid || project.payments.reduce((sum, p) => sum + p.amount, 0);
   const totalEstimate = project.finance?.total || project.totalEstimate;
@@ -81,7 +83,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
       title: eventTitle,
       description: eventDesc,
       type: eventType,
-      fileUrl: eventType === 'photo' ? eventImageUrl : undefined
+      mediaUrls: eventType === 'photo' || eventType === 'video' ? eventMediaUrls : undefined
     };
 
     const updatedProject = { ...project, timeline: [newEvent, ...project.timeline] };
@@ -93,7 +95,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
 
     setEventTitle('');
     setEventDesc('');
-    setEventImageUrl('');
+    setEventMediaUrls([]);
     setIsEventModalOpen(false);
   };
 
@@ -254,15 +256,24 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
                     </p>
                   )}
 
-                  {event.fileUrl && event.type === 'photo' && (
-                    <div className="w-full sm:w-64 h-40 rounded-2xl overflow-hidden border border-slate-200 shadow-sm mt-3 hover:shadow-md transition-shadow cursor-pointer">
-                      <img src={event.fileUrl} alt="Event" className="w-full h-full object-cover transition-all duration-500" />
-                    </div>
-                  )}
-
-                  {event.mediaUrl && event.type === 'photo' && (
-                    <div className="w-full sm:w-64 h-40 rounded-2xl overflow-hidden border border-slate-200 shadow-sm mt-3 hover:shadow-md transition-shadow cursor-pointer">
-                      <img src={event.mediaUrl} alt="Event" className="w-full h-full object-cover transition-all duration-500" />
+                  {((event.mediaUrls && event.mediaUrls.length > 0) || (event.fileUrl || event.mediaUrl)) && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3">
+                      {(event.mediaUrls || [event.fileUrl || event.mediaUrl]).filter(Boolean).map((url, i) => (
+                        <div
+                          key={i}
+                          className="aspect-square rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer relative"
+                          onClick={() => setSelectedImage(url as string)}
+                        >
+                          {url?.toString().match(/\.(mp4|webm|ogg|mov)$/) ? (
+                            <div className="w-full h-full flex items-center justify-center bg-slate-900">
+                              <Video className="text-white opacity-40" size={24} />
+                              <Play className="absolute text-white" size={20} />
+                            </div>
+                          ) : (
+                            <img src={url as string} alt="Event" className="w-full h-full object-cover transition-all duration-500" />
+                          )}
+                        </div>
+                      ))}
                     </div>
                   )}
 
@@ -337,7 +348,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
           <div>
             <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Тип события</label>
             <div className="flex gap-3">
-              {['info', 'photo', 'doc'].map((t) => (
+              {['info', 'photo', 'video', 'doc'].map((t) => (
                 <button
                   key={t}
                   type="button"
@@ -347,17 +358,18 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
                     : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300'
                     }`}
                 >
-                  {t === 'info' ? 'Инфо' : t === 'photo' ? 'Фото' : 'Док'}
+                  {t === 'info' ? 'Инфо' : t === 'photo' ? 'Фото' : t === 'video' ? 'Видео' : 'Док'}
                 </button>
               ))}
             </div>
           </div>
 
-          {eventType === 'photo' && (
-            <ImageUpload
-              label="Фото события"
-              value={eventImageUrl}
-              onUpload={(url) => setEventImageUrl(url)}
+          {(eventType === 'photo' || eventType === 'video') && (
+            <MediaUpload
+              label={eventType === 'photo' ? "Фото события" : "Видео события"}
+              values={eventMediaUrls}
+              onUpload={(urls) => setEventMediaUrls(urls)}
+              accept={eventType === 'photo' ? "image/*" : "video/*"}
             />
           )}
 
@@ -383,6 +395,12 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
           <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 hover:bg-slate-900 transition-colors active:scale-[0.98]">Добавить</button>
         </form>
       </AdminModal>
+
+      <FullscreenMedia
+        isOpen={!!selectedImage}
+        onClose={() => setSelectedImage(null)}
+        currentUrl={selectedImage || ''}
+      />
     </div>
   );
 };

@@ -29,18 +29,17 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, la
               <button
                 key={item.id}
                 onClick={() => onTabChange(item.id)}
-                className={`flex flex-col items-center justify-center w-14 h-12 rounded-full transition-all duration-300 ${
-                  isActive 
-                    ? 'text-primary scale-105' 
+                className={`flex flex-col items-center justify-center w-14 h-12 rounded-full transition-all duration-300 ${isActive
+                    ? 'text-primary scale-105'
                     : 'text-slate-400 hover:text-slate-600'
-                }`}
+                  }`}
               >
                 <div className={`flex items-center justify-center w-10 h-8 rounded-full mb-0.5 transition-all ${isActive ? 'bg-primary text-primary-foreground shadow-lg' : ''}`}>
-                   <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                  <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
                 </div>
-                <span className={`text-[9px] font-bold ${isActive ? 'text-primary' : 'text-transparent scale-0'} transition-all duration-300 absolute -bottom-5`}>
+                {/* <span className={`text-[9px] font-bold ${isActive ? 'text-primary' : 'text-transparent scale-0'} transition-all duration-300 absolute -bottom-5`}>
                    {item.label}
-                </span>
+                </span> */}
               </button>
             );
           })}

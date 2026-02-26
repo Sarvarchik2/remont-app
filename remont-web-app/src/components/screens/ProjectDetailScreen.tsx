@@ -12,9 +12,11 @@ import {
   CreditCard,
   Package,
   Video,
-  MessageSquare
+  MessageSquare,
+  Play
 } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
+import { FullscreenMedia } from '../ui/FullscreenMedia';
 
 interface ProjectDetailScreenProps {
   lang: Language;
@@ -30,6 +32,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
   projects = []
 }) => {
   const [activeTab, setActiveTab] = useState<'finance' | 'payments' | 'timeline'>('finance');
+  const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
 
   // Find project by ID or use first one as fallback
   const project = projects.find(p => p.id === String(projectId)) || projects[0];
@@ -100,8 +103,14 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
       <div className="px-4">
         {activeTab === 'finance' && <FinanceTab project={project} progressPercentage={progressPercentage} lang={lang} />}
         {activeTab === 'payments' && <PaymentsTab project={project} lang={lang} />}
-        {activeTab === 'timeline' && <TimelineTab project={project} lang={lang} />}
+        {activeTab === 'timeline' && <TimelineTab project={project} lang={lang} onSelectMedia={setSelectedMedia} />}
       </div>
+
+      <FullscreenMedia
+        isOpen={!!selectedMedia}
+        onClose={() => setSelectedMedia(null)}
+        currentUrl={selectedMedia || ''}
+      />
     </div>
   );
 };
@@ -251,7 +260,7 @@ const PaymentsTab = ({ project, lang }: any) => (
 );
 
 // Timeline Tab - Chat Style
-const TimelineTab = ({ project, lang }: any) => (
+const TimelineTab = ({ project, lang, onSelectMedia }: any) => (
   <div className="space-y-4">
     <div className="flex items-center justify-between mb-3">
       <h3 className="font-bold text-slate-900 text-lg">{lang === 'ru' ? 'Хронология работ' : lang === 'en' ? 'Work timeline' : 'Ish xronologiyasi'}</h3>
@@ -303,29 +312,37 @@ const TimelineTab = ({ project, lang }: any) => (
             </p>
           )}
 
-          {/* Photo */}
-          {event.type === 'photo' && (event.mediaUrl || event.fileUrl) && (
-            <div className="rounded-2xl overflow-hidden mb-2 border border-slate-100">
-              <ImageWithFallback
-                src={event.mediaUrl || event.fileUrl}
-                alt="Work progress"
-                className="w-full h-64 object-cover"
-              />
-            </div>
-          )}
-
-          {/* Video */}
-          {event.type === 'video' && event.videoUrl && (
-            <div className="rounded-2xl overflow-hidden bg-slate-50 mb-2 border border-slate-100">
-              <div className="aspect-video flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-2 shadow-sm border border-slate-100">
-                    <Video size={28} className="text-slate-900" />
+          {/* Media Content (Multiple or Single) */}
+          {((event.mediaUrls && event.mediaUrls.length > 0) || (event.mediaUrl || event.fileUrl)) && (
+            <div className={`grid gap-2 mb-2 ${(event.mediaUrls?.length || 1) > 1 ? 'grid-cols-2' : 'grid-cols-1'
+              }`}>
+              {(event.mediaUrls || [event.mediaUrl || event.fileUrl]).filter(Boolean).map((url: any, i: number) => {
+                const isVideo = url.match(/\.(mp4|webm|ogg|mov)$/) || event.type === 'video';
+                return (
+                  <div
+                    key={i}
+                    className="rounded-2xl overflow-hidden border border-slate-100 relative cursor-pointer aspect-square"
+                    onClick={() => onSelectMedia(url)}
+                  >
+                    {isVideo ? (
+                      <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                        <Video size={32} className="text-slate-400" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-12 h-12 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center">
+                            <Play size={24} className="text-white fill-white" />
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <ImageWithFallback
+                        src={url}
+                        alt="Work progress"
+                        className="w-full h-full object-cover"
+                      />
+                    )}
                   </div>
-                  <p className="text-sm text-slate-600 font-medium">{lang === 'ru' ? 'Видео доступно' : lang === 'en' ? 'Video available' : 'Video mavjud'}</p>
-                  <p className="text-xs text-slate-400 mt-1">{lang === 'ru' ? 'Нажмите для просмотра' : lang === 'en' ? 'Click to watch' : 'Ko\'rish uchun bosing'}</p>
-                </div>
-              </div>
+                );
+              })}
             </div>
           )}
 
