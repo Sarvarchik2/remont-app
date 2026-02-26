@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Upload, X, ImageIcon, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ImageUploadProps {
     onUpload: (url: string) => void;
@@ -15,6 +16,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, value, label
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Check file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Файл слишком большой. Максимум 5MB');
+            return;
+        }
+
         setIsUploading(true);
         const formData = new FormData();
         formData.append('file', file);
@@ -28,13 +35,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, value, label
             if (response.ok) {
                 const data = await response.json();
                 onUpload(data.url);
+                toast.success('Фото загружено успешно!');
             } else {
-                console.error('Upload failed');
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.detail || 'Не удалось загрузить файл';
+                console.error('Upload failed:', errorMessage);
+                toast.error(`Ошибка загрузки: ${errorMessage}`);
             }
         } catch (error) {
             console.error('Error uploading file:', error);
+            toast.error('Ошибка при соединении с сервером');
         } finally {
             setIsUploading(false);
+            if (e.target) e.target.value = ''; // Reset input to allow re-uploading the same file
         }
     };
 

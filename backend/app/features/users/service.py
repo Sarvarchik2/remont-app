@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.features.users.repository import UserRepository
 from app.features.users.schemas import UserCreate
@@ -21,7 +22,12 @@ class UserService:
         # Additional business rules can be validated here
         return await self.repository.create(user_in)
 
-    from typing import Optional
+    async def list_users(self) -> list[User]:
+        """
+        Retrieve all users.
+        """
+        return await self.repository.get_all()
+
     async def get_user_by_telegram_id(self, telegram_id: str) -> Optional[User]:
         """
         Retrieve a user. Further logic can be placed here if necessary.

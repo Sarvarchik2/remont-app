@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../../utils/translations';
-import { Project } from '../../../utils/types';
+import { Project, AppUser } from '../../../utils/types';
 import { AdminProjectDetail } from './AdminProjectDetail';
 import { AdminModal } from '../AdminModal';
 import { Search, Plus, MapPin, Calendar, X, DollarSign, User, Phone, FileText } from 'lucide-react';
@@ -9,14 +9,19 @@ interface AdminProjectsProps {
   lang: Language;
   projects: Project[];
   onUpdateProjects: (projects: Project[]) => void;
+  users: AppUser[];
 }
 
-export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, onUpdateProjects }) => {
+export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, onUpdateProjects, users }) => {
   const t = translations[lang].admin.project || { title: 'Проекты' };
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [inputLang, setInputLang] = useState<Language>('ru');
+
+  // Client Search State
+  const [clientSearchQuery, setClientSearchQuery] = useState('');
+  const [isClientSearchOpen, setIsClientSearchOpen] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState<Partial<Project>>({
@@ -248,6 +253,72 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
             {/* Client Info */}
             <div className="space-y-4">
               <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Клиент</h4>
+
+              <div className="relative">
+                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Выбрать из базы</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Поиск клиента..."
+                    value={clientSearchQuery}
+                    onFocus={() => setIsClientSearchOpen(true)}
+                    onChange={(e) => setClientSearchQuery(e.target.value)}
+                    className="w-full bg-slate-50 border-none rounded-xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
+                  />
+                  {isClientSearchOpen && (
+                    <div className="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl max-h-[250px] overflow-y-auto animate-in fade-in slide-in-from-top-2">
+                      <div className="p-2 border-b border-slate-50 sticky top-0 bg-white/90 backdrop-blur-sm flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4">
+                        <span>Найдено: {(Array.isArray(users) ? users : []).filter(u =>
+                          (u.first_name || '').toLowerCase().includes(clientSearchQuery.toLowerCase()) ||
+                          (u.last_name || '').toLowerCase().includes(clientSearchQuery.toLowerCase()) ||
+                          (u.username || '').toLowerCase().includes(clientSearchQuery.toLowerCase())
+                        ).length}</span>
+                        <button onClick={() => setIsClientSearchOpen(false)} className="text-slate-300 hover:text-slate-900 transition-colors">Закрыть</button>
+                      </div>
+                      {(Array.isArray(users) ? users : []).filter(u =>
+                        (u.first_name || '').toLowerCase().includes(clientSearchQuery.toLowerCase()) ||
+                        (u.last_name || '').toLowerCase().includes(clientSearchQuery.toLowerCase()) ||
+                        (u.username || '').toLowerCase().includes(clientSearchQuery.toLowerCase())
+                      ).map(u => (
+                        <div
+                          key={u.id}
+                          className="px-4 py-3 hover:bg-slate-50 cursor-pointer flex flex-col transition-colors border-b border-slate-50 last:border-none"
+                          onClick={() => {
+                            const fullName = `${u.first_name} ${u.last_name || ''}`.trim();
+                            setFormData({
+                              ...formData,
+                              clientName: { ru: fullName, uz: fullName, en: fullName },
+                              telegramId: u.telegram_id,
+                              phone: u.phone || formData.phone || '+998 '
+                            });
+                            setClientSearchQuery(fullName);
+                            setIsClientSearchOpen(false);
+                          }}
+                        >
+                          <span className="font-bold text-slate-900 text-sm">{u.first_name} {u.last_name || ''}</span>
+                          <span className="text-xs text-[#24A1DE] font-bold">@{u.username || 'no_username'} • {u.telegram_id}</span>
+                        </div>
+                      ))}
+                      {(Array.isArray(users) ? users : []).filter(u =>
+                        (u.first_name || '').toLowerCase().includes(clientSearchQuery.toLowerCase()) ||
+                        (u.last_name || '').toLowerCase().includes(clientSearchQuery.toLowerCase()) ||
+                        (u.username || '').toLowerCase().includes(clientSearchQuery.toLowerCase())
+                      ).length === 0 && (
+                          <div className="p-8 text-center text-slate-400 text-sm font-medium italic">
+                            Клиент не найден
+                          </div>
+                        )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="relative py-2 flex items-center">
+                <div className="flex-grow border-t border-slate-100"></div>
+                <span className="flex-shrink-0 mx-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest">Или введите вручную</span>
+                <div className="flex-grow border-t border-slate-100"></div>
+              </div>
+
               <div>
                 <label className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-2">ФИО Клиента <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span></label>
                 <div className="relative">

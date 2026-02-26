@@ -3,6 +3,7 @@ import { translations, Language } from '../../utils/translations';
 import {
   LayoutDashboard,
   Users,
+  User,
   Briefcase,
   Image,
   Settings,
@@ -36,6 +37,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   const navItems = [
     { id: 'dashboard', label: t.dashboard, icon: LayoutDashboard },
     { id: 'crm', label: t.crm, icon: Users },
+    { id: 'users', label: t.users, icon: User },
     { id: 'projects', label: t.projects, icon: Briefcase },
     { id: 'portfolio', label: t.portfolio, icon: Image },
     { id: 'stories', label: t.stories, icon: LayoutTemplate },
@@ -83,8 +85,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
               key={item.id}
               onClick={() => handleNavClick(item.id)}
               className={`w-full flex items-center space-x-4 px-6 py-4 rounded-[24px] transition-all duration-200 ${activeTab === item.id
-                  ? 'bg-primary text-primary-foreground shadow-xl shadow-primary/20 font-bold scale-[1.02]'
-                  : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900 font-medium'
+                ? 'bg-primary text-primary-foreground shadow-xl shadow-primary/20 font-bold scale-[1.02]'
+                : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900 font-medium'
                 }`}
             >
               <item.icon size={20} strokeWidth={activeTab === item.id ? 2.5 : 2} />

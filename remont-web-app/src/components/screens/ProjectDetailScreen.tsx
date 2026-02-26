@@ -290,6 +290,11 @@ const TimelineTab = ({ project, lang }: any) => (
           </div>
 
           {/* Message Content */}
+          {event.title && (
+            <h4 className="font-bold text-slate-900 mb-1">
+              {typeof event.title === 'string' ? event.title : event.title?.[lang] || (event.title as any)?.ru}
+            </h4>
+          )}
           {(event.message || event.description) && (
             <p className="text-sm text-slate-700 mb-3 leading-relaxed">
               {typeof (event.message || event.description) === 'string'
@@ -299,12 +304,12 @@ const TimelineTab = ({ project, lang }: any) => (
           )}
 
           {/* Photo */}
-          {event.type === 'photo' && event.mediaUrl && (
+          {event.type === 'photo' && (event.mediaUrl || event.fileUrl) && (
             <div className="rounded-2xl overflow-hidden mb-2 border border-slate-100">
               <ImageWithFallback
-                src={event.mediaUrl}
+                src={event.mediaUrl || event.fileUrl}
                 alt="Work progress"
-                className="w-full h-64 object-cover grayscale"
+                className="w-full h-64 object-cover"
               />
             </div>
           )}

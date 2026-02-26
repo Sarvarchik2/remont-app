@@ -13,13 +13,19 @@ class UserRepository:
         result = await self.session.execute(select(User).where(User.telegram_id == telegram_id))
         return result.scalars().first()
 
+    async def get_all(self) -> list[User]:
+        """ Fetch all users from db """
+        result = await self.session.execute(select(User))
+        return result.scalars().all()
+
     async def create(self, user_in: UserCreate) -> User:
         """ Save a new user to db """
         db_user = User(
             telegram_id=user_in.telegram_id,
             username=user_in.username,
             first_name=user_in.first_name,
-            last_name=user_in.last_name
+            last_name=user_in.last_name,
+            phone=user_in.phone
         )
         self.session.add(db_user)
         await self.session.commit()

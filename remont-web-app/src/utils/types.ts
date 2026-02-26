@@ -8,6 +8,16 @@ export interface Story {
     videoUrl?: string; // Optional
 }
 
+export interface AppUser {
+    id: number;
+    telegram_id: string;
+    username?: string;
+    first_name?: string;
+    last_name?: string;
+    phone?: string;
+    is_active: boolean;
+}
+
 export interface Payment {
     id: string;
     date: string;

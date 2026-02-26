@@ -175,6 +175,7 @@ export const translations = {
       nav: {
         dashboard: "Дашборд",
         crm: "Заявки (CRM)",
+        users: "Пользователи",
         projects: "Проекты",
         portfolio: "Портфолио",
         services: "Услуги",
@@ -391,6 +392,7 @@ export const translations = {
       nav: {
         dashboard: "Dashbord",
         crm: "Arizalar (CRM)",
+        users: "Foydalanuvchilar",
         projects: "Loyihalar",
         portfolio: "Portfolio",
         services: "Xizmatlar",
@@ -607,6 +609,7 @@ export const translations = {
       nav: {
         dashboard: "Dashboard",
         crm: "Leads (CRM)",
+        users: "Users",
         projects: "Projects",
         portfolio: "Portfolio",
         services: "Services",

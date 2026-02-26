@@ -23,6 +23,12 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
 
   const [project, setProject] = useState<Project>(initialProject);
 
+  React.useEffect(() => {
+    if (initialProject) {
+      setProject(initialProject);
+    }
+  }, [initialProject]);
+
   // Form States
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
@@ -50,21 +56,17 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
       comment: paymentComment
     };
 
-    let updatedProject: Project = { ...project };
+    const updatedPaid = (project.finance?.paid || 0) + Number(paymentAmount);
+    const updatedProject: Project = {
+      ...project,
+      payments: [newPayment, ...project.payments],
+      finance: project.finance ? { ...project.finance, paid: updatedPaid, remaining: (project.finance.total - updatedPaid) } : undefined
+    };
 
-    setProject(prev => {
-      const updatedPaid = (prev.finance?.paid || 0) + Number(paymentAmount);
-      updatedProject = {
-        ...prev,
-        payments: [newPayment, ...prev.payments],
-        finance: prev.finance ? { ...prev.finance, paid: updatedPaid, remaining: (prev.finance.total - updatedPaid) } : undefined
-      };
-
-      if (onUpdateProject) {
-        onUpdateProject(updatedProject);
-      }
-      return updatedProject;
-    });
+    setProject(updatedProject);
+    if (onUpdateProject) {
+      onUpdateProject(updatedProject);
+    }
 
     setPaymentAmount('');
     setPaymentComment('');
@@ -82,13 +84,12 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
       fileUrl: eventType === 'photo' ? eventImageUrl : undefined
     };
 
-    setProject(prev => {
-      const updatedProject = { ...prev, timeline: [newEvent, ...prev.timeline] };
-      if (onUpdateProject) {
-        onUpdateProject(updatedProject);
-      }
-      return updatedProject;
-    });
+    const updatedProject = { ...project, timeline: [newEvent, ...project.timeline] };
+    setProject(updatedProject);
+
+    if (onUpdateProject) {
+      onUpdateProject(updatedProject);
+    }
 
     setEventTitle('');
     setEventDesc('');
@@ -113,11 +114,11 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
           </button>
           <div>
             <h1 className="text-3xl font-extrabold text-slate-900 leading-tight mb-2">
-              {typeof initialProject.clientName === 'string' ? initialProject.clientName : initialProject.clientName?.[lang] || (initialProject.clientName as any)?.ru}
+              {typeof project.clientName === 'string' ? project.clientName : project.clientName?.[lang] || (project.clientName as any)?.ru}
             </h1>
             <p className="text-slate-500 font-medium flex items-center">
               <MapPin size={16} className="mr-2 text-primary" />
-              {typeof initialProject.address === 'string' ? initialProject.address : initialProject.address?.[lang] || (initialProject.address as any)?.ru}
+              {typeof project.address === 'string' ? project.address : project.address?.[lang] || (project.address as any)?.ru}
             </p>
           </div>
         </div>
@@ -255,13 +256,13 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
 
                   {event.fileUrl && event.type === 'photo' && (
                     <div className="w-full sm:w-64 h-40 rounded-2xl overflow-hidden border border-slate-200 shadow-sm mt-3 hover:shadow-md transition-shadow cursor-pointer">
-                      <img src={event.fileUrl} alt="Event" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                      <img src={event.fileUrl} alt="Event" className="w-full h-full object-cover transition-all duration-500" />
                     </div>
                   )}
 
                   {event.mediaUrl && event.type === 'photo' && (
                     <div className="w-full sm:w-64 h-40 rounded-2xl overflow-hidden border border-slate-200 shadow-sm mt-3 hover:shadow-md transition-shadow cursor-pointer">
-                      <img src={event.mediaUrl} alt="Event" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+                      <img src={event.mediaUrl} alt="Event" className="w-full h-full object-cover transition-all duration-500" />
                     </div>
                   )}
 

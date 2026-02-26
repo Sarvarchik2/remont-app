@@ -9,6 +9,7 @@ import {
   Filter,
   CheckCircle2,
   X,
+  Search,
   User
 } from 'lucide-react';
 import { Lead } from '../../../utils/types';
@@ -22,10 +23,15 @@ interface AdminCRMProps {
 export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLeadStatus }) => {
   const t = translations[lang].admin.crm;
   const [filter, setFilter] = useState<'all' | Lead['status']>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredLeads = filter === 'all'
-    ? leads
-    : leads.filter(lead => lead.status === filter);
+  const filteredLeads = leads.filter(lead => {
+    const matchesFilter = filter === 'all' || lead.status === filter;
+    const name = typeof lead.name === 'string' ? lead.name : lead.name?.[lang] || (lead.name as any)?.ru || '';
+    const matchesSearch = name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (lead.phone || '').includes(searchQuery);
+    return matchesFilter && matchesSearch;
+  });
 
   const getStatusColor = (status: Lead['status']) => {
     switch (status) {
@@ -70,21 +76,34 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
   return (
     <div className="space-y-6 animate-fade-in pb-24 md:pb-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <div>
           <p className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1">
             CRM
           </p>
           <h1 className="text-3xl font-bold text-slate-900">{t.title}</h1>
         </div>
+      </div>
 
-        {/* Filters Desktop */}
-        <div className="hidden md:flex items-center space-x-2 bg-white p-1 rounded-full border border-slate-200">
+      {/* Search & Filters */}
+      <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <div className="relative flex-1">
+          <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400">
+            <Search size={20} />
+          </div>
+          <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Поиск по имени или телефону..."
+            className="w-full pl-14 pr-4 py-4 rounded-[24px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary transition-colors placeholder:text-slate-400 shadow-sm"
+          />
+        </div>
+        <div className="flex items-center space-x-2 bg-white p-1 rounded-[24px] border border-slate-200 overflow-x-auto hide-scrollbar">
           {['all', 'new', 'contacted', 'measuring'].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f as any)}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${filter === f
+              className={`px-6 py-3 rounded-full text-xs font-bold transition-all whitespace-nowrap ${filter === f
                 ? 'bg-black text-white shadow-md'
                 : 'text-slate-500 hover:bg-slate-50'
                 }`}
@@ -98,53 +117,13 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {stats.map((stat, idx) => (
           <div key={idx} className={`${stat.bg} rounded-[24px] p-6 border border-slate-100 shadow-sm flex flex-col justify-between h-32`}>
             <div className={`text-4xl font-bold ${stat.color} mb-1`}>{stat.value}</div>
             <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">{stat.label}</div>
           </div>
         ))}
-      </div>
-
-      {/* Filters Mobile */}
-      <div className="md:hidden flex items-center space-x-2 overflow-x-auto scrollbar-hide pb-2">
-        <button
-          onClick={() => setFilter('all')}
-          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${filter === 'all'
-            ? 'bg-black text-white shadow-lg'
-            : 'bg-white text-slate-400 border border-slate-200'
-            }`}
-        >
-          Все ({leads.length})
-        </button>
-        <button
-          onClick={() => setFilter('new')}
-          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${filter === 'new'
-            ? 'bg-slate-900 text-white shadow-lg'
-            : 'bg-white text-slate-400 border border-slate-200'
-            }`}
-        >
-          Новые ({leads.filter(l => l.status === 'new').length})
-        </button>
-        <button
-          onClick={() => setFilter('contacted')}
-          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${filter === 'contacted'
-            ? 'bg-slate-200 text-slate-800'
-            : 'bg-white text-slate-400 border border-slate-200'
-            }`}
-        >
-          Связались
-        </button>
-        <button
-          onClick={() => setFilter('measuring')}
-          className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${filter === 'measuring'
-            ? 'bg-slate-600 text-white shadow-lg'
-            : 'bg-white text-slate-400 border border-slate-200'
-            }`}
-        >
-          Замер
-        </button>
       </div>
 
       {/* Leads List Grid */}

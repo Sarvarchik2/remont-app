@@ -12,7 +12,7 @@ import { CatalogScreen } from './components/screens/CatalogScreen';
 import { ProductDetailScreen } from './components/screens/ProductDetailScreen';
 import { PortfolioDetailScreen } from './components/screens/PortfolioDetailScreen';
 import { translations, Language } from './utils/translations';
-import { Lead, Story, Project, PortfolioItem, ServiceCategory, CatalogItem } from './utils/types';
+import { Lead, Story, Project, PortfolioItem, ServiceCategory, CatalogItem, AppUser } from './utils/types';
 import { INITIAL_CALCULATOR_PRICES } from './utils/constants';
 import { Toaster, toast } from 'sonner';
 
@@ -26,6 +26,7 @@ import { AdminServices } from './components/admin/screens/AdminServices';
 import { AdminSettings } from './components/admin/screens/AdminSettings';
 import { AdminStories } from './components/admin/screens/AdminStories';
 import { AdminCatalog } from './components/admin/screens/AdminCatalog';
+import { AdminUsers } from './components/admin/screens/AdminUsers';
 import { Lock, ArrowLeft } from 'lucide-react';
 
 export default function App() {
@@ -65,6 +66,9 @@ export default function App() {
   // Catalog State
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
 
+  // Users State
+  const [users, setUsers] = useState<any[]>([]);
+
   // User State
   const [tgUser, setTgUser] = useState<any>(null);
 
@@ -84,7 +88,27 @@ export default function App() {
       };
     }
     setTgUser(user);
+    if (user) {
+      handleRegisterUser(user);
+    }
   }, [lang]);
+
+  const handleRegisterUser = async (user: any) => {
+    try {
+      await fetch('/api/v1/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          telegram_id: String(user.id),
+          username: user.username,
+          first_name: user.first_name,
+          last_name: user.last_name
+        })
+      });
+    } catch (e) {
+      console.error("User registration failed", e);
+    }
+  };
 
   // --- Backend Sync Logic ---
   useEffect(() => {
@@ -103,8 +127,12 @@ export default function App() {
 
         const fetchFeature = async (path: string, setState: React.Dispatch<any>) => {
           const res = await fetch(`${url}/${path}/`);
-          const data = await res.json();
-          setState(data);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+              setState(data);
+            }
+          }
         };
 
         await Promise.all([
@@ -113,7 +141,8 @@ export default function App() {
           fetchFeature('projects', setProjects),
           fetchFeature('portfolio', setPortfolio),
           fetchFeature('services', setServices),
-          fetchFeature('catalog', setCatalog)
+          fetchFeature('catalog', setCatalog),
+          fetchFeature('users', setUsers)
         ]);
 
       } catch (error) {
@@ -141,6 +170,35 @@ export default function App() {
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const globalStyles = (
+    <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+        
+        body {
+          font-family: 'Manrope', sans-serif;
+          background-color: #F9F9F7;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .pb-safe-bottom {
+          padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+      `}</style>
+  );
 
   // --- Lead Management ---
   const handleSubmitLead = async (lead: Lead) => {
@@ -197,16 +255,29 @@ export default function App() {
     isBatch: boolean = true
   ): React.Dispatch<React.SetStateAction<T>> => {
     return (action: React.SetStateAction<T>) => {
+      // 1. Calculate the new state first so we can send it to the backend
+      // and update the local state immediately.
       originalSetter((prevState: T) => {
-        const newState = typeof action === 'function' ? (action as Function)(prevState) : action;
+        const newState = typeof action === 'function' ? (action as any)(prevState) : action;
 
-        try {
-          fetch(`/api/v1/${endpoint}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(isBatch ? newState : { id: 1, prices: newState })
-          });
-        } catch (e) { }
+        // 2. Perform the Side Effect (API call) outside of the return statement
+        // but inside a microtask or simply after the state calculation
+        // To be safe and clean, we calculate it here but return newState.
+        // The console warning "Cannot update a component while rendering..." 
+        // usually happens if we trigger a nested state update.
+
+        // We capture the newState to use it for the API call below.
+        setTimeout(async () => {
+          try {
+            await fetch(`/api/v1/${endpoint}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(isBatch ? newState : { id: 1, prices: newState })
+            });
+          } catch (e) {
+            console.error(`Failed to sync ${endpoint}`, e);
+          }
+        }, 0);
 
         return newState;
       });
@@ -224,7 +295,8 @@ export default function App() {
     switch (adminTab) {
       case 'dashboard': return <AdminDashboard lang={lang} onNavigate={handleAdminNavigate} leads={leads} />;
       case 'crm': return <AdminCRM lang={lang} leads={leads} onUpdateLeadStatus={handleUpdateLeadStatus} />;
-      case 'projects': return <AdminProjects lang={lang} projects={projects} onUpdateProjects={proxySetProjects} />;
+      case 'users': return <AdminUsers lang={lang} users={users} />;
+      case 'projects': return <AdminProjects lang={lang} projects={projects} onUpdateProjects={proxySetProjects} users={users} />;
       case 'portfolio': return <AdminPortfolio lang={lang} portfolio={portfolio} onUpdatePortfolio={proxySetPortfolio} />;
       case 'stories': return <AdminStories lang={lang} stories={stories} onUpdateStories={proxySetStories} />;
       case 'catalog': return <AdminCatalog lang={lang} catalog={catalog} onUpdateCatalog={proxySetCatalog} />;
@@ -286,14 +358,18 @@ export default function App() {
   // 2. Admin Panel
   if (viewMode === 'admin') {
     return (
-      <AdminLayout
-        activeTab={adminTab}
-        onNavigate={handleAdminNavigate}
-        lang={lang}
-        onLogout={() => setViewMode('client')}
-      >
-        {renderAdminScreen()}
-      </AdminLayout>
+      <>
+        {globalStyles}
+        <AdminLayout
+          activeTab={adminTab}
+          onNavigate={handleAdminNavigate}
+          lang={lang}
+          onLogout={() => setViewMode('client')}
+        >
+          {renderAdminScreen()}
+        </AdminLayout>
+        <Toaster position="top-center" richColors />
+      </>
     );
   }
 
@@ -318,32 +394,7 @@ export default function App() {
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
-        
-        body {
-          font-family: 'Manrope', sans-serif;
-          background-color: #F9F9F7;
-        }
-        
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .pb-safe-bottom {
-          padding-bottom: env(safe-area-inset-bottom, 20px);
-        }
-      `}</style>
+      {globalStyles}
       <div className="min-h-screen text-slate-900 font-sans">
         {activeTab !== 'booking' && activeTab !== 'project_detail' && (
           <Header
