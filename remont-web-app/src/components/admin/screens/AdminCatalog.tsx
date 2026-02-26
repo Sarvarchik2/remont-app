@@ -274,17 +274,31 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                         </div>
                     </div>
 
-                    <div className="space-y-4">
-                        <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
-                            <ImageIcon size={16} className="text-primary" />
-                            Фотография
-                        </h4>
-                        <MediaUpload
-                            multiple={false}
-                            values={newItem.image ? [newItem.image] : []}
-                            onUpload={(urls) => setNewItem({ ...newItem, image: urls[0] })}
-                            label={null as any}
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-4">
+                            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                                <ImageIcon size={16} className="text-primary" />
+                                Главное фото
+                            </h4>
+                            <MediaUpload
+                                multiple={false}
+                                values={newItem.image ? [newItem.image] : []}
+                                onUpload={(urls) => setNewItem({ ...newItem, image: urls[0] })}
+                                label={null as any}
+                            />
+                        </div>
+                        <div className="space-y-4">
+                            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                                <ImageIcon size={16} className="text-primary" />
+                                Галерея (Multiple)
+                            </h4>
+                            <MediaUpload
+                                multiple={true}
+                                values={newItem.images || []}
+                                onUpload={(urls) => setNewItem({ ...newItem, images: urls })}
+                                label={null as any}
+                            />
+                        </div>
                     </div>
 
                     <div className="pt-6 border-t border-slate-100 flex gap-4">

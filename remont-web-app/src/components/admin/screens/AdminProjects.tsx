@@ -117,7 +117,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <div>
           <p className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-            Projects
+            PROJECTS
           </p>
           <h1 className="text-3xl font-bold text-slate-900">{t.title}</h1>
         </div>

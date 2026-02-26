@@ -366,33 +366,36 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
 
           {(eventType === 'photo' || eventType === 'video') && (
             <MediaUpload
-              label={eventType === 'photo' ? "Фото события" : "Видео события"}
+              label={eventType === 'photo' ? "Фото объекта" : "Видео объекта"}
               values={eventMediaUrls}
               onUpload={(urls) => setEventMediaUrls(urls)}
               accept={eventType === 'photo' ? "image/*" : "video/*"}
+              multiple={true}
             />
           )}
 
-          <div>
-            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Заголовок</label>
-            <input
-              placeholder="Стяжка пола завершена"
-              value={eventTitle}
-              onChange={(e) => setEventTitle(e.target.value)}
-              required
-              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 shadow-sm"
-            />
+          <div className="space-y-4">
+            <div>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block leading-none">Заголовок</label>
+              <input
+                placeholder="Стяжка пола завершена"
+                value={eventTitle}
+                onChange={(e) => setEventTitle(e.target.value)}
+                required
+                className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
+              />
+            </div>
+            <div>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block leading-none">Описание / Сообщение</label>
+              <textarea
+                placeholder="Работы выполнены в полном объеме..."
+                value={eventDesc}
+                onChange={(e) => setEventDesc(e.target.value)}
+                className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-5 px-6 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[120px] resize-none"
+              />
+            </div>
           </div>
-          <div>
-            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Описание</label>
-            <textarea
-              placeholder="Детали..."
-              value={eventDesc}
-              onChange={(e) => setEventDesc(e.target.value)}
-              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 min-h-[100px] resize-none shadow-sm"
-            />
-          </div>
-          <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 hover:bg-slate-900 transition-colors active:scale-[0.98]">Добавить</button>
+          <button type="submit" className="w-full bg-black text-white rounded-[24px] py-5 font-black text-xl shadow-2xl shadow-black/20 hover:bg-slate-900 transition-all active:scale-[0.98] uppercase tracking-widest">Добавить в ленту</button>
         </form>
       </AdminModal>
 
