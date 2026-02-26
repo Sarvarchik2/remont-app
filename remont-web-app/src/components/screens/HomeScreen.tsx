@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { translations, Language } from '../../utils/translations';
 import { StoriesModal } from '../ui/StoriesModal';
 import { Story, PortfolioItem, ServiceCategory } from '../../utils/types';
@@ -13,15 +13,15 @@ interface HomeScreenProps {
   services?: ServiceCategory[];
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({
+export const HomeScreen = ({
   lang,
   onNavigate,
   stories = [],
   portfolio = [],
   services = []
-}) => {
+}: HomeScreenProps) => {
   const t = translations[lang].home;
-  const [storyIndex, setStoryIndex] = useState<number | null>(null);
+  const [storyIndex, setStoryIndex] = React.useState<number | null>(null);
 
   return (
     <div className="pb-32 bg-[#F9F9F7] min-h-screen">

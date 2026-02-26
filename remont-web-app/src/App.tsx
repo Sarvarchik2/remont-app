@@ -255,31 +255,23 @@ export default function App() {
     isBatch: boolean = true
   ): React.Dispatch<React.SetStateAction<T>> => {
     return (action: React.SetStateAction<T>) => {
-      // 1. Calculate the new state first so we can send it to the backend
-      // and update the local state immediately.
-      originalSetter((prevState: T) => {
-        const newState = typeof action === 'function' ? (action as any)(prevState) : action;
+      originalSetter((prev) => {
+        const newValue = typeof action === 'function' ? (action as any)(prev) : action;
 
-        // 2. Perform the Side Effect (API call) outside of the return statement
-        // but inside a microtask or simply after the state calculation
-        // To be safe and clean, we calculate it here but return newState.
-        // The console warning "Cannot update a component while rendering..." 
-        // usually happens if we trigger a nested state update.
-
-        // We capture the newState to use it for the API call below.
-        setTimeout(async () => {
+        // Perform background sync to backend
+        Promise.resolve().then(async () => {
           try {
             await fetch(`/api/v1/${endpoint}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(isBatch ? newState : { id: 1, prices: newState })
+              body: JSON.stringify(isBatch ? newValue : newValue),
             });
           } catch (e) {
-            console.error(`Failed to sync ${endpoint}`, e);
+            console.error('Failed to sync state:', e);
           }
-        }, 0);
+        });
 
-        return newState;
+        return newValue;
       });
     };
   };
@@ -374,22 +366,6 @@ export default function App() {
   }
 
   // 3. Client App
-  const renderClientScreen = () => {
-    switch (activeTab) {
-      case 'home': return <HomeScreen lang={lang} onNavigate={handleClientNavigate} stories={stories} portfolio={portfolio} services={services} />;
-      case 'calc': return <CalculatorScreen lang={lang} onNavigate={handleClientNavigate} onSubmitLead={handleSubmitLead} prices={calculatorPrices} tgUser={tgUser} />;
-      case 'services': return <ServicesScreen lang={lang} onNavigate={handleClientNavigate} categories={services} />;
-      case 'catalog': return <CatalogScreen lang={lang} onNavigate={handleClientNavigate} catalog={catalog} />;
-      case 'product_detail': return <ProductDetailScreen lang={lang} onNavigate={handleClientNavigate} productId={currentProductId || ''} catalog={catalog} tgUser={tgUser} onSubmitLead={handleSubmitLead} />;
-      case 'portfolio': return <PortfolioScreen lang={lang} onNavigate={handleClientNavigate} portfolio={portfolio} />;
-      case 'portfolio_detail': return <PortfolioDetailScreen lang={lang} onNavigate={handleClientNavigate} projectId={currentPortfolioId!} portfolio={portfolio} />;
-      case 'project_detail': return <ProjectDetailScreen lang={lang} onNavigate={handleClientNavigate} projectId={currentProjectId} projects={projects} />;
-      case 'dashboard': return <DashboardScreen lang={lang} onNavigate={handleClientNavigate} projects={projects} tgUser={tgUser} />;
-      case 'booking': return <BookingScreen lang={lang} onNavigate={handleClientNavigate} onSubmitLead={handleSubmitLead} tgUser={tgUser} />;
-      default: return <HomeScreen lang={lang} onNavigate={handleClientNavigate} />;
-    }
-  };
-
   const showBottomNav = ['home', 'calc', 'portfolio', 'dashboard', 'services', 'catalog'].includes(activeTab);
 
   return (
@@ -404,7 +380,96 @@ export default function App() {
         )}
 
         <main className={`max-w-md mx-auto w-full ${activeTab === 'project_detail' ? '' : 'pt-4'}`}>
-          {renderClientScreen()}
+          {activeTab === 'home' && (
+            <HomeScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              stories={stories}
+              portfolio={portfolio}
+              services={services}
+            />
+          )}
+          {activeTab === 'calc' && (
+            <CalculatorScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              onSubmitLead={handleSubmitLead}
+              prices={calculatorPrices}
+              tgUser={tgUser}
+            />
+          )}
+          {activeTab === 'services' && (
+            <ServicesScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              categories={services}
+            />
+          )}
+          {activeTab === 'catalog' && (
+            <CatalogScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              catalog={catalog}
+            />
+          )}
+          {activeTab === 'product_detail' && (
+            <ProductDetailScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              productId={currentProductId || ''}
+              catalog={catalog}
+              tgUser={tgUser}
+              onSubmitLead={handleSubmitLead}
+            />
+          )}
+          {activeTab === 'portfolio' && (
+            <PortfolioScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              portfolio={portfolio}
+            />
+          )}
+          {activeTab === 'portfolio_detail' && (
+            <PortfolioDetailScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              projectId={currentPortfolioId!}
+              portfolio={portfolio}
+            />
+          )}
+          {activeTab === 'project_detail' && (
+            <ProjectDetailScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              projectId={currentProjectId}
+              projects={projects}
+            />
+          )}
+          {activeTab === 'dashboard' && (
+            <DashboardScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              projects={projects}
+              tgUser={tgUser}
+            />
+          )}
+          {activeTab === 'booking' && (
+            <BookingScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              onSubmitLead={handleSubmitLead}
+              tgUser={tgUser}
+            />
+          )}
+          {!['home', 'calc', 'services', 'catalog', 'product_detail', 'portfolio', 'portfolio_detail', 'project_detail', 'dashboard', 'booking'].includes(activeTab) && (
+            <HomeScreen
+              lang={lang}
+              onNavigate={handleClientNavigate}
+              stories={stories}
+              portfolio={portfolio}
+              services={services}
+            />
+          )}
         </main>
 
         {showBottomNav && (

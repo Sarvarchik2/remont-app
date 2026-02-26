@@ -80,10 +80,10 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
     const newEvent = {
       id: Date.now().toString(),
       date: new Date().toISOString().split('T')[0],
-      title: eventTitle,
-      description: eventDesc,
+      title: { ru: eventTitle, uz: eventTitle, en: eventTitle },
+      description: { ru: eventDesc, uz: eventDesc, en: eventDesc },
       type: eventType,
-      mediaUrls: eventType === 'photo' || eventType === 'video' ? eventMediaUrls : undefined
+      mediaUrls: eventMediaUrls.length > 0 ? eventMediaUrls : undefined
     };
 
     const updatedProject = { ...project, timeline: [newEvent, ...project.timeline] };
@@ -265,9 +265,13 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
                           onClick={() => setSelectedImage(url as string)}
                         >
                           {url?.toString().match(/\.(mp4|webm|ogg|mov)$/) ? (
-                            <div className="w-full h-full flex items-center justify-center bg-slate-900">
-                              <Video className="text-white opacity-40" size={24} />
-                              <Play className="absolute text-white" size={20} />
+                            <div className="w-full h-full relative group-hover:bg-black transition-colors">
+                              <video src={url as string} className="w-full h-full object-cover opacity-80" muted playsInline />
+                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div className="w-10 h-10 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
+                                  <Play className="text-white fill-white ml-1" size={18} />
+                                </div>
+                              </div>
                             </div>
                           ) : (
                             <img src={url as string} alt="Event" className="w-full h-full object-cover transition-all duration-500" />

@@ -93,14 +93,13 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({
                 {values.map((url, idx) => (
                     <div key={idx} className="relative aspect-square rounded-[28px] overflow-hidden border-2 border-slate-50 group bg-slate-50 transition-all hover:scale-[1.02] hover:shadow-xl shadow-sm">
                         {isVideo(url) ? (
-                            <div className="w-full h-full flex items-center justify-center bg-slate-900 group-hover:bg-black transition-colors">
-                                <Video className="text-white opacity-20" size={40} />
-                                <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-full h-full relative group-hover:bg-black transition-colors">
+                                <video src={url} className="w-full h-full object-cover opacity-80" muted playsInline />
+                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                     <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 shadow-2xl">
                                         <Play className="text-white fill-white ml-1" size={24} />
                                     </div>
                                 </div>
-                                <video className="hidden" src={url} />
                             </div>
                         ) : (
                             <img src={url} alt="Uploaded" className="w-full h-full object-cover" />

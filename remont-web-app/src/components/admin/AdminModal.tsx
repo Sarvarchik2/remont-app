@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 interface AdminModalProps {
@@ -14,25 +15,35 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, title, 
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
+            // Also prevent main content scroll in AdminLayout
+            const mainContent = document.querySelector('.flex-1.overflow-y-auto');
+            if (mainContent instanceof HTMLElement) mainContent.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
+            const mainContent = document.querySelector('.flex-1.overflow-y-auto');
+            if (mainContent instanceof HTMLElement) mainContent.style.overflow = 'auto';
         }
-        return () => { document.body.style.overflow = 'unset'; };
+        return () => {
+            document.body.style.overflow = 'unset';
+            const mainContent = document.querySelector('.flex-1.overflow-y-auto');
+            if (mainContent instanceof HTMLElement) mainContent.style.overflow = 'auto';
+        };
     }, [isOpen]);
 
     if (!isOpen) return null;
 
-    return (
+    const modalContent = (
         <div
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex justify-center items-start overflow-y-auto p-4 md:p-8 animate-fade-in"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xl z-[99999] flex justify-center items-center p-4 md:p-10 animate-fade-in"
             onClick={onClose}
+            style={{ zIndex: 99999 }}
         >
             <div
-                className={`bg-white rounded-[32px] w-full ${maxWidth} shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] animate-scale-up relative my-auto`}
+                className={`bg-white rounded-[32px] w-full ${maxWidth} max-h-[90vh] shadow-[0_32px_80px_-16px_rgba(0,0,0,0.3)] animate-scale-up relative flex flex-col`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="flex items-center justify-between px-8 py-6 sticky top-0 bg-white/90 backdrop-blur-md z-20 rounded-t-[32px] border-b border-slate-50">
+                <div className="flex items-center justify-between px-8 py-6 sticky top-0 bg-white/95 backdrop-blur-md z-[100] rounded-t-[32px] border-b border-slate-50 shrink-0">
                     <h3 className="text-xl font-bold text-slate-900 tracking-tight">
                         {title}
                     </h3>
@@ -46,10 +57,12 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, title, 
                 </div>
 
                 {/* Content */}
-                <div className="p-8">
+                <div className="p-8 pt-6 overflow-y-auto custom-scrollbar flex-grow">
                     {children}
                 </div>
             </div>
         </div>
     );
+
+    return createPortal(modalContent, document.body);
 };

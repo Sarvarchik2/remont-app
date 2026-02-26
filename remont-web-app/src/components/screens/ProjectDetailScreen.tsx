@@ -325,11 +325,11 @@ const TimelineTab = ({ project, lang, onSelectMedia }: any) => (
                     onClick={() => onSelectMedia(url)}
                   >
                     {isVideo ? (
-                      <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-                        <Video size={32} className="text-slate-400" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-12 h-12 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center">
-                            <Play size={24} className="text-white fill-white" />
+                      <div className="w-full h-full relative group-hover:bg-black transition-colors">
+                        <video src={url} className="w-full h-full object-cover opacity-80" muted playsInline />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="w-12 h-12 bg-black/30 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
+                            <Play size={24} className="text-white fill-white ml-1" />
                           </div>
                         </div>
                       </div>

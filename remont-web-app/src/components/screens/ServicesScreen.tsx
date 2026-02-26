@@ -97,7 +97,7 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
         <h2 className="text-xl font-bold text-slate-900 mb-4">{lang === 'ru' ? 'Полный прайс-лист' : lang === 'en' ? 'Full price list' : 'To\'liq narxlar'}</h2>
         <div className="space-y-3">
           {categories.map((category) => (
-            <ServiceCategory
+            <ServiceCategoryRow
               key={category.id}
               category={category}
               isExpanded={expandedCategory === category.id}
@@ -164,14 +164,14 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, image, icon: Icon, o
   </div>
 );
 
-interface ServiceCategoryProps {
+interface ServiceCategoryRowProps {
   category: ServiceCategoryType;
   isExpanded: boolean;
   onToggle: (id: string) => void;
   lang: Language;
 }
 
-const ServiceCategory: React.FC<ServiceCategoryProps> = ({
+const ServiceCategoryRow: React.FC<ServiceCategoryRowProps> = ({
   category,
   isExpanded,
   onToggle,
