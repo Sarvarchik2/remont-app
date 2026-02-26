@@ -8,14 +8,15 @@ interface BookingScreenProps {
   lang: Language;
   onNavigate: (tab: string) => void;
   onSubmitLead?: (lead: Lead) => void;
+  tgUser?: any;
 }
 
-export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate, onSubmitLead }) => {
+export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate, onSubmitLead, tgUser }) => {
   const t = translations[lang].booking;
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState(tgUser ? `${tgUser.first_name}${tgUser.last_name ? ' ' + tgUser.last_name : ''}` : '');
+  const [phone, setPhone] = useState(tgUser?.username ? `@${tgUser.username}` : '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,12 +25,13 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate, 
     const now = new Date();
     const newLead: Lead = {
       id: `lead-${Date.now()}`,
-      name: name,
-      phone: phone,
+      name: name || (tgUser ? `${tgUser.first_name}${tgUser.last_name ? ' ' + tgUser.last_name : ''}` : undefined),
+      phone: phone || (tgUser?.username ? `@${tgUser.username}` : undefined),
       source: 'booking',
       status: 'new',
       date: now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }),
       time: now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+      notes: tgUser ? `TG ID: ${tgUser.id}${tgUser.username ? `, User: @${tgUser.username}` : ''}` : undefined,
     };
 
     if (onSubmitLead) {

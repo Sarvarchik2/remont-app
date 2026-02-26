@@ -8,9 +8,14 @@ interface ProductDetailScreenProps {
   onNavigate: (tab: string, params?: any) => void;
   productId: string;
   catalog: CatalogItem[];
+  tgUser?: any;
+  onSubmitLead?: (lead: Lead) => void;
 }
 
-export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, onNavigate, productId, catalog }) => {
+import { Lead } from '../../utils/types';
+import { toast } from 'sonner';
+
+export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, onNavigate, productId, catalog, tgUser, onSubmitLead }) => {
   const t = translations[lang].catalog;
   const product = catalog.find(p => p.id === productId);
 
@@ -24,6 +29,26 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat(lang === 'ru' ? 'ru-RU' : lang === 'en' ? 'en-US' : 'uz-UZ').format(price);
+  };
+
+  const handleInquiry = async () => {
+    if (onSubmitLead) {
+      const now = new Date();
+      const newLead: Lead = {
+        id: `lead-${Date.now()}`,
+        name: tgUser ? `${tgUser.first_name}${tgUser.last_name ? ' ' + tgUser.last_name : ''}` : undefined,
+        phone: tgUser?.username ? `@${tgUser.username}` : undefined,
+        source: 'other',
+        status: 'new',
+        date: now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+        time: now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+        notes: `Product inquiry: ${product.title[lang]} (ID: ${product.id}). ${tgUser ? `TG User: @${tgUser.username} (ID: ${tgUser.id})` : ''}`,
+      };
+      await onSubmitLead(newLead);
+      toast.success(lang === 'ru' ? 'Запрос отправлен!' : lang === 'en' ? 'Inquiry sent!' : 'So\'rov yuborildi!', {
+        description: lang === 'ru' ? 'Наш менеджер скоро свяжется с вами' : lang === 'en' ? 'Our manager will contact you soon' : 'Menejerimiz tez orada bog\'lanadi',
+      });
+    }
   };
 
   return (
@@ -101,7 +126,10 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
 
       {/* Floating Action Button */}
       <div className="fixed bottom-6 left-6 right-6 z-20">
-        <button className="w-full bg-[#FFB800] text-black rounded-[24px] py-4 shadow-xl shadow-[#FFB800]/20 flex items-center justify-center font-bold text-lg active:scale-[0.98] transition-transform hover:bg-[#E5A600]">
+        <button
+          onClick={handleInquiry}
+          className="w-full bg-[#FFB800] text-black rounded-[24px] py-4 shadow-xl shadow-[#FFB800]/20 flex items-center justify-center font-bold text-lg active:scale-[0.98] transition-transform hover:bg-[#E5A600]"
+        >
           <MessageCircle className="mr-2" size={24} />
           {lang === 'ru' ? 'Узнать подробнее' : lang === 'en' ? 'Learn More' : "Batafsil ma'lumot"}
         </button>

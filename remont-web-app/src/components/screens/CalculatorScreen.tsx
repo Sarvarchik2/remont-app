@@ -14,9 +14,10 @@ interface CalculatorScreenProps {
   onSubmitLead?: (lead: Lead) => void;
   prices?: CalculatorPrices;
   onNavigate: (tab: string, params?: any) => void;
+  tgUser?: any;
 }
 
-export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubmitLead, prices = INITIAL_CALCULATOR_PRICES, onNavigate }) => {
+export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubmitLead, prices = INITIAL_CALCULATOR_PRICES, onNavigate, tgUser }) => {
   const t = translations[lang].calc;
 
   const [area, setArea] = useState<number>(60);
@@ -27,8 +28,14 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
   // Modal states
   const [showContactModal, setShowContactModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [name, setName] = useState('');
+  const [name, setName] = useState(tgUser ? `${tgUser.first_name}${tgUser.last_name ? ' ' + tgUser.last_name : ''}` : '');
   const [phone, setPhone] = useState('');
+
+  useEffect(() => {
+    if (tgUser && !name) {
+      setName(`${tgUser.first_name}${tgUser.last_name ? ' ' + tgUser.last_name : ''}`);
+    }
+  }, [tgUser]);
 
   useEffect(() => {
     const basePrice = prices[type][level];
@@ -40,7 +47,13 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
   };
 
   const handleOrderClick = () => {
-    setShowContactModal(true);
+    if (tgUser) {
+      // If we have TG user, we can either submit immediately or show summary
+      // Let's show the summary modal but without name/phone inputs
+      setShowContactModal(true);
+    } else {
+      setShowContactModal(true);
+    }
   };
 
   const handleSubmit = async () => {
@@ -48,12 +61,13 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
       const now = new Date();
       const newLead: Lead = {
         id: `lead-${Date.now()}`,
-        name: name || undefined,
-        phone: phone || undefined,
+        name: name || (tgUser ? `${tgUser.first_name} ${tgUser.last_name || ''}`.trim() : undefined),
+        phone: phone || (tgUser?.username ? `@${tgUser.username}` : undefined),
         source: 'calculator',
         status: 'new',
         date: now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }),
         time: now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+        notes: tgUser ? `TG ID: ${tgUser.id}${tgUser.username ? `, User: @${tgUser.username}` : ''}` : undefined,
         calculatorData: {
           area,
           type,
@@ -200,28 +214,40 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
               </button>
             </div>
 
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="text-sm font-bold text-slate-700 mb-2 block">Ваше имя</label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Введите имя"
-                  className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-slate-900 outline-none focus:ring-2 focus:ring-[#FFB800]/20 placeholder:text-slate-300"
-                />
+            {!tgUser ? (
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="text-sm font-bold text-slate-700 mb-2 block">Ваше имя</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Введите имя"
+                    className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-slate-900 outline-none focus:ring-2 focus:ring-[#FFB800]/20 placeholder:text-slate-300"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-bold text-slate-700 mb-2 block">Телефон</label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+998 XX XXX XX XX"
+                    className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-slate-900 outline-none focus:ring-2 focus:ring-[#FFB800]/20 placeholder:text-slate-300"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="text-sm font-bold text-slate-700 mb-2 block">Телефон</label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+998 XX XXX XX XX"
-                  className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-slate-900 outline-none focus:ring-2 focus:ring-[#FFB800]/20 placeholder:text-slate-300"
-                />
+            ) : (
+              <div className="mb-6 p-4 bg-blue-50 rounded-2xl border border-blue-100 flex items-center space-x-3">
+                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  {tgUser.first_name[0]}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-900">{tgUser.first_name} {tgUser.last_name || ''}</p>
+                  <p className="text-xs text-blue-600 font-medium">{tgUser.username ? `@${tgUser.username}` : 'Telegram User'}</p>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Calculation Summary */}
             <div className="bg-slate-50 rounded-2xl p-4 mb-6">

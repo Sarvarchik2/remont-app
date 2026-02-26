@@ -301,15 +301,15 @@ export default function App() {
   const renderClientScreen = () => {
     switch (activeTab) {
       case 'home': return <HomeScreen lang={lang} onNavigate={handleClientNavigate} stories={stories} portfolio={portfolio} services={services} />;
-      case 'calc': return <CalculatorScreen lang={lang} onNavigate={handleClientNavigate} onSubmitLead={handleSubmitLead} prices={calculatorPrices} />;
+      case 'calc': return <CalculatorScreen lang={lang} onNavigate={handleClientNavigate} onSubmitLead={handleSubmitLead} prices={calculatorPrices} tgUser={tgUser} />;
       case 'services': return <ServicesScreen lang={lang} onNavigate={handleClientNavigate} categories={services} />;
       case 'catalog': return <CatalogScreen lang={lang} onNavigate={handleClientNavigate} catalog={catalog} />;
-      case 'product_detail': return <ProductDetailScreen lang={lang} onNavigate={handleClientNavigate} productId={currentProductId || ''} catalog={catalog} />;
+      case 'product_detail': return <ProductDetailScreen lang={lang} onNavigate={handleClientNavigate} productId={currentProductId || ''} catalog={catalog} tgUser={tgUser} onSubmitLead={handleSubmitLead} />;
       case 'portfolio': return <PortfolioScreen lang={lang} onNavigate={handleClientNavigate} portfolio={portfolio} />;
       case 'portfolio_detail': return <PortfolioDetailScreen lang={lang} onNavigate={handleClientNavigate} projectId={currentPortfolioId!} portfolio={portfolio} />;
       case 'project_detail': return <ProjectDetailScreen lang={lang} onNavigate={handleClientNavigate} projectId={currentProjectId} projects={projects} />;
       case 'dashboard': return <DashboardScreen lang={lang} onNavigate={handleClientNavigate} projects={projects} tgUser={tgUser} />;
-      case 'booking': return <BookingScreen lang={lang} onNavigate={handleClientNavigate} onSubmitLead={handleSubmitLead} />;
+      case 'booking': return <BookingScreen lang={lang} onNavigate={handleClientNavigate} onSubmitLead={handleSubmitLead} tgUser={tgUser} />;
       default: return <HomeScreen lang={lang} onNavigate={handleClientNavigate} />;
     }
   };
