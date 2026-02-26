@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { translations, Language } from '../../../utils/translations';
 import { Story } from '../../../utils/types';
 import { AdminModal } from '../AdminModal';
-import { ImageUpload } from '../ImageUpload';
-import { Plus, Trash2, Edit2, Play, Image as ImageIcon, Check, X, Search } from 'lucide-react';
+import { MediaUpload } from '../MediaUpload';
+import { Plus, Trash2, Edit2, Play, Image as ImageIcon, Check, X, Search, Type, List, Video } from 'lucide-react';
 
 interface AdminStoriesProps {
   lang: Language;
@@ -151,54 +151,49 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
         title={editingStory ? "Редактировать сторис" : "Новая сторис"}
         maxWidth="max-w-lg"
       >
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 block">RU Заголовок</label>
-              <input
-                type="text"
-                required
-                value={formData.title?.ru}
-                onChange={(e) => setFormData({ ...formData, title: { ...formData.title!, ru: e.target.value } })}
-                className="w-full bg-slate-50 border-none rounded-xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                placeholder="Например: Монтаж"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 block">UZ Sarlavha</label>
-              <input
-                type="text"
-                required
-                value={formData.title?.uz}
-                onChange={(e) => setFormData({ ...formData, title: { ...formData.title!, uz: e.target.value } })}
-                className="w-full bg-slate-50 border-none rounded-xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                placeholder="Masalan: Montaj"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 block">EN Title</label>
-              <input
-                type="text"
-                required
-                value={formData.title?.en}
-                onChange={(e) => setFormData({ ...formData, title: { ...formData.title!, en: e.target.value } })}
-                className="w-full bg-slate-50 border-none rounded-xl py-3 px-4 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                placeholder="E.g: Mount"
-              />
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="space-y-6">
+            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+              <Type size={16} className="text-primary" />
+              Заголовки (Title)
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { key: 'ru', label: 'RU Sarlavha', placeholder: 'Монтаж...' },
+                { key: 'uz', label: 'UZ Sarlavha', placeholder: 'Montaj...' },
+                { key: 'en', label: 'EN Title', placeholder: 'Installing...' },
+              ].map((langItem) => (
+                <div key={langItem.key}>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">
+                    {langItem.label}
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={(formData.title as any)?.[langItem.key] || ''}
+                    onChange={(e) => setFormData({ ...formData, title: { ...formData.title!, [langItem.key]: e.target.value } })}
+                    className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
+                    placeholder={langItem.placeholder}
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
-          <div>
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 block">Категория / Kategoriya</label>
-            <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-4">
+            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+              <List size={16} className="text-primary" />
+              Категория
+            </h4>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 p-1.5 bg-slate-50 rounded-[24px]">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   type="button"
                   onClick={() => setFormData({ ...formData, category: cat.id as any })}
-                  className={`py-3 px-4 rounded-xl text-sm font-bold transition-all border ${formData.category === cat.id
-                    ? 'bg-primary text-black border-primary'
-                    : 'bg-slate-50 text-slate-500 border-transparent hover:border-slate-200'
+                  className={`py-3.5 px-3 rounded-[18px] text-[11px] font-black uppercase tracking-wider transition-all border-2 ${formData.category === cat.id
+                    ? 'bg-primary border-primary text-black shadow-lg shadow-primary/20 scale-[1.02]'
+                    : 'bg-transparent text-slate-400 border-transparent hover:text-slate-600 hover:bg-slate-100'
                     }`}
                 >
                   {cat.label.split('/')[lang === 'ru' ? 0 : lang === 'en' ? 2 : 1] || cat.label.split('/')[0]}
@@ -207,29 +202,41 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
             </div>
           </div>
 
-          <ImageUpload
-            label="Обложка сторис"
-            value={formData.imageUrl}
-            onUpload={(url) => setFormData({ ...formData, imageUrl: url })}
-          />
+          <div className="space-y-4">
+            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+              <ImageIcon size={16} className="text-primary" />
+              Обложка
+            </h4>
+            <MediaUpload
+              label={null as any}
+              values={formData.imageUrl ? [formData.imageUrl] : []}
+              onUpload={(urls) => setFormData({ ...formData, imageUrl: urls[0] || '' })}
+              multiple={false}
+            />
+          </div>
 
-          <div>
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2 block">Видео (Optional URL)</label>
+          <div className="space-y-4">
+            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+              <Video size={16} className="text-primary" />
+              Видео (Optional)
+            </h4>
             <div className="relative">
-              <Play size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 w-8 h-8 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">
+                <Play size={14} className="fill-current" />
+              </div>
               <input
                 type="text"
                 value={formData.videoUrl || ''}
                 onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
-                className="w-full bg-slate-50 border-none rounded-xl py-3 pl-12 pr-4 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-black/5"
-                placeholder="https://..."
+                className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-16 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
+                placeholder="https://vimeo.com/... / Direct URL"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-black text-white rounded-2xl py-4 font-bold text-lg shadow-lg shadow-black/20 hover:bg-slate-900 active:scale-95 transition-transform mt-4"
+            className="w-full bg-black text-white rounded-[24px] py-5 font-black text-xl shadow-2xl shadow-black/30 hover:bg-slate-900 active:scale-[0.98] transition-all mt-6 uppercase tracking-widest"
           >
             {lang === 'ru' ? 'Сохранить' : 'Saqlash'}
           </button>

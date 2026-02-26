@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import delete, select
 from app.core.database import get_db
 from app.features.portfolio.models import PortfolioItem
 
@@ -10,7 +10,6 @@ router = APIRouter()
 async def get_all_portfolio(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(PortfolioItem))
     items = result.scalars().all()
-    # Pydantic is cleaner but returning dict simplifies our quick setup
     return items
 
 @router.post("/")
@@ -22,9 +21,14 @@ async def create_or_update_portfolio(data: dict, db: AsyncSession = Depends(get_
 
 @router.post("/batch")
 async def create_batch_portfolio(data_list: list[dict], db: AsyncSession = Depends(get_db)):
-    for data in data_list:
-        item = PortfolioItem(**data)
-        await db.merge(item)
-    await db.commit()
-    return {"message": "Batch upserted"}
+    try:
+        await db.execute(delete(PortfolioItem))
+        for data in data_list:
+            item = PortfolioItem(**data)
+            db.add(item)
+        await db.commit()
+        return {"message": "Portfolio synchronized"}
+    except Exception as e:
+        await db.rollback()
+        raise e
 

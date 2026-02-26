@@ -82,30 +82,36 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({
     };
 
     return (
-        <div className="space-y-3">
-            {label && <label className="text-xs font-bold text-slate-400 uppercase tracking-wide ml-2">{label}</label>}
+        <div className="space-y-4">
+            {label && (
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 block leading-none">
+                    {label}
+                </label>
+            )}
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {values.map((url, idx) => (
-                    <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden border border-slate-200 group bg-slate-50">
+                    <div key={idx} className="relative aspect-square rounded-[28px] overflow-hidden border-2 border-slate-50 group bg-slate-50 transition-all hover:scale-[1.02] hover:shadow-xl shadow-sm">
                         {isVideo(url) ? (
-                            <div className="w-full h-full flex items-center justify-center bg-slate-900">
-                                <Video className="text-white opacity-40" size={32} />
+                            <div className="w-full h-full flex items-center justify-center bg-slate-900 group-hover:bg-black transition-colors">
+                                <Video className="text-white opacity-20" size={40} />
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <Play className="text-white fill-white" size={24} />
+                                    <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 shadow-2xl">
+                                        <Play className="text-white fill-white ml-1" size={24} />
+                                    </div>
                                 </div>
                                 <video className="hidden" src={url} />
                             </div>
                         ) : (
                             <img src={url} alt="Uploaded" className="w-full h-full object-cover" />
                         )}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
                             <button
                                 type="button"
                                 onClick={() => removeMedia(idx)}
-                                className="bg-white text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors shadow-lg"
+                                className="bg-white/90 backdrop-blur-md text-red-500 w-12 h-12 rounded-2xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-2xl active:scale-90"
                             >
-                                <X size={20} />
+                                <X size={24} />
                             </button>
                         </div>
                     </div>
@@ -114,16 +120,19 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({
                 {(multiple || values.length === 0) && (
                     <div
                         onClick={() => fileInputRef.current?.click()}
-                        className={`aspect-square rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center cursor-pointer hover:border-black hover:bg-slate-100 transition-all group ${isUploading ? 'pointer-events-none' : ''}`}
+                        className={`aspect-square rounded-[28px] border-2 border-dashed border-slate-200 bg-slate-50/50 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all group ${isUploading ? 'pointer-events-none' : ''}`}
                     >
                         {isUploading ? (
-                            <Loader2 className="w-8 h-8 text-black animate-spin" />
+                            <div className="flex flex-col items-center gap-3">
+                                <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                                <span className="text-[10px] font-black text-primary uppercase tracking-widest">Загрузка...</span>
+                            </div>
                         ) : (
                             <>
-                                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-slate-400 mb-2 group-hover:scale-110 transition-transform shadow-sm">
-                                    <Upload size={20} />
+                                <div className="w-14 h-14 rounded-[22px] bg-white text-slate-400 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:text-primary transition-all shadow-sm border border-slate-100 group-hover:border-primary/20">
+                                    <Upload size={24} />
                                 </div>
-                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Добавить</p>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-primary">Добавить</p>
                             </>
                         )}
                     </div>

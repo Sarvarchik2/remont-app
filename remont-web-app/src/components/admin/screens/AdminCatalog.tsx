@@ -2,8 +2,8 @@ import React, { useState, Dispatch, SetStateAction } from 'react';
 import { translations, Language } from '../../../utils/translations';
 import { CatalogItem } from '../../../utils/types';
 import { AdminModal } from '../AdminModal';
-import { ImageUpload } from '../ImageUpload';
-import { Plus, Trash2, Pencil, Search, X, Image as ImageIcon, Check } from 'lucide-react';
+import { MediaUpload } from '../MediaUpload';
+import { Plus, Trash2, Pencil, Search, X, Image as ImageIcon, Check, Type, List, DollarSign } from 'lucide-react';
 
 interface AdminCatalogProps {
     lang: Language;
@@ -178,91 +178,125 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                 isOpen={isModalOpen}
                 onClose={handleClose}
                 title={editingId ? "Редактировать товар" : "Новый товар"}
+                maxWidth="max-w-2xl"
             >
-                <form onSubmit={handleSave} className="space-y-6">
-                    {/* Language Switcher for Inputs */}
+                <form onSubmit={handleSave} className="space-y-10">
                     <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
                         {(['ru', 'uz', 'en'] as const).map(l => (
                             <button
                                 type="button"
                                 key={l}
                                 onClick={() => setInputLang(l)}
-                                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+                                className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-[10px] uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
                             >
                                 {l}
                             </button>
                         ))}
                     </div>
 
-                    <div>
-                        <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                            Название <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
-                        </label>
-                        <input
-                            placeholder="Например: Люстра Kristall"
-                            value={newItem.title?.[inputLang] || ''}
-                            onChange={(e) => handleTitleChange(inputLang, e.target.value)}
-                            required
-                            autoFocus
-                            className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                        />
-                    </div>
+                    <div className="space-y-6">
+                        <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                            <Type size={16} className="text-primary" />
+                            Основная информация
+                        </h4>
 
-                    <div>
-                        <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                            Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
-                        </label>
-                        <textarea
-                            placeholder="Подробное описание товара..."
-                            value={newItem.description?.[inputLang] || ''}
-                            onChange={(e) => {
-                                setNewItem(prev => ({
-                                    ...prev,
-                                    description: { ...prev.description, [inputLang]: e.target.value } as Record<Language, string>
-                                }));
-                            }}
-                            className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-medium text-base outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5 min-h-[100px] resize-none"
-                        />
-                    </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 flex items-center gap-2">
+                                    Название <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                                </label>
+                                <input
+                                    placeholder="Например: Люстра Kristall"
+                                    value={newItem.title?.[inputLang] || ''}
+                                    onChange={(e) => handleTitleChange(inputLang, e.target.value)}
+                                    required
+                                    className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
+                                />
+                            </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Цена (UZS)</label>
-                            <input
-                                type="number"
-                                placeholder="1 500 000"
-                                value={newItem.price || ''}
-                                onChange={(e) => setNewItem({ ...newItem, price: Number(e.target.value) })}
-                                required
-                                className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Категория</label>
-                            <select
-                                value={newItem.category || 'materials'}
-                                onChange={(e) => setNewItem({ ...newItem, category: e.target.value as any })}
-                                className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-base outline-none shadow-sm focus:ring-2 focus:ring-black/5 appearance-none"
-                            >
-                                <option value="materials">Материалы</option>
-                                <option value="furniture">Мебель</option>
-                                <option value="lighting">Освещение</option>
-                                <option value="plumbing">Сантехника</option>
-                                <option value="decor">Декор</option>
-                            </select>
+                            <div>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 flex items-center gap-2">
+                                    Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                                </label>
+                                <textarea
+                                    placeholder="Подробное описание товара..."
+                                    value={newItem.description?.[inputLang] || ''}
+                                    onChange={(e) => {
+                                        setNewItem(prev => ({
+                                            ...prev,
+                                            description: { ...prev.description, [inputLang]: e.target.value } as Record<Language, string>
+                                        }));
+                                    }}
+                                    className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[120px] resize-none"
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    <ImageUpload
-                        label="Фото товара"
-                        value={newItem.image || ''}
-                        onUpload={(url) => setNewItem({ ...newItem, image: url })}
-                    />
+                    <div className="space-y-6">
+                        <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                            <DollarSign size={16} className="text-primary" />
+                            Характеристики
+                        </h4>
 
-                    <div className="pt-4 border-t border-slate-100">
-                        <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/10 transition-transform active:scale-[0.98]">
-                            {editingId ? 'Сохранить изменения' : 'Добавить товар'}
+                        <div className="grid grid-cols-2 gap-6">
+                            <div>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4">Цена (UZS)</label>
+                                <input
+                                    type="number"
+                                    placeholder="0"
+                                    value={newItem.price || ''}
+                                    onChange={(e) => setNewItem({ ...newItem, price: Number(e.target.value) })}
+                                    required
+                                    className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-black text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4">Категория</label>
+                                <div className="relative">
+                                    <select
+                                        value={newItem.category || 'materials'}
+                                        onChange={(e) => setNewItem({ ...newItem, category: e.target.value as any })}
+                                        className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-bold text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm appearance-none"
+                                    >
+                                        <option value="materials">Материалы</option>
+                                        <option value="furniture">Мебель</option>
+                                        <option value="lighting">Освещение</option>
+                                        <option value="plumbing">Сантехника</option>
+                                        <option value="decor">Декор</option>
+                                    </select>
+                                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                        <List size={18} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                            <ImageIcon size={16} className="text-primary" />
+                            Фотография
+                        </h4>
+                        <MediaUpload
+                            multiple={false}
+                            values={newItem.image ? [newItem.image] : []}
+                            onUpload={(urls) => setNewItem({ ...newItem, image: urls[0] })}
+                            label={null as any}
+                        />
+                    </div>
+
+                    <div className="pt-6 border-t border-slate-100 flex gap-4">
+                        <button
+                            type="button"
+                            onClick={handleClose}
+                            className="px-8 bg-slate-100 text-slate-500 rounded-[22px] font-black text-[12px] uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
+                        >
+                            Отмена
+                        </button>
+                        <button type="submit" className="flex-1 bg-black text-white rounded-[24px] py-5 font-black text-xl shadow-2xl shadow-black/30 hover:bg-slate-900 active:scale-[0.98] transition-all uppercase tracking-widest">
+                            {editingId ? 'Сохранить' : 'Добавить'}
                         </button>
                     </div>
                 </form>
