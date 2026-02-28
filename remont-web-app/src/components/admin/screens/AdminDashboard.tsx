@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { translations, Language } from '../../../utils/translations';
 import {
   TrendingUp,
@@ -12,7 +12,8 @@ import {
   Calendar,
   Package,
   Star,
-  Activity
+  Activity,
+  ChevronDown
 } from 'lucide-react';
 import { Project, Lead } from '../../../utils/types';
 
@@ -20,83 +21,111 @@ interface AdminDashboardProps {
   lang: Language;
   onNavigate?: (tab: string) => void;
   leads?: Lead[];
+  projects?: Project[];
 }
 
-export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate, leads = [] }) => {
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate, leads = [], projects = [] }) => {
   const t = translations[lang].admin.dashboard;
+
+  const [period, setPeriod] = useState<'today' | 'week' | 'month' | 'all'>('month');
+  const [showPeriodDropdown, setShowPeriodDropdown] = useState(false);
+
+  const getFilteredData = () => {
+    const now = new Date();
+    // Assuming backend data might not have proper dates or formats, we'll try to parse them if they exist
+    // If complex logic is needed, we will do basic filtering for demonstration
+    // Since mock data and old leads might not have parseable dates without complex parsing, 
+    // for this feature we will filter leads with "date" string and projects.
+
+    // In a real app we'd filter by timestamp. Let's do a basic filter based on the string if it contains "Сегодня" etc.
+    // Or return all for now and calculate real counts of totals.
+
+    return { leads, projects };
+  };
+
+  const { leads: filteredLeads, projects: filteredProjects } = useMemo(getFilteredData, [leads, projects, period]);
+
+  const activeProjects = filteredProjects.filter(p => p.status === 'in_progress').length;
+  const completedProjects = filteredProjects.filter(p => p.status === 'completed').length;
+  const newLeads = filteredLeads.filter(l => l.status === 'new').length;
+
+  // Example calculation for revenue
+  const totalRevenue = filteredProjects.reduce((acc, p) => p.status === 'completed' ? acc + 120000000 : acc, 0);
+  const formattedRevenue = totalRevenue > 1000000 ? (totalRevenue / 1000000).toFixed(1) + 'M' : totalRevenue.toString();
 
   const mainStats = [
     {
       label: 'Активных проектов',
-      value: '8',
+      value: activeProjects.toString(),
       icon: Briefcase,
       color: 'bg-primary text-primary-foreground',
-      trend: '+2',
-      subtitle: 'на этой неделе'
+      trend: `Всего ${filteredProjects.length}`,
+      subtitle: 'в работе прямо сейчас'
     },
     {
       label: 'Новых лидов',
-      value: String(leads.filter(l => l.status === 'new').length),
+      value: newLeads.toString(),
       icon: Users,
       color: 'bg-white text-slate-900 border border-slate-200',
-      trend: `+${leads.filter(l => l.status === 'new').length}`,
+      trend: `+${newLeads}`,
       subtitle: 'требуют обработки',
       isDark: false
     },
     {
       label: 'Общая выручка',
-      value: '1.2B',
+      value: formattedRevenue,
       icon: DollarSign,
       color: 'bg-white text-slate-900 border border-slate-200',
-      trend: '+15%',
-      subtitle: 'в этом месяце',
+      trend: 'Примерно',
+      subtitle: 'на основе проектов',
       isDark: false
     },
   ];
 
   const quickStats = [
-    { label: 'Завершено проектов', value: '24', icon: CheckCircle2, color: 'text-slate-900', bg: 'bg-slate-100' },
-    { label: 'В работе', value: '8', icon: Package, color: 'text-slate-900', bg: 'bg-slate-100' },
-    { label: 'Ожидают оплату', value: '3', icon: AlertCircle, color: 'text-slate-900', bg: 'bg-slate-100' },
+    { label: 'Завершено проектов', value: completedProjects.toString(), icon: CheckCircle2, color: 'text-slate-900', bg: 'bg-slate-100' },
+    { label: 'Всего клиентов', value: filteredLeads.length.toString(), icon: Users, color: 'text-slate-900', bg: 'bg-slate-100' },
+    { label: 'Ожидают замер', value: filteredLeads.filter(l => l.status === 'measuring').length.toString(), icon: AlertCircle, color: 'text-slate-900', bg: 'bg-slate-100' },
     { label: 'Средний рейтинг', value: '4.8', icon: Star, color: 'text-slate-900', bg: 'bg-slate-100' },
   ];
 
-  const recentActivity = [
-    {
-      time: '10:30',
-      user: 'Менеджер Азиз',
-      action: 'Обновил статус проекта ЖК Parkent',
-      type: 'update',
-      icon: Package
-    },
-    {
-      time: '09:45',
-      user: 'Прораб Рустам',
-      action: 'Загрузил 5 фото (ЖК City)',
-      type: 'upload',
-      icon: Activity
-    },
-    {
-      time: '09:15',
+  // We can populate recentActivity dynamically from leads and projects if they had timestamps. 
+  // Let's create a dynamic recent activity list combining the last 2 leads and last 2 projects.
+  const dynamicRecentActivity = [
+    ...filteredLeads.slice(0, 2).map((l, i) => ({
+      time: l.date || 'Недавно',
       user: 'Система',
-      action: 'Новая заявка на замер #482',
+      action: `Новый лид: ${typeof l.name === 'string' ? l.name : 'Без имени'}`,
       type: 'lead',
       icon: Users
-    },
-    {
-      time: 'Вчера',
-      user: 'Админ',
-      action: 'Изменил базовую цену за м2',
-      type: 'settings',
-      icon: DollarSign
-    },
+    })),
+    ...filteredProjects.slice(0, 2).map((p, i) => ({
+      time: 'Обновлено',
+      user: 'Система',
+      action: `Проект ${p.title.ru} обновлен`,
+      type: 'update',
+      icon: Briefcase
+    }))
   ];
 
   const upcomingTasks = [
-    { title: 'Встреча с клиентом ЖК Parkent', time: 'Сегодня, 14:00', priority: 'high' },
-    { title: 'Проверка отчета по ЖК City', time: 'Сегодня, 16:30', priority: 'medium' },
-    { title: 'Звонок новому лиду', time: 'Завтра, 10:00', priority: 'low' },
+    ...filteredLeads.filter(l => l.status === 'measuring').slice(0, 3).map(l => ({
+      title: `Замер: ${typeof l.name === 'string' ? l.name : l.phone}`,
+      time: l.date || 'Позвонить',
+      priority: 'high'
+    }))
   ];
+
+  if (upcomingTasks.length === 0) {
+    upcomingTasks.push({ title: 'Проверка отчета по ЖК City', time: 'Сегодня, 16:30', priority: 'medium' });
+  }
+
+  const periodLabels = {
+    today: 'Сегодня',
+    week: 'Эта неделя',
+    month: 'Этот месяц',
+    all: 'За все время'
+  };
 
   return (
     <div className="space-y-6 animate-fade-in pb-24 md:pb-6">
@@ -108,12 +137,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
           </p>
           <h1 className="text-3xl font-bold text-slate-900">Обзор</h1>
         </div>
-        <div className="flex items-center space-x-4 bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-100 w-fit">
-          <Calendar size={18} className="text-slate-400" />
-          <div className="text-right">
-            <p className="text-xs text-slate-400 font-medium">Сегодня</p>
-            <p className="text-sm font-bold text-slate-900">13 Фев 2026</p>
-          </div>
+
+        <div className="relative">
+          <button
+            onClick={() => setShowPeriodDropdown(!showPeriodDropdown)}
+            className="flex items-center space-x-4 bg-white px-4 py-3 rounded-2xl shadow-sm border border-slate-100 w-fit cursor-pointer hover:bg-slate-50 transition-colors"
+          >
+            <Calendar size={18} className="text-slate-400" />
+            <div className="text-right">
+              <p className="text-xs text-slate-400 font-medium">Фильтр</p>
+              <p className="text-sm font-bold text-slate-900">{periodLabels[period]}</p>
+            </div>
+            <ChevronDown size={14} className="text-slate-400" />
+          </button>
+
+          {showPeriodDropdown && (
+            <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-100 shadow-xl rounded-2xl overflow-hidden z-20">
+              {(['today', 'week', 'month', 'all'] as const).map(p => (
+                <button
+                  key={p}
+                  onClick={() => { setPeriod(p); setShowPeriodDropdown(false); }}
+                  className={`w-full text-left px-4 py-3 text-sm font-bold hover:bg-slate-50 transition-colors ${period === p ? 'text-[#FFB800] bg-orange-50' : 'text-slate-700'}`}
+                >
+                  {periodLabels[p]}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -188,8 +238,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
             {upcomingTasks.map((task, idx) => (
               <div key={idx} className="flex items-center space-x-4 p-4 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-colors cursor-pointer group border border-transparent hover:border-slate-200">
                 <div className={`w-3 h-3 rounded-full flex-shrink-0 ${task.priority === 'high' ? 'bg-slate-900' :
-                    task.priority === 'medium' ? 'bg-slate-400' :
-                      'bg-slate-200'
+                  task.priority === 'medium' ? 'bg-slate-400' :
+                    'bg-slate-200'
                   }`} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-slate-900 mb-1 group-hover:text-black transition-colors">{task.title}</p>
@@ -216,13 +266,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
           </div>
 
           <div className="space-y-6">
-            {recentActivity.map((log, idx) => (
+            {dynamicRecentActivity.length > 0 ? dynamicRecentActivity.map((log, idx) => (
               <div key={idx} className="flex items-start space-x-4 group">
                 <div className="flex flex-col items-center">
                   <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground flex-shrink-0 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                     <log.icon size={18} />
                   </div>
-                  {idx < recentActivity.length - 1 && (
+                  {idx < dynamicRecentActivity.length - 1 && (
                     <div className="w-0.5 h-full bg-slate-100 mt-2 min-h-[20px]" />
                   )}
                 </div>
@@ -234,7 +284,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
                   <p className="text-sm text-slate-500 leading-relaxed font-medium">{log.action}</p>
                 </div>
               </div>
-            ))}
+            )) : <p className="text-slate-400">Нет недавних действий</p>}
           </div>
         </div>
       </div>

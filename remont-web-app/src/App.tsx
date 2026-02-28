@@ -287,7 +287,7 @@ export default function App() {
 
   const renderAdminScreen = () => {
     switch (adminTab) {
-      case 'dashboard': return <AdminDashboard lang={lang} onNavigate={handleAdminNavigate} leads={leads} />;
+      case 'dashboard': return <AdminDashboard lang={lang} onNavigate={handleAdminNavigate} leads={leads} projects={projects} />;
       case 'crm': return <AdminCRM lang={lang} leads={leads} onUpdateLeadStatus={handleUpdateLeadStatus} prices={calculatorPrices} />;
       case 'users': return <AdminUsers lang={lang} users={users} />;
       case 'projects': return <AdminProjects lang={lang} projects={projects} onUpdateProjects={proxySetProjects} users={users} />;
