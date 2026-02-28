@@ -42,6 +42,7 @@ export default function App() {
 
   // Admin State
   const [adminTab, setAdminTab] = useState('dashboard');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 
@@ -116,11 +117,11 @@ export default function App() {
       try {
         const url = '/api/v1';
 
-        // Settings Sync
         const settingsRes = await fetch(`${url}/settings/`);
         const settingsData = await settingsRes.json();
-        if (settingsData.length === 0) {
+        if (settingsData.length === 0 || !Array.isArray(settingsData[0]?.prices)) {
           await fetch(`${url}/settings/`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: 1, prices: INITIAL_CALCULATOR_PRICES }) });
+          setCalculatorPrices(INITIAL_CALCULATOR_PRICES);
         } else {
           setCalculatorPrices(settingsData[0].prices);
         }
@@ -234,12 +235,13 @@ export default function App() {
   // --- Admin Logic ---
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'admin') {
+    if (username === 'admin' && password === 'admin123') {
       setViewMode('admin');
       setLoginError('');
+      setUsername('');
       setPassword('');
     } else {
-      setLoginError('Неверный пароль');
+      setLoginError('Неверный логин или пароль');
     }
   };
 
@@ -286,7 +288,7 @@ export default function App() {
   const renderAdminScreen = () => {
     switch (adminTab) {
       case 'dashboard': return <AdminDashboard lang={lang} onNavigate={handleAdminNavigate} leads={leads} />;
-      case 'crm': return <AdminCRM lang={lang} leads={leads} onUpdateLeadStatus={handleUpdateLeadStatus} />;
+      case 'crm': return <AdminCRM lang={lang} leads={leads} onUpdateLeadStatus={handleUpdateLeadStatus} prices={calculatorPrices} />;
       case 'users': return <AdminUsers lang={lang} users={users} />;
       case 'projects': return <AdminProjects lang={lang} projects={projects} onUpdateProjects={proxySetProjects} users={users} />;
       case 'portfolio': return <AdminPortfolio lang={lang} portfolio={portfolio} onUpdatePortfolio={proxySetPortfolio} />;
@@ -317,14 +319,21 @@ export default function App() {
           <p className="text-slate-400 text-sm font-medium mb-8 text-center">Доступ только для сотрудников</p>
 
           <form onSubmit={handleLogin} className="w-full space-y-4">
-            <div>
+            <div className="space-y-3">
+              <input
+                type="text"
+                placeholder="Логин"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-center text-lg font-bold outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 placeholder:font-normal"
+                autoFocus
+              />
               <input
                 type="password"
                 placeholder="Пароль"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-center text-lg font-bold outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 placeholder:font-normal"
-                autoFocus
               />
               {loginError && <p className="text-red-500 text-xs font-bold text-center mt-2">{loginError}</p>}
             </div>

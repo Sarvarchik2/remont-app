@@ -2,17 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { translations, Language } from '../../utils/translations';
 import { ArrowRight, Calculator as CalcIcon, X, CheckCircle2 } from 'lucide-react';
 import { Lead } from '../../utils/types';
-import { INITIAL_CALCULATOR_PRICES } from '../../utils/constants';
-
-interface CalculatorPrices {
-  new: { economy: number; standard: number; premium: number };
-  secondary: { economy: number; standard: number; premium: number };
-}
+import { INITIAL_CALCULATOR_PRICES, CalculatorPriceType } from '../../utils/constants';
 
 interface CalculatorScreenProps {
   lang: Language;
   onSubmitLead?: (lead: Lead) => void;
-  prices?: CalculatorPrices;
+  prices?: CalculatorPriceType[];
   onNavigate: (tab: string, params?: any) => void;
   tgUser?: any;
 }
@@ -21,7 +16,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
   const t = translations[lang].calc;
 
   const [area, setArea] = useState<number>(60);
-  const [type, setType] = useState<'new' | 'secondary'>('new');
+  const [type, setType] = useState<string>(prices?.[0]?.id || 'new');
   const [level, setLevel] = useState<'economy' | 'standard' | 'premium'>('standard');
   const [total, setTotal] = useState<number>(0);
 
@@ -38,7 +33,8 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
   }, [tgUser]);
 
   useEffect(() => {
-    const basePrice = prices[type][level];
+    const selectedTypeInfo = prices?.find(p => p.id === type) || prices?.[0];
+    const basePrice = selectedTypeInfo ? selectedTypeInfo[level] : 0;
     setTotal(basePrice * area);
   }, [area, type, level, prices]);
 
@@ -131,24 +127,18 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
             <div>
               <label className="text-sm font-bold text-slate-900 mb-3 block">Тип помещения</label>
               <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => setType('new')}
-                  className={`py-4 rounded-2xl font-bold text-sm transition-all border ${type === 'new'
-                    ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20'
-                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
-                    }`}
-                >
-                  Новостройка
-                </button>
-                <button
-                  onClick={() => setType('secondary')}
-                  className={`py-4 rounded-2xl font-bold text-sm transition-all border ${type === 'secondary'
-                    ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20'
-                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
-                    }`}
-                >
-                  Вторичка
-                </button>
+                {prices?.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setType(p.id)}
+                    className={`py-4 rounded-2xl font-bold text-sm transition-all border ${type === p.id
+                      ? 'bg-[#FFB800] text-black border-[#FFB800] shadow-lg shadow-[#FFB800]/20'
+                      : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                      }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -258,7 +248,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
               </div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-sm text-slate-600">Тип:</span>
-                <span className="text-sm font-bold text-slate-900">{type === 'new' ? 'Новостройка' : 'Вторичка'}</span>
+                <span className="text-sm font-bold text-slate-900">{(prices?.find(p => p.id === type) || prices?.[0])?.label}</span>
               </div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-sm text-slate-600">Уровень:</span>

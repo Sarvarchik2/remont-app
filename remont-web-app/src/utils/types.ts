@@ -54,7 +54,7 @@ export interface Lead {
     // Calculator data
     calculatorData?: {
         area: number;
-        type: 'new' | 'secondary';
+        type: string;
         level: 'economy' | 'standard' | 'premium';
         estimatedCost: number;
     };

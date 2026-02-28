@@ -13,14 +13,16 @@ import {
   User
 } from 'lucide-react';
 import { Lead } from '../../../utils/types';
+import { CalculatorPriceType } from '../../../utils/constants';
 
 interface AdminCRMProps {
   lang: Language;
   leads?: Lead[];
   onUpdateLeadStatus?: (leadId: string, status: Lead['status']) => void;
+  prices?: CalculatorPriceType[];
 }
 
-export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLeadStatus }) => {
+export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLeadStatus, prices = [] }) => {
   const t = translations[lang].admin.crm;
   const [filter, setFilter] = useState<'all' | Lead['status']>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -187,7 +189,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                       <div className="flex justify-between text-sm border-b border-slate-100 pb-2">
                         <span className="text-slate-500">Тип</span>
                         <span className="font-bold text-slate-900">
-                          {lead.calculatorData.type === 'new' ? 'Новостройка' : 'Вторичка'}
+                          {prices.find(p => p.id === lead.calculatorData?.type)?.label || lead.calculatorData?.type || '-'}
                         </span>
                       </div>
                       <div className="pt-1">
