@@ -11,6 +11,8 @@ interface AdminUsersProps {
 export const AdminUsers: React.FC<AdminUsersProps> = ({ lang, users }) => {
     const [searchQuery, setSearchQuery] = useState('');
 
+    const t = translations[lang].admin.users;
+
     const filteredUsers = users.filter(u =>
         (u.first_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (u.last_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -26,7 +28,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ lang, users }) => {
                     <p className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1">
                         Community
                     </p>
-                    <h1 className="text-3xl font-bold text-slate-900">Пользователи бота</h1>
+                    <h1 className="text-3xl font-bold text-slate-900">{t.title}</h1>
                 </div>
             </div>
 
@@ -38,7 +40,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ lang, users }) => {
                 <input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Поиск по имени, username или Telegram ID..."
+                    placeholder={t.search}
                     className="w-full pl-14 pr-4 py-4 rounded-[24px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary transition-colors placeholder:text-slate-400 shadow-sm"
                 />
             </div>
@@ -48,10 +50,10 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ lang, users }) => {
                     <table className="w-full border-collapse text-left">
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100">
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Пользователь</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Telegram ID</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Статус</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Действия</th>
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.table.user}</th>
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.table.tg_id}</th>
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">{t.table.status}</th>
+                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">{t.table.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -78,7 +80,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ lang, users }) => {
                                     <td className="px-6 py-4 text-center">
                                         <span className={`inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${u.is_active ? 'bg-green-50 text-green-600' : 'bg-slate-100 text-slate-400'}`}>
                                             {u.is_active && <ShieldCheck size={12} />}
-                                            <span>{u.is_active ? 'Активен' : 'Неактивен'}</span>
+                                            <span>{u.is_active ? t.status.active : t.status.inactive}</span>
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-right">
@@ -90,7 +92,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ lang, users }) => {
                             )) : (
                                 <tr>
                                     <td colSpan={4} className="px-6 py-12 text-center text-slate-400 font-medium">
-                                        Пользователей не найдено
+                                        {t.not_found}
                                     </td>
                                 </tr>
                             )}

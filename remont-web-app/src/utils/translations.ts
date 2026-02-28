@@ -185,10 +185,38 @@ export const translations = {
         logout: "Выйти",
       },
       dashboard: {
-        new_leads: "Новых заявок",
-        active_projects: "Проектов в работе",
-        total_money: "Сумма в работе",
+        new_leads: "Новых лидов",
+        active_projects: "Активных проектов",
+        total_money: "Общая выручка",
         recent_activity: "Последние действия",
+        completed_projects: "Завершено проектов",
+        total_clients: "Всего клиентов",
+        waiting_measuring: "Ожидают замер",
+        average_rating: "Средний рейтинг",
+        upcoming_tasks: "Предстоящие задачи",
+        overview: "Обзор",
+        in_progress_now: "в работе прямо сейчас",
+        require_processing: "требуют обработки",
+        based_on_projects: "на основе проектов",
+        about: "Примерно",
+        total: "Всего",
+        recent_time: "Недавно",
+        system: "Система",
+        new_lead: "Новый лид:",
+        unknown: "Без имени",
+        updated: "Обновлено",
+        project: "Проект",
+        measuring: "Замер:",
+        call: "Позвонить",
+        periods: {
+          today: 'Сегодня',
+          week: 'Эта неделя',
+          month: 'Этот месяц',
+          all: 'За все время'
+        },
+        filter: "Фильтр",
+        all_tasks: "Все задачи",
+        history: "История"
       },
       crm: {
         title: "Управление заявками",
@@ -198,6 +226,33 @@ export const translations = {
           measure: "Замер",
           contract: "Договор",
           reject: "Отказ",
+          contacted: "Связались",
+          all: "Все"
+        },
+        sources: {
+          calculator: "Калькулятор",
+          booking: "Запись на замер",
+          phone: "Телефон",
+          other: "Другое"
+        },
+        stats: {
+          total: "Всего заявок",
+          new: "Новых",
+          in_progress: "В работе",
+          contracts: "Договоров"
+        },
+        search_placeholder: "Поиск по имени или телефону...",
+        no_leads_title: "Заявок пока нет",
+        no_leads_desc: "Новые заявки появятся здесь, когда клиенты заполнят форму",
+        no_name: "Имя не указано",
+        fields: {
+          area: "Площадь",
+          type: "Тип",
+          budget: "Бюджет"
+        },
+        actions: {
+          call: "Позвонить",
+          accept: "Принять"
         },
         convert: "Создать проект",
       },
@@ -211,6 +266,49 @@ export const translations = {
         event_placeholder: "Что сделано? (напр. Завезли ламинат)",
         upload_photo: "Загрузить фото",
         upload_doc: "Загрузить документ (PDF)",
+        add_project: "Добавить проект",
+        search_placeholder: "Поиск по названию ЖК, клиенту или адресу...",
+        status: {
+          in_progress: "В работе",
+          finished: "Завершен",
+          new: "Новый"
+        },
+        payment: "Оплата",
+        paid: "Оплачено",
+        new_project: "Новый проект",
+        create_desc: "Создайте карточку нового объекта для отслеживания",
+        input_lang: "Язык ввода",
+        client: "Клиент",
+        select_from_db: "Выбрать из базы",
+        search_client: "Поиск клиента...",
+        or_manual: "Или вручную",
+        fio: "ФИО Клиента",
+        phone: "Телефон",
+        object: "Объект",
+        address: "Адрес",
+        contract_details: "Номер договора / Смета",
+        total: "Всего",
+        tg_id: "Telegram ID",
+        terms: "Сроки",
+        start_date: "Дата начала",
+        deadline: "Дедлайн (Прогноз)",
+        cancel: "Отмена",
+        create: "Создать проект"
+      },
+      users: {
+        title: "Пользователи бота",
+        search: "Поиск по имени, username или Telegram ID...",
+        table: {
+          user: "Пользователь",
+          tg_id: "Telegram ID",
+          status: "Статус",
+          actions: "Действия"
+        },
+        status: {
+          active: "Активен",
+          inactive: "Неактивен"
+        },
+        not_found: "Пользователей не найдено"
       },
       settings: {
         title: "Цены и Калькулятор",
@@ -404,8 +502,36 @@ export const translations = {
       dashboard: {
         new_leads: "Yangi arizalar",
         active_projects: "Ishdagi loyihalar",
-        total_money: "Ishdagi summa",
+        total_money: "Umumiy daromad",
         recent_activity: "So'nggi harakatlar",
+        completed_projects: "Tugallangan loyihalar",
+        total_clients: "Jami mijozlar",
+        waiting_measuring: "O'lchov kutayotganlar",
+        average_rating: "O'rtacha reyting",
+        upcoming_tasks: "Kelgusi vazifalar",
+        overview: "Umumiy ko'rinish",
+        in_progress_now: "hozir ishlanyapti",
+        require_processing: "ko'rib chiqish kerak",
+        based_on_projects: "loyihalar asosida",
+        about: "Taxminan",
+        total: "Jami",
+        recent_time: "Yaqinda",
+        system: "Tizim",
+        new_lead: "Yangi ariza:",
+        unknown: "Ismsiz",
+        updated: "Yangilandi",
+        project: "Loyiha",
+        measuring: "O'lchov:",
+        call: "Qo'ng'iroq",
+        periods: {
+          today: 'Bugun',
+          week: 'Bu hafta',
+          month: 'Bu oy',
+          all: 'Barcha vaqt'
+        },
+        filter: "Filtr",
+        all_tasks: "Barcha vazifalar",
+        history: "Tarix"
       },
       crm: {
         title: "Arizalarni boshqarish",
@@ -415,6 +541,33 @@ export const translations = {
           measure: "O'lchov",
           contract: "Shartnoma",
           reject: "Rad etish",
+          contacted: "Bog'lanildi",
+          all: "Barchasi"
+        },
+        sources: {
+          calculator: "Kalkulyator",
+          booking: "O'lchovga yozilish",
+          phone: "Telefon",
+          other: "Boshqa"
+        },
+        stats: {
+          total: "Jami arizalar",
+          new: "Yangi",
+          in_progress: "Jarayonda",
+          contracts: "Shartnomalar"
+        },
+        search_placeholder: "Ism yoki telefon orqali qidirish...",
+        no_leads_title: "Hozircha arizalar yo'q",
+        no_leads_desc: "Mijozlar formani to'ldirganda yangi arizalar shu yerda paydo bo'ladi",
+        no_name: "Ism ko'rsatilmagan",
+        fields: {
+          area: "Maydon",
+          type: "Tur",
+          budget: "Byudjet"
+        },
+        actions: {
+          call: "Qo'ng'iroq",
+          accept: "Qabul qilish"
         },
         convert: "Loyiha yaratish",
       },
@@ -428,6 +581,49 @@ export const translations = {
         event_placeholder: "Nima qilindi? (masalan, Laminat olib kelindi)",
         upload_photo: "Rasm yuklash",
         upload_doc: "Hujjat yuklash (PDF)",
+        add_project: "Loyiha qo'shish",
+        search_placeholder: "Majmua, mijoz yoki manzil bo'yicha qidirish...",
+        status: {
+          in_progress: "Jarayonda",
+          finished: "Tugallangan",
+          new: "Yangi"
+        },
+        payment: "To'lov",
+        paid: "To'landi:",
+        new_project: "Yangi loyiha",
+        create_desc: "Kuzatish uchun yangi obyekt kartochkasini yarating",
+        input_lang: "Kiritish tili",
+        client: "Mijoz",
+        select_from_db: "Bazadan tanlash",
+        search_client: "Mijozni qidirish...",
+        or_manual: "Yoki qo'lda",
+        fio: "F.I.Sh",
+        phone: "Telefon",
+        object: "Obyekt",
+        address: "Manzil",
+        contract_details: "Shartnoma raqami / Smeta",
+        total: "Jami",
+        tg_id: "Telegram ID",
+        terms: "Muddatlar",
+        start_date: "Boshlanish sanasi",
+        deadline: "Dedlayn (Prognoz)",
+        cancel: "Bekor qilish",
+        create: "Loyiha yaratish"
+      },
+      users: {
+        title: "Bot foydalanuvchilari",
+        search: "Ism, username yoki Telegram ID orqali qidirish...",
+        table: {
+          user: "Foydalanuvchi",
+          tg_id: "Telegram ID",
+          status: "Holati",
+          actions: "Harakatlar"
+        },
+        status: {
+          active: "Faol",
+          inactive: "Nofaol"
+        },
+        not_found: "Foydalanuvchilar topilmadi"
       },
       settings: {
         title: "Narxlar va Kalkulyator",
@@ -621,8 +817,36 @@ export const translations = {
       dashboard: {
         new_leads: "New Leads",
         active_projects: "Active Projects",
-        total_money: "Funds in Work",
+        total_money: "Total Revenue",
         recent_activity: "Recent Activity",
+        completed_projects: "Completed Projects",
+        total_clients: "Total Clients",
+        waiting_measuring: "Waiting Measurement",
+        average_rating: "Average Rating",
+        upcoming_tasks: "Upcoming Tasks",
+        overview: "Overview",
+        in_progress_now: "in progress now",
+        require_processing: "require processing",
+        based_on_projects: "based on projects",
+        about: "About",
+        total: "Total",
+        recent_time: "Recently",
+        system: "System",
+        new_lead: "New Lead:",
+        unknown: "Unknown",
+        updated: "Updated",
+        project: "Project",
+        measuring: "Measurement:",
+        call: "Call",
+        periods: {
+          today: 'Today',
+          week: 'This Week',
+          month: 'This Month',
+          all: 'All Time'
+        },
+        filter: "Filter",
+        all_tasks: "All Tasks",
+        history: "History"
       },
       crm: {
         title: "Lead Management",
@@ -632,6 +856,33 @@ export const translations = {
           measure: "Measurement",
           contract: "Contract",
           reject: "Rejected",
+          contacted: "Contacted",
+          all: "All"
+        },
+        sources: {
+          calculator: "Calculator",
+          booking: "Measurement Booking",
+          phone: "Phone",
+          other: "Other"
+        },
+        stats: {
+          total: "Total Leads",
+          new: "New",
+          in_progress: "In Progress",
+          contracts: "Contracts"
+        },
+        search_placeholder: "Search by name or phone...",
+        no_leads_title: "No leads yet",
+        no_leads_desc: "New leads will appear here when clients fill the form",
+        no_name: "Name not specified",
+        fields: {
+          area: "Area",
+          type: "Type",
+          budget: "Budget"
+        },
+        actions: {
+          call: "Call",
+          accept: "Accept"
         },
         convert: "Create Project",
       },
@@ -645,6 +896,49 @@ export const translations = {
         event_placeholder: "What was done? (e.g., Laminate delivered)",
         upload_photo: "Upload Photo",
         upload_doc: "Upload Document (PDF)",
+        add_project: "Add Project",
+        search_placeholder: "Search by RC name, client or address...",
+        status: {
+          in_progress: "In Progress",
+          finished: "Finished",
+          new: "New"
+        },
+        payment: "Payment",
+        paid: "Paid:",
+        new_project: "New Project",
+        create_desc: "Create a new object card for tracking",
+        input_lang: "Input Language",
+        client: "Client",
+        select_from_db: "Select from database",
+        search_client: "Search client...",
+        or_manual: "Or manually",
+        fio: "Full Name",
+        phone: "Phone",
+        object: "Object",
+        address: "Address",
+        contract_details: "Contract number / Estimate",
+        total: "Total",
+        tg_id: "Telegram ID",
+        terms: "Timeline",
+        start_date: "Start date",
+        deadline: "Deadline (Forecast)",
+        cancel: "Cancel",
+        create: "Create Project"
+      },
+      users: {
+        title: "Bot Users",
+        search: "Search by name, username or Telegram ID...",
+        table: {
+          user: "User",
+          tg_id: "Telegram ID",
+          status: "Status",
+          actions: "Actions"
+        },
+        status: {
+          active: "Active",
+          inactive: "Inactive"
+        },
+        not_found: "No users found"
       },
       settings: {
         title: "Prices & Calculator",

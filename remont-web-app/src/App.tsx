@@ -365,6 +365,7 @@ export default function App() {
           activeTab={adminTab}
           onNavigate={handleAdminNavigate}
           lang={lang}
+          setLang={setLang}
           onLogout={() => setViewMode('client')}
         >
           {renderAdminScreen()}

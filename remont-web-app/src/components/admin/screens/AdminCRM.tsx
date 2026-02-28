@@ -37,11 +37,11 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
 
   const getStatusColor = (status: Lead['status']) => {
     switch (status) {
-      case 'new': return { bg: 'bg-black', text: 'text-white', label: 'Новая' };
-      case 'contacted': return { bg: 'bg-slate-200', text: 'text-slate-700', label: 'Связались' };
-      case 'measuring': return { bg: 'bg-slate-800', text: 'text-white', label: 'Замер' };
-      case 'contract': return { bg: 'bg-slate-100', text: 'text-slate-900 border border-slate-300', label: 'Договор' };
-      case 'declined': return { bg: 'bg-white', text: 'text-slate-400 border border-slate-200', label: 'Отказ' };
+      case 'new': return { bg: 'bg-black', text: 'text-white', label: t.status.new };
+      case 'contacted': return { bg: 'bg-slate-200', text: 'text-slate-700', label: t.status.contacted };
+      case 'measuring': return { bg: 'bg-slate-800', text: 'text-white', label: t.status.measure };
+      case 'contract': return { bg: 'bg-slate-100', text: 'text-slate-900 border border-slate-300', label: t.status.contract };
+      case 'declined': return { bg: 'bg-white', text: 'text-slate-400 border border-slate-200', label: t.status.reject };
       default: return { bg: 'bg-slate-100', text: 'text-slate-600', label: status };
     }
   };
@@ -57,10 +57,10 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
 
   const getSourceLabel = (source: Lead['source']) => {
     switch (source) {
-      case 'calculator': return 'Калькулятор';
-      case 'booking': return 'Запись на замер';
-      case 'phone': return 'Телефон';
-      default: return 'Другое';
+      case 'calculator': return t.sources.calculator;
+      case 'booking': return t.sources.booking;
+      case 'phone': return t.sources.phone;
+      default: return t.sources.other;
     }
   };
 
@@ -69,10 +69,10 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
   };
 
   const stats = [
-    { label: 'Всего заявок', value: leads.length, color: 'text-slate-900', bg: 'bg-white' },
-    { label: 'Новых', value: leads.filter(l => l.status === 'new').length, color: 'text-slate-900', bg: 'bg-white' },
-    { label: 'В работе', value: leads.filter(l => l.status === 'contacted' || l.status === 'measuring').length, color: 'text-slate-900', bg: 'bg-white' },
-    { label: 'Договоров', value: leads.filter(l => l.status === 'contract').length, color: 'text-slate-900', bg: 'bg-white' },
+    { label: t.stats.total, value: leads.length, color: 'text-slate-900', bg: 'bg-white' },
+    { label: t.stats.new, value: leads.filter((l: Lead) => l.status === 'new').length, color: 'text-slate-900', bg: 'bg-white' },
+    { label: t.stats.in_progress, value: leads.filter((l: Lead) => l.status === 'contacted' || l.status === 'measuring').length, color: 'text-slate-900', bg: 'bg-white' },
+    { label: t.stats.contracts, value: leads.filter((l: Lead) => l.status === 'contract').length, color: 'text-slate-900', bg: 'bg-white' },
   ];
 
   return (
@@ -96,7 +96,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Поиск по имени или телефону..."
+            placeholder={t.search_placeholder}
             className="w-full pl-14 pr-4 py-4 rounded-[24px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary transition-colors placeholder:text-slate-400 shadow-sm"
           />
         </div>
@@ -110,9 +110,9 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                 : 'text-slate-500 hover:bg-slate-50'
                 }`}
             >
-              {f === 'all' ? 'Все' :
-                f === 'new' ? 'Новые' :
-                  f === 'contacted' ? 'Связались' : 'Замер'}
+              {f === 'all' ? t.status.all :
+                f === 'new' ? t.status.new :
+                  f === 'contacted' ? t.status.contacted : t.status.measure}
             </button>
           ))}
         </div>
@@ -134,8 +134,8 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
           <div className="w-20 h-20 bg-slate-50 rounded-full mb-6 flex items-center justify-center">
             <Filter size={32} className="text-slate-300" />
           </div>
-          <h3 className="text-xl font-bold text-slate-900 mb-2">Заявок пока нет</h3>
-          <p className="text-slate-500 font-medium max-w-xs">Новые заявки появятся здесь, когда клиенты заполнят форму</p>
+          <h3 className="text-xl font-bold text-slate-900 mb-2">{t.no_leads_title}</h3>
+          <p className="text-slate-500 font-medium max-w-xs">{t.no_leads_desc}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -171,7 +171,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                       </h3>
                     </div>
                   ) : (
-                    <div className="text-slate-400 italic mb-1">Имя не указано</div>
+                    <div className="text-slate-400 italic mb-1">{t.no_name}</div>
                   )}
                   {lead.phone && (
                     <p className="text-sm text-slate-500 font-mono ml-6">{lead.phone}</p>
@@ -183,17 +183,17 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                   {lead.calculatorData && (
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm border-b border-slate-100 pb-2">
-                        <span className="text-slate-500">Площадь</span>
+                        <span className="text-slate-500">{t.fields.area}</span>
                         <span className="font-bold text-slate-900">{lead.calculatorData.area} м²</span>
                       </div>
                       <div className="flex justify-between text-sm border-b border-slate-100 pb-2">
-                        <span className="text-slate-500">Тип</span>
+                        <span className="text-slate-500">{t.fields.type}</span>
                         <span className="font-bold text-slate-900">
                           {prices.find(p => p.id === lead.calculatorData?.type)?.label || lead.calculatorData?.type || '-'}
                         </span>
                       </div>
                       <div className="pt-1">
-                        <span className="text-xs text-slate-400 uppercase tracking-wider font-bold block mb-1">Бюджет</span>
+                        <span className="text-xs text-slate-400 uppercase tracking-wider font-bold block mb-1">{t.fields.budget}</span>
                         <span className="text-xl font-black text-slate-900">
                           {formatPrice(lead.calculatorData.estimatedCost)} сум
                         </span>
@@ -220,7 +220,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                       className="flex-1 bg-white border border-slate-200 text-slate-900 py-3 rounded-xl flex items-center justify-center font-bold text-sm hover:bg-slate-50 transition-colors"
                     >
                       <Phone size={16} className="mr-2" />
-                      Позвонить
+                      {t.actions.call}
                     </a>
                   )}
                   {lead.status === 'new' && onUpdateLeadStatus && (
@@ -228,7 +228,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                       onClick={() => onUpdateLeadStatus(lead.id, 'contacted')}
                       className="flex-1 bg-black text-white py-3 rounded-xl flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
                     >
-                      Принять
+                      {t.actions.accept}
                       <ArrowRight size={16} className="ml-2" />
                     </button>
                   )}

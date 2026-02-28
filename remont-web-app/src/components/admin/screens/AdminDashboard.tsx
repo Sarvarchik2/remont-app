@@ -55,54 +55,54 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
 
   const mainStats = [
     {
-      label: 'Активных проектов',
+      label: t.active_projects,
       value: activeProjects.toString(),
       icon: Briefcase,
       color: 'bg-primary text-primary-foreground',
-      trend: `Всего ${filteredProjects.length}`,
-      subtitle: 'в работе прямо сейчас'
+      trend: `${t.total} ${filteredProjects.length}`,
+      subtitle: t.in_progress_now
     },
     {
-      label: 'Новых лидов',
+      label: t.new_leads,
       value: newLeads.toString(),
       icon: Users,
       color: 'bg-white text-slate-900 border border-slate-200',
       trend: `+${newLeads}`,
-      subtitle: 'требуют обработки',
+      subtitle: t.require_processing,
       isDark: false
     },
     {
-      label: 'Общая выручка',
+      label: t.total_money,
       value: formattedRevenue,
       icon: DollarSign,
       color: 'bg-white text-slate-900 border border-slate-200',
-      trend: 'Примерно',
-      subtitle: 'на основе проектов',
+      trend: t.about,
+      subtitle: t.based_on_projects,
       isDark: false
     },
   ];
 
   const quickStats = [
-    { label: 'Завершено проектов', value: completedProjects.toString(), icon: CheckCircle2, color: 'text-slate-900', bg: 'bg-slate-100' },
-    { label: 'Всего клиентов', value: filteredLeads.length.toString(), icon: Users, color: 'text-slate-900', bg: 'bg-slate-100' },
-    { label: 'Ожидают замер', value: filteredLeads.filter((l: Lead) => l.status === 'measuring').length.toString(), icon: AlertCircle, color: 'text-slate-900', bg: 'bg-slate-100' },
-    { label: 'Средний рейтинг', value: '4.8', icon: Star, color: 'text-slate-900', bg: 'bg-slate-100' },
+    { label: t.completed_projects, value: completedProjects.toString(), icon: CheckCircle2, color: 'text-slate-900', bg: 'bg-slate-100' },
+    { label: t.total_clients, value: filteredLeads.length.toString(), icon: Users, color: 'text-slate-900', bg: 'bg-slate-100' },
+    { label: t.waiting_measuring, value: filteredLeads.filter((l: Lead) => l.status === 'measuring').length.toString(), icon: AlertCircle, color: 'text-slate-900', bg: 'bg-slate-100' },
+    { label: t.average_rating, value: '4.8', icon: Star, color: 'text-slate-900', bg: 'bg-slate-100' },
   ];
 
   // We can populate recentActivity dynamically from leads and projects if they had timestamps. 
   // Let's create a dynamic recent activity list combining the last 2 leads and last 2 projects.
   const dynamicRecentActivity = [
     ...filteredLeads.slice(0, 2).map((l: Lead, i: number) => ({
-      time: l.date || 'Недавно',
-      user: 'Система',
-      action: `Новый лид: ${typeof l.name === 'string' ? l.name : typeof l.name === 'object' && l.name ? (l.name as Record<Language, string>).ru : 'Без имени'}`,
+      time: l.date || t.recent_time,
+      user: t.system,
+      action: `${t.new_lead} ${typeof l.name === 'string' ? l.name : typeof l.name === 'object' && l.name ? (l.name as Record<Language, string>).ru : t.unknown}`,
       type: 'lead',
       icon: Users
     })),
     ...filteredProjects.slice(0, 2).map((p: Project, i: number) => ({
-      time: 'Обновлено',
-      user: 'Система',
-      action: `Проект ${typeof p.clientName === 'string' ? p.clientName : typeof p.clientName === 'object' && p.clientName ? (p.clientName as Record<Language, string>).ru : ''} обновлен`,
+      time: t.updated,
+      user: t.system,
+      action: `${t.project} ${typeof p.clientName === 'string' ? p.clientName : typeof p.clientName === 'object' && p.clientName ? (p.clientName as Record<Language, string>).ru : ''} ${t.updated.toLowerCase()}`,
       type: 'update',
       icon: Briefcase
     }))
@@ -110,8 +110,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
 
   const upcomingTasks = [
     ...filteredLeads.filter((l: Lead) => l.status === 'measuring').slice(0, 3).map((l: Lead) => ({
-      title: `Замер: ${typeof l.name === 'string' ? l.name : l.phone}`,
-      time: l.date || 'Позвонить',
+      title: `${t.measuring} ${typeof l.name === 'string' ? l.name : l.phone}`,
+      time: l.date || t.call,
       priority: 'high'
     }))
   ];
@@ -120,12 +120,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
     upcomingTasks.push({ title: 'Проверка отчета по ЖК City', time: 'Сегодня, 16:30', priority: 'medium' });
   }
 
-  const periodLabels = {
-    today: 'Сегодня',
-    week: 'Эта неделя',
-    month: 'Этот месяц',
-    all: 'За все время'
-  };
+  const periodLabels = t.periods;
 
   return (
     <div className="space-y-6 animate-fade-in pb-24 md:pb-6">
@@ -135,7 +130,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
           <p className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1">
             DASHBOARD
           </p>
-          <h1 className="text-3xl font-bold text-slate-900">Обзор</h1>
+          <h1 className="text-3xl font-bold text-slate-900">{t.overview}</h1>
         </div>
 
         <div className="relative">
@@ -145,7 +140,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
           >
             <Calendar size={18} className="text-slate-400" />
             <div className="text-right">
-              <p className="text-xs text-slate-400 font-medium">Фильтр</p>
+              <p className="text-xs text-slate-400 font-medium">{t.filter}</p>
               <p className="text-sm font-bold text-slate-900">{periodLabels[period]}</p>
             </div>
             <ChevronDown size={14} className="text-slate-400" />
@@ -227,10 +222,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-slate-900 flex items-center">
               <Calendar size={24} className="mr-3 text-slate-900" />
-              Предстоящие задачи
+              {t.upcoming_tasks}
             </h2>
             <button className="text-xs font-bold text-slate-400 hover:text-slate-900 bg-slate-50 px-3 py-1.5 rounded-full transition-colors">
-              Все задачи
+              {t.all_tasks}
             </button>
           </div>
 
@@ -261,7 +256,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
               {t.recent_activity}
             </h2>
             <button className="text-xs font-bold text-slate-400 hover:text-slate-900 bg-slate-50 px-3 py-1.5 rounded-full transition-colors">
-              История
+              {t.history}
             </button>
           </div>
 

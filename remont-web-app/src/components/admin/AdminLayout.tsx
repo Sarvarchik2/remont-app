@@ -21,6 +21,7 @@ interface AdminLayoutProps {
   activeTab: string;
   onNavigate: (tab: string) => void;
   lang: Language;
+  setLang: (lang: Language) => void;
   onLogout: () => void;
 }
 
@@ -29,6 +30,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   activeTab,
   onNavigate,
   lang,
+  setLang,
   onLogout
 }) => {
   const t = translations[lang].admin.nav;
@@ -96,6 +98,17 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-50">
+          <div className="flex bg-slate-100 p-1 rounded-full mb-4">
+            {(['ru', 'uz', 'en'] as Language[]).map(l => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                className={`flex-1 text-center text-xs font-bold py-2 rounded-full transition-colors ${lang === l ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400 hover:text-slate-900'}`}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
           <button
             onClick={onLogout}
             className="w-full flex items-center space-x-3 px-6 py-4 rounded-[24px] text-slate-400 hover:bg-slate-50 hover:text-slate-900 transition-colors font-bold text-sm"

@@ -126,7 +126,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
           className="mt-4 md:mt-0 bg-primary text-black px-6 py-3 rounded-full flex items-center justify-center shadow-lg shadow-primary/20 hover:bg-primary/90 transition-colors font-bold text-sm active:scale-95"
         >
           <Plus size={18} className="mr-2" />
-          Добавить проект
+          {t.add_project}
         </button>
       </div>
 
@@ -138,7 +138,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
         <input
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Поиск по названию ЖК, клиенту или адресу..."
+          placeholder={t.search_placeholder}
           className="w-full pl-14 pr-4 py-4 rounded-[24px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary transition-colors placeholder:text-slate-400 shadow-sm"
         />
       </div>
@@ -168,8 +168,8 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                   p.status === 'finished' ? 'bg-white text-slate-900 border-slate-200' :
                     'bg-slate-100 text-slate-500 border-slate-200'
                   }`}>
-                  {p.status === 'process' ? 'В работе' :
-                    p.status === 'finished' ? 'Завершен' : 'Новый'}
+                  {p.status === 'process' ? t.status.in_progress :
+                    p.status === 'finished' ? t.status.finished : t.status.new}
                 </div>
               </div>
 
@@ -196,7 +196,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
 
               <div className="bg-slate-50 rounded-2xl p-4 mt-auto">
                 <div className="flex justify-between items-end mb-2">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Оплата</div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.payment}</div>
                   <div className="text-sm font-black text-slate-900">{progress}%</div>
                 </div>
                 <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
@@ -206,7 +206,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                   />
                 </div>
                 <div className="mt-3 flex justify-between text-xs font-medium">
-                  <span className="text-slate-500">Оплачено:</span>
+                  <span className="text-slate-500">{t.paid}</span>
                   <span className="text-slate-900 font-bold">{(totalPaid / 1000000).toFixed(1)}M</span>
                 </div>
               </div>
@@ -222,8 +222,8 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
           <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 mb-4 group-hover:bg-white group-hover:shadow-md transition-all">
             <Plus size={32} />
           </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-1">Новый проект</h3>
-          <p className="text-slate-400 text-sm max-w-[200px]">Создайте карточку нового объекта для отслеживания</p>
+          <h3 className="text-lg font-bold text-slate-900 mb-1">{t.new_project}</h3>
+          <p className="text-slate-400 text-sm max-w-[200px]">{t.create_desc}</p>
         </div>
       </div>
 
@@ -231,11 +231,11 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
       <AdminModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Новый проект"
+        title={t.new_project}
       >
         {/* Language Switcher for Inputs */}
         <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">{t.input_lang}:</span>
           {(['ru', 'uz', 'en'] as const).map(l => (
             <button
               type="button"
@@ -254,17 +254,17 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
             <div className="space-y-6">
               <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
                 <User size={16} className="text-primary" />
-                Клиент
+                {t.client}
               </h4>
 
               <div className="space-y-4">
                 <div className="relative">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">Выбрать из базы</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.select_from_db}</label>
                   <div className="relative">
                     <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type="text"
-                      placeholder="Поиск клиента..."
+                      placeholder={t.search_client}
                       value={clientSearchQuery}
                       onFocus={() => setIsClientSearchOpen(true)}
                       onChange={(e) => setClientSearchQuery(e.target.value)}
@@ -303,13 +303,13 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
 
                 <div className="flex items-center gap-4 py-2">
                   <div className="h-[1px] flex-grow bg-slate-100"></div>
-                  <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">Или вручную</span>
+                  <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">{t.or_manual}</span>
                   <div className="h-[1px] flex-grow bg-slate-100"></div>
                 </div>
 
                 <div>
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none flex items-center gap-2">
-                    ФИО Клиента <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                    {t.fio} <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
                   </label>
                   <div className="relative">
                     <User size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -330,7 +330,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">Телефон</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.phone}</label>
                   <div className="relative">
                     <Phone size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
@@ -350,12 +350,12 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
             <div className="space-y-6">
               <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
                 <MapPin size={16} className="text-primary" />
-                Объект
+                {t.object}
               </h4>
               <div className="space-y-4">
                 <div>
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none flex items-center gap-2">
-                    Адрес <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                    {t.address} <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
                   </label>
                   <div className="relative">
                     <MapPin size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -376,7 +376,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">Номер договора / Смета</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.contract_details}</label>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="relative">
                       <FileText size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -397,14 +397,14 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                         value={formData.totalEstimate || ''}
                         onChange={(e) => setFormData({ ...formData, totalEstimate: Number(e.target.value) })}
                         className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
-                        placeholder="Всего"
+                        placeholder={t.total}
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">Telegram ID</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.tg_id}</label>
                   <div className="relative">
                     <div className="absolute left-5 top-1/2 -translate-y-1/2 w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 font-black text-[9px]">ID</div>
                     <input
@@ -423,11 +423,11 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
           <div className="space-y-6">
             <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
               <Calendar size={16} className="text-primary" />
-              Сроки
+              {t.terms}
             </h4>
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">Дата начала</label>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.start_date}</label>
                 <input
                   required
                   type="date"
@@ -437,7 +437,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 />
               </div>
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">Дедлайн (Прогноз)</label>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.deadline}</label>
                 <input
                   required
                   type="date"
@@ -455,13 +455,13 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
               onClick={() => setIsModalOpen(false)}
               className="px-8 bg-slate-100 text-slate-500 rounded-[22px] font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
             >
-              Отмена
+              {t.cancel}
             </button>
             <button
               type="submit"
               className="flex-1 bg-black text-white rounded-[24px] py-5 font-black text-lg shadow-2xl shadow-black/20 hover:bg-slate-900 active:scale-[0.98] transition-all uppercase tracking-widest"
             >
-              Создать проект
+              {t.create}
             </button>
           </div>
         </form>      </AdminModal>
