@@ -45,12 +45,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
 
   const { leads: filteredLeads, projects: filteredProjects } = useMemo(getFilteredData, [leads, projects, period]);
 
-  const activeProjects = filteredProjects.filter(p => p.status === 'in_progress').length;
-  const completedProjects = filteredProjects.filter(p => p.status === 'completed').length;
-  const newLeads = filteredLeads.filter(l => l.status === 'new').length;
+  const activeProjects = filteredProjects.filter((p: Project) => p.status === 'process').length;
+  const completedProjects = filteredProjects.filter((p: Project) => p.status === 'finished').length;
+  const newLeads = filteredLeads.filter((l: Lead) => l.status === 'new').length;
 
   // Example calculation for revenue
-  const totalRevenue = filteredProjects.reduce((acc, p) => p.status === 'completed' ? acc + 120000000 : acc, 0);
+  const totalRevenue = filteredProjects.reduce((acc: number, p: Project) => p.status === 'finished' ? acc + 120000000 : acc, 0);
   const formattedRevenue = totalRevenue > 1000000 ? (totalRevenue / 1000000).toFixed(1) + 'M' : totalRevenue.toString();
 
   const mainStats = [
@@ -85,31 +85,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
   const quickStats = [
     { label: 'Завершено проектов', value: completedProjects.toString(), icon: CheckCircle2, color: 'text-slate-900', bg: 'bg-slate-100' },
     { label: 'Всего клиентов', value: filteredLeads.length.toString(), icon: Users, color: 'text-slate-900', bg: 'bg-slate-100' },
-    { label: 'Ожидают замер', value: filteredLeads.filter(l => l.status === 'measuring').length.toString(), icon: AlertCircle, color: 'text-slate-900', bg: 'bg-slate-100' },
+    { label: 'Ожидают замер', value: filteredLeads.filter((l: Lead) => l.status === 'measuring').length.toString(), icon: AlertCircle, color: 'text-slate-900', bg: 'bg-slate-100' },
     { label: 'Средний рейтинг', value: '4.8', icon: Star, color: 'text-slate-900', bg: 'bg-slate-100' },
   ];
 
   // We can populate recentActivity dynamically from leads and projects if they had timestamps. 
   // Let's create a dynamic recent activity list combining the last 2 leads and last 2 projects.
   const dynamicRecentActivity = [
-    ...filteredLeads.slice(0, 2).map((l, i) => ({
+    ...filteredLeads.slice(0, 2).map((l: Lead, i: number) => ({
       time: l.date || 'Недавно',
       user: 'Система',
-      action: `Новый лид: ${typeof l.name === 'string' ? l.name : 'Без имени'}`,
+      action: `Новый лид: ${typeof l.name === 'string' ? l.name : typeof l.name === 'object' && l.name ? (l.name as Record<Language, string>).ru : 'Без имени'}`,
       type: 'lead',
       icon: Users
     })),
-    ...filteredProjects.slice(0, 2).map((p, i) => ({
+    ...filteredProjects.slice(0, 2).map((p: Project, i: number) => ({
       time: 'Обновлено',
       user: 'Система',
-      action: `Проект ${p.title.ru} обновлен`,
+      action: `Проект ${typeof p.clientName === 'string' ? p.clientName : typeof p.clientName === 'object' && p.clientName ? (p.clientName as Record<Language, string>).ru : ''} обновлен`,
       type: 'update',
       icon: Briefcase
     }))
   ];
 
   const upcomingTasks = [
-    ...filteredLeads.filter(l => l.status === 'measuring').slice(0, 3).map(l => ({
+    ...filteredLeads.filter((l: Lead) => l.status === 'measuring').slice(0, 3).map((l: Lead) => ({
       title: `Замер: ${typeof l.name === 'string' ? l.name : l.phone}`,
       time: l.date || 'Позвонить',
       priority: 'high'

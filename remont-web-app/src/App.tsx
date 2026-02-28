@@ -257,7 +257,7 @@ export default function App() {
     isBatch: boolean = true
   ): React.Dispatch<React.SetStateAction<T>> => {
     return (action: React.SetStateAction<T>) => {
-      originalSetter((prev) => {
+      originalSetter((prev: T) => {
         const newValue = typeof action === 'function' ? (action as any)(prev) : action;
 
         // Perform background sync to backend
@@ -486,7 +486,7 @@ export default function App() {
             activeTab={activeTab}
             onTabChange={handleClientNavigate}
             lang={lang}
-            labels={translations[lang].nav}
+            labels={translations[lang as keyof typeof translations].nav}
           />
         )}
       </div>
