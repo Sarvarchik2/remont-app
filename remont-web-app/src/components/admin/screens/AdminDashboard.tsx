@@ -50,8 +50,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
   const newLeads = filteredLeads.filter((l: Lead) => l.status === 'new').length;
 
   // Example calculation for revenue
-  const totalRevenue = filteredProjects.reduce((acc: number, p: Project) => p.status === 'finished' ? acc + 120000000 : acc, 0);
-  const formattedRevenue = totalRevenue > 1000000 ? (totalRevenue / 1000000).toFixed(1) + 'M' : totalRevenue.toString();
+  const totalRevenue = projects.reduce((acc: number, p: Project) => {
+    const paid = p.finance?.paid || p.payments?.reduce((sum, pay) => sum + pay.amount, 0) || 0;
+    return acc + paid;
+  }, 0);
+  const formattedRevenue = totalRevenue > 1000000 ? (totalRevenue / 1000000).toFixed(1) + 'M' : totalRevenue.toLocaleString();
 
   const mainStats = [
     {
@@ -86,7 +89,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ lang, onNavigate
     { label: t.completed_projects, value: completedProjects.toString(), icon: CheckCircle2, color: 'text-slate-900', bg: 'bg-slate-100' },
     { label: t.total_clients, value: filteredLeads.length.toString(), icon: Users, color: 'text-slate-900', bg: 'bg-slate-100' },
     { label: t.waiting_measuring, value: filteredLeads.filter((l: Lead) => l.status === 'measuring').length.toString(), icon: AlertCircle, color: 'text-slate-900', bg: 'bg-slate-100' },
-    { label: t.average_rating, value: '4.8', icon: Star, color: 'text-slate-900', bg: 'bg-slate-100' },
+    { label: translations[lang].admin.project.total, value: projects.length.toString(), icon: Briefcase, color: 'text-slate-900', bg: 'bg-slate-100' },
   ];
 
   // We can populate recentActivity dynamically from leads and projects if they had timestamps. 

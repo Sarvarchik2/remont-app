@@ -43,6 +43,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
   const [eventMediaUrls, setEventMediaUrls] = useState<string[]>([]);
   const [eventType, setEventType] = useState<'photo' | 'doc' | 'info' | 'video'>('info');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [eventInputLang, setEventInputLang] = useState<Language>(lang);
 
   const totalPaid = project.finance?.paid || project.payments.reduce((sum, p) => sum + p.amount, 0);
   const totalEstimate = project.finance?.total || project.totalEstimate;
@@ -80,8 +81,8 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
     const newEvent = {
       id: Date.now().toString(),
       date: new Date().toISOString().split('T')[0],
-      title: { ru: eventTitle, uz: eventTitle, en: eventTitle },
-      description: { ru: eventDesc, uz: eventDesc, en: eventDesc },
+      title: typeof eventTitle === 'string' ? { ru: eventTitle, uz: eventTitle, en: eventTitle } : eventTitle,
+      description: typeof eventDesc === 'string' ? { ru: eventDesc, uz: eventDesc, en: eventDesc } : eventDesc,
       type: eventType,
       mediaUrls: eventMediaUrls.length > 0 ? eventMediaUrls : undefined
     };
@@ -124,12 +125,26 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
             </p>
           </div>
         </div>
-        <div className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide border w-fit ${project.status === 'process' ? 'bg-black text-white border-black' :
-          project.status === 'finished' ? 'bg-white text-slate-900 border-slate-200' :
-            'bg-slate-100 text-slate-500 border-slate-200'
-          }`}>
-          {project.status === 'process' ? 'В работе' :
-            project.status === 'finished' ? 'Завершен' : 'Новый'}
+        <div className="flex items-center gap-2">
+          {(['new', 'process', 'finished'] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => {
+                const updated = { ...project, status: s };
+                setProject(updated);
+                if (onUpdateProject) onUpdateProject(updated);
+              }}
+              className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wide border transition-all ${project.status === s
+                ? s === 'process' ? 'bg-primary text-black border-primary shadow-lg shadow-primary/10 scale-105' :
+                  s === 'finished' ? 'bg-black text-white border-black scale-105' :
+                    'bg-slate-200 text-slate-900 border-slate-300 scale-105'
+                : 'bg-white text-slate-400 border-slate-100 hover:border-slate-300'
+                }`}
+            >
+              {s === 'process' ? translations[lang].admin.project.status.in_progress :
+                s === 'finished' ? translations[lang].admin.project.status.finished : translations[lang].admin.project.status.new}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -147,7 +162,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
               </h2>
               <button
                 onClick={() => setIsPaymentModalOpen(true)}
-                className="bg-black text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-black/20 hover:scale-105 transition-transform"
+                className="bg-primary text-black w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
               >
                 <Plus size={20} />
               </button>
@@ -164,7 +179,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
                   <span className="text-slate-500">Оплачено {progressPercent}%</span>
                 </div>
                 <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                  <div className="h-full bg-black transition-all duration-700 ease-out rounded-full" style={{ width: `${progressPercent}%` }} />
+                  <div className="h-full bg-primary transition-all duration-700 ease-out rounded-full shadow-[0_0_10px_rgba(255,193,7,0.3)]" style={{ width: `${progressPercent}%` }} />
                 </div>
               </div>
 
@@ -222,7 +237,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
               </h2>
               <button
                 onClick={() => setIsEventModalOpen(true)}
-                className="bg-black text-white px-5 py-2.5 rounded-full text-xs font-bold active:scale-95 transition-transform flex items-center shadow-lg shadow-black/20 hover:bg-slate-900"
+                className="bg-primary text-black px-5 py-2.5 rounded-full text-xs font-bold active:scale-95 transition-transform flex items-center shadow-lg shadow-primary/20 hover:bg-primary/90"
               >
                 <Plus size={16} className="mr-2" /> {t.add_event}
               </button>
@@ -231,9 +246,9 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
             <div className="relative border-l-2 border-slate-100 ml-4 space-y-10 pl-8 pb-4">
               {project.timeline.map((event) => (
                 <div key={event.id} className="relative group">
-                  <div className={`absolute -left-[41px] top-1 w-5 h-5 rounded-full border-[3px] border-white shadow-sm flex items-center justify-center bg-slate-200 z-10 group-hover:scale-125 transition-transform duration-300`}>
-                    <div className={`w-2 h-2 rounded-full ${event.type === 'photo' ? 'bg-slate-900' :
-                      event.type === 'doc' ? 'bg-slate-500' : 'bg-black'
+                  <div className={`absolute -left-[41px] top-1 w-5 h-5 rounded-full border-[3px] border-white shadow-sm flex items-center justify-center bg-slate-100 z-10 group-hover:scale-125 transition-transform duration-300`}>
+                    <div className={`w-2.5 h-2.5 rounded-full ${event.type === 'photo' ? 'bg-primary' :
+                      event.type === 'doc' ? 'bg-slate-400' : 'bg-primary'
                       }`} />
                   </div>
 
@@ -338,16 +353,28 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
               className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 shadow-sm"
             />
           </div>
-          <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 hover:bg-slate-900 transition-colors active:scale-[0.98]">Сохранить</button>
+          <button type="submit" className="w-full bg-primary text-black rounded-2xl py-5 font-bold text-xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-colors active:scale-[0.98]">Сохранить</button>
         </form>
       </AdminModal>
 
       <AdminModal
         isOpen={isEventModalOpen}
         onClose={() => setIsEventModalOpen(false)}
-        title="Новое событие"
+        title={t.add_event}
         maxWidth="max-w-md"
       >
+        <div className="flex items-center gap-2 mb-6 bg-slate-50 p-1.5 rounded-[22px] w-fit border border-slate-100/50">
+          {(['ru', 'uz', 'en'] as const).map(l => (
+            <button
+              type="button"
+              key={l}
+              onClick={() => setEventInputLang(l)}
+              className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-[11px] uppercase transition-all ${eventInputLang === l ? 'bg-primary text-black shadow-lg shadow-primary/20 scale-110' : 'text-slate-400 hover:bg-white hover:text-slate-600'}`}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
         <form onSubmit={handleAddEvent} className="space-y-6">
           <div>
             <label className="text-xs font-bold text-slate-500 ml-4 mb-2 block uppercase tracking-wide">Тип события</label>
@@ -358,7 +385,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
                   type="button"
                   onClick={() => setEventType(t as any)}
                   className={`flex-1 py-4 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all border ${eventType === t
-                    ? 'bg-black text-white border-black shadow-lg shadow-black/20'
+                    ? 'bg-primary text-black border-primary shadow-lg shadow-primary/20'
                     : 'bg-white text-slate-400 border-slate-200 hover:border-slate-300'
                     }`}
                 >
@@ -380,26 +407,44 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
 
           <div className="space-y-4">
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block leading-none">Заголовок</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block leading-none flex items-center justify-between">
+                <span>Заголовок</span>
+                <span className="bg-slate-100 px-2 py-0.5 rounded text-[8px]">{eventInputLang.toUpperCase()}</span>
+              </label>
               <input
                 placeholder="Стяжка пола завершена"
-                value={eventTitle}
-                onChange={(e) => setEventTitle(e.target.value)}
+                value={typeof eventTitle === 'string' ? eventTitle : (eventTitle as any)?.[eventInputLang] || ''}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setEventTitle(prev => {
+                    const current = typeof prev === 'string' ? { ru: prev, uz: prev, en: prev } : (prev || { ru: '', uz: '', en: '' });
+                    return { ...current, [eventInputLang]: val } as any;
+                  });
+                }}
                 required
                 className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
               />
             </div>
             <div>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block leading-none">Описание / Сообщение</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2 block leading-none flex items-center justify-between">
+                <span>Описание / Сообщение</span>
+                <span className="bg-slate-100 px-2 py-0.5 rounded text-[8px]">{eventInputLang.toUpperCase()}</span>
+              </label>
               <textarea
                 placeholder="Работы выполнены в полном объеме..."
-                value={eventDesc}
-                onChange={(e) => setEventDesc(e.target.value)}
+                value={typeof eventDesc === 'string' ? eventDesc : (eventDesc as any)?.[eventInputLang] || ''}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setEventDesc(prev => {
+                    const current = typeof prev === 'string' ? { ru: prev, uz: prev, en: prev } : (prev || { ru: '', uz: '', en: '' });
+                    return { ...current, [eventInputLang]: val } as any;
+                  });
+                }}
                 className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-5 px-6 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[120px] resize-none"
               />
             </div>
           </div>
-          <button type="submit" className="w-full bg-black text-white rounded-[24px] py-5 font-black text-xl shadow-2xl shadow-black/20 hover:bg-slate-900 transition-all active:scale-[0.98] uppercase tracking-widest">Добавить в ленту</button>
+          <button type="submit" className="w-full bg-primary text-black rounded-[24px] py-5 font-black text-xl shadow-2xl shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98] uppercase tracking-widest">Добавить в ленту</button>
         </form>
       </AdminModal>
 
@@ -408,6 +453,6 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
         onClose={() => setSelectedImage(null)}
         currentUrl={selectedImage || ''}
       />
-    </div>
+    </div >
   );
 };

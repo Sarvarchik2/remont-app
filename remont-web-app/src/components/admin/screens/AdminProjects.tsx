@@ -132,14 +132,15 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
 
       {/* Search & Filter */}
       <div className="relative mb-8">
-        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400">
-          <Search size={20} />
+        <div className="absolute left-8 top-1/2 -translate-y-1/2 text-slate-400">
+          <Search size={22} style={{ marginLeft: '1rem' }} />
         </div>
         <input
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={t.search_placeholder}
-          className="w-full pl-14 pr-4 py-3.5 rounded-[24px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary transition-colors placeholder:text-slate-400 shadow-sm"
+          style={{ paddingLeft: '3rem', paddingRight: '3rem' }}
+          className="w-full pl-20 pr-6 py-5 rounded-[32px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary focus:shadow-lg focus:shadow-primary/5 transition-all placeholder:text-slate-400 shadow-sm"
         />
       </div>
 
@@ -164,7 +165,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center font-bold text-slate-900 text-lg group-hover:bg-primary group-hover:text-primary-foreground transition-colors border border-slate-100 uppercase">
                   {displayClientName.charAt(0)}
                 </div>
-                <div className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wide border ${p.status === 'process' ? 'bg-primary text-primary-foreground border-primary' :
+                <div className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wide border ${p.status === 'process' ? 'bg-primary text-black border-primary shadow-sm shadow-primary/10' :
                   p.status === 'finished' ? 'bg-white text-slate-900 border-slate-200' :
                     'bg-slate-100 text-slate-500 border-slate-200'
                   }`}>
@@ -406,12 +407,12 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 <div>
                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-1">{t.tg_id}</label>
                   <div className="relative group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-slate-200 border border-slate-300 rounded-lg flex items-center justify-center text-[9px] font-black text-slate-500 group-focus-within:border-primary/50 group-focus-within:text-primary transition-all">ID</div>
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 px-2 h-8 bg-slate-200 border border-slate-300 rounded-lg flex items-center justify-center text-[9px] font-black text-slate-500 group-focus-within:border-primary/50 group-focus-within:text-primary transition-all">ID</div>
                     <input
                       type="text"
                       value={formData.telegramId || ''}
                       onChange={(e) => setFormData({ ...formData, telegramId: e.target.value })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-16 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:bg-white focus:shadow-md transition-all"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:bg-white focus:shadow-md transition-all"
                       placeholder="123456789"
                     />
                   </div>
@@ -434,9 +435,8 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                     type="date"
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full bg-white border border-slate-200 rounded-full py-4 pl-5 pr-10 font-bold text-slate-900 outline-none focus:border-primary/50 focus:shadow-md transition-all appearance-none text-sm"
+                    className="w-full bg-white border border-slate-200 rounded-full py-4 px-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:shadow-md transition-all text-sm"
                   />
-                  <Calendar size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-focus-within:text-primary transition-colors" />
                 </div>
               </div>
               <div className="space-y-2">
@@ -447,9 +447,8 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                     type="date"
                     value={formData.deadline}
                     onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                    className="w-full bg-white border border-slate-200 rounded-full py-4 pl-5 pr-10 font-bold text-slate-900 outline-none focus:border-primary/50 focus:shadow-md transition-all appearance-none text-sm"
+                    className="w-full bg-white border border-slate-200 rounded-full py-4 px-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:shadow-md transition-all text-sm"
                   />
-                  <Clock size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-focus-within:text-primary transition-colors" />
                 </div>
               </div>
             </div>

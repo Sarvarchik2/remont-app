@@ -43,10 +43,10 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
 
   const getStatusColor = (status: Lead['status']) => {
     switch (status) {
-      case 'new': return { bg: 'bg-black', text: 'text-white', label: t.status.new };
-      case 'contacted': return { bg: 'bg-slate-200', text: 'text-slate-700', label: t.status.contacted };
-      case 'measuring': return { bg: 'bg-slate-800', text: 'text-white', label: t.status.measure };
-      case 'contract': return { bg: 'bg-slate-100', text: 'text-slate-900 border border-slate-300', label: t.status.contract };
+      case 'new': return { bg: 'bg-primary', text: 'text-black', label: t.status.new };
+      case 'contacted': return { bg: 'bg-indigo-50', text: 'text-indigo-600', label: t.status.contacted };
+      case 'measuring': return { bg: 'bg-purple-50', text: 'text-purple-600', label: t.status.measure };
+      case 'contract': return { bg: 'bg-emerald-50', text: 'text-emerald-600 border border-emerald-100', label: t.status.contract };
       case 'declined': return { bg: 'bg-white', text: 'text-slate-400 border border-slate-200', label: t.status.reject };
       default: return { bg: 'bg-slate-100', text: 'text-slate-600', label: status };
     }
@@ -113,9 +113,9 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
             <button
               key={f}
               onClick={() => setFilter(f as any)}
-              className={`px-6 py-3 rounded-full text-xs font-bold transition-all whitespace-nowrap ${filter === f
-                ? 'bg-black text-white shadow-md'
-                : 'text-slate-500 hover:bg-slate-50'
+              className={`px-6 py-3 rounded-full text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap ${filter === f
+                ? 'bg-primary text-black shadow-lg shadow-primary/20 scale-105'
+                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'
                 }`}
             >
               {f === 'all' ? t.status.all :
@@ -170,7 +170,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6 relative z-10">
                   <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 group-hover:bg-black group-hover:text-white transition-all duration-300 transform group-hover:rotate-6 border border-slate-200">
+                    <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-black transition-all duration-500 transform group-hover:rotate-6 border border-slate-100 shadow-sm">
                       <SourceIcon size={20} />
                     </div>
                     <div>
@@ -213,13 +213,15 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                       <div className="flex justify-between text-sm border-b border-slate-200 pb-3">
                         <span className="text-slate-500 font-bold">{t.fields.type}</span>
                         <span className="font-black text-slate-900">
-                          {prices.find(p => p.id === lead.calculatorData?.type)?.label || lead.calculatorData?.type || '-'}
+                          {translations[lang].calc.types[lead.calculatorData?.type as keyof typeof translations.ru.calc.types] || lead.calculatorData?.type || '-'}
                         </span>
                       </div>
                       <div className="pt-1">
                         <span className="text-[10px] text-slate-500 uppercase tracking-widest font-black block mb-2">{t.fields.budget}</span>
                         <span className="text-2xl font-black text-slate-900 tracking-tight">
-                          {formatPrice(lead.calculatorData.estimatedCost)} <span className="text-xs font-bold text-slate-400">сум</span>
+                          {formatPrice(lead.calculatorData.estimatedCost)} <span className="text-xs font-bold text-slate-400 uppercase">
+                            {translations[lang].calc.result.range.split(' ').pop()}
+                          </span>
                         </span>
                       </div>
                     </div>
@@ -250,28 +252,28 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                   {lead.status === 'new' && onUpdateLeadStatus && (
                     <button
                       onClick={() => onUpdateLeadStatus(lead.id, 'contacted')}
-                      className="flex-1 bg-black text-white py-3 rounded-full flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
+                      className="flex-1 bg-primary text-black py-4 rounded-full flex items-center justify-center font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95"
                     >
                       {t.status.contacted}
-                      <ArrowRight size={16} className="ml-2" />
+                      <ArrowRight size={14} className="ml-2" />
                     </button>
                   )}
                   {lead.status === 'contacted' && onUpdateLeadStatus && (
                     <button
                       onClick={() => onUpdateLeadStatus(lead.id, 'measuring')}
-                      className="flex-1 bg-black text-white py-3 rounded-full flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
+                      className="flex-1 bg-primary text-black py-4 rounded-full flex items-center justify-center font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95"
                     >
                       {t.status.measure}
-                      <ArrowRight size={16} className="ml-2" />
+                      <ArrowRight size={14} className="ml-2" />
                     </button>
                   )}
                   {lead.status === 'measuring' && onUpdateLeadStatus && (
                     <button
                       onClick={() => onUpdateLeadStatus(lead.id, 'contract')}
-                      className="flex-1 bg-black text-white py-3 rounded-full flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
+                      className="flex-1 bg-primary text-black py-4 rounded-full flex items-center justify-center font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95"
                     >
                       {t.status.contract}
-                      <ArrowRight size={16} className="ml-2" />
+                      <ArrowRight size={14} className="ml-2" />
                     </button>
                   )}
                   {lead.status !== 'declined' && lead.status !== 'contract' && onUpdateLeadStatus && (
