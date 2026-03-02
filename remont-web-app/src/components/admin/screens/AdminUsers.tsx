@@ -49,11 +49,11 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ lang, users }) => {
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse text-left">
                         <thead>
-                            <tr className="bg-slate-50 border-b border-slate-100">
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.table.user}</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.table.tg_id}</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">{t.table.status}</th>
-                                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">{t.table.actions}</th>
+                            <tr className="bg-slate-50 border-b border-slate-200">
+                                <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">{t.table.user}</th>
+                                <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">{t.table.tg_id}</th>
+                                <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">{t.table.status}</th>
+                                <th className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-right">{t.table.actions}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">

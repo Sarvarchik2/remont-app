@@ -300,14 +300,14 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
         }
       >
         {/* Language Switcher for Inputs */}
-        <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+        <div className="flex items-center gap-3 mb-8 bg-slate-50 p-2 rounded-[22px] w-fit border border-slate-200">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mr-2 leading-none">Язык ввода:</span>
           {(['ru', 'uz', 'en'] as const).map(l => (
             <button
               key={l}
               type="button"
               onClick={() => setInputLang(l)}
-              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+              className={`w-11 h-11 rounded-full flex items-center justify-center font-black text-[11px] uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-xl shadow-primary/20 scale-110' : 'text-slate-400 hover:bg-white hover:text-slate-600'}`}
             >
               {l}
             </button>
@@ -319,8 +319,8 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
             // Category Form
             <>
               <div>
-                <label className="text-xs font-bold text-slate-500 ml-4 mb-2 flex items-center gap-2 uppercase tracking-wide">
-                  Название <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded text-[10px]">{inputLang.toUpperCase()}</span>
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-4 flex items-center gap-2">
+                  Название <span className="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
                 </label>
                 <input
                   placeholder="Например: Электрика"
@@ -333,7 +333,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                   }}
                   required
                   autoFocus
-                  className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                 />
               </div>
               <div>
@@ -344,8 +344,8 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                       key={opt.name}
                       type="button"
                       onClick={() => setFormData({ ...formData, icon: opt.name })}
-                      className={`p-4 rounded-2xl flex items-center justify-center transition-all ${formData.icon === opt.name
-                        ? 'bg-black text-white shadow-lg scale-105'
+                      className={`p-4 rounded-full flex items-center justify-center transition-all ${formData.icon === opt.name
+                        ? 'bg-primary text-black shadow-lg shadow-primary/20 scale-105'
                         : 'bg-slate-50 text-slate-400 hover:bg-slate-100'
                         }`}
                     >
@@ -376,7 +376,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                   }}
                   required
                   autoFocus
-                  className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-full py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-primary/10"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -387,7 +387,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                     required
-                    className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                   />
                 </div>
                 <div>
@@ -404,7 +404,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
                       setFormData({ ...formData, unit: newUnit });
                     }}
                     required
-                    className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none shadow-sm placeholder:text-slate-300 focus:ring-2 focus:ring-black/5"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                   />
                 </div>
               </div>
@@ -412,7 +412,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
           )}
 
           <div className="pt-4 border-t border-slate-100">
-            <button type="submit" className="w-full bg-black text-white rounded-2xl py-5 font-bold text-xl shadow-xl shadow-black/20 mt-6 active:scale-[0.98] transition-transform hover:bg-slate-900">
+            <button type="submit" className="w-full bg-primary text-black rounded-full py-5 font-black text-lg shadow-xl shadow-primary/20 mt-6 active:scale-[0.98] transition-all hover:bg-primary/90 uppercase tracking-widest">
               Сохранить
             </button>
           </div>

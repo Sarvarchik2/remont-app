@@ -139,7 +139,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={t.search_placeholder}
-          className="w-full pl-14 pr-4 py-4 rounded-[24px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary transition-colors placeholder:text-slate-400 shadow-sm"
+          className="w-full pl-14 pr-4 py-3.5 rounded-[24px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary transition-colors placeholder:text-slate-400 shadow-sm"
         />
       </div>
 
@@ -232,26 +232,27 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={t.new_project}
+        maxWidth="max-w-2xl"
       >
         {/* Language Switcher for Inputs */}
-        <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest self-center mr-2">{t.input_lang}:</span>
+        <div className="flex items-center gap-2 mb-8 bg-slate-50 p-1.5 rounded-[22px] w-fit border border-slate-100/50">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mr-2 leading-none">{t.input_lang}:</span>
           {(['ru', 'uz', 'en'] as const).map(l => (
             <button
               type="button"
               key={l}
               onClick={() => setInputLang(l)}
-              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs uppercase transition-all ${inputLang === l ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+              className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-[11px] uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-lg shadow-primary/20 scale-110' : 'text-slate-400 hover:bg-white hover:text-slate-600'}`}
             >
               {l}
             </button>
           ))}
         </div>
 
-        <form onSubmit={handleCreateProject} className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <form onSubmit={handleCreateProject} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {/* Client Info */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] border-b border-slate-100 pb-3 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 {t.client}
@@ -259,16 +260,16 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
 
               <div className="space-y-5">
                 <div className="relative">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.select_from_db}</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-1">{t.select_from_db}</label>
                   <div className="relative group">
-                    <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
+                    <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
                     <input
                       type="text"
                       placeholder={t.search_client}
                       value={clientSearchQuery}
                       onFocus={() => setIsClientSearchOpen(true)}
                       onChange={(e) => setClientSearchQuery(e.target.value)}
-                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all placeholder:text-slate-300"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:bg-white focus:shadow-md transition-all placeholder:text-slate-400"
                     />
                     {isClientSearchOpen && (
                       <div className="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-[22px] shadow-2xl max-h-[250px] overflow-y-auto animate-in fade-in slide-in-from-top-2 divide-y divide-slate-50">
@@ -301,19 +302,19 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 py-1">
-                  <div className="h-[1px] flex-grow bg-slate-100"></div>
-                  <span className="text-[8px] font-black text-slate-300 uppercase tracking-[0.3em]">{t.or_manual}</span>
-                  <div className="h-[1px] flex-grow bg-slate-100"></div>
+                <div className="flex items-center gap-4 py-4">
+                  <div className="h-[1px] flex-grow bg-slate-200"></div>
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.3em]">{t.or_manual}</span>
+                  <div className="h-[1px] flex-grow bg-slate-200"></div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1 flex items-center justify-between">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-1 flex items-center justify-between">
                     {t.fio}
-                    <span className="text-[8px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded-md">{inputLang.toUpperCase()}</span>
+                    <span className="text-[8px] bg-slate-200 text-slate-500 px-2 py-1 rounded-md">{inputLang.toUpperCase()}</span>
                   </label>
                   <div className="relative group">
-                    <User size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
+                    <User size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
                     <input
                       required
                       type="text"
@@ -324,21 +325,21 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                           : { ...(formData.clientName as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
                         setFormData({ ...formData, clientName: newName });
                       }}
-                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:shadow-md transition-all appearance-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.phone}</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-1">{t.phone}</label>
                   <div className="relative group">
-                    <Phone size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
+                    <Phone size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
                     <input
                       required
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:shadow-md transition-all appearance-none"
                     />
                   </div>
                 </div>
@@ -347,18 +348,18 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
 
             {/* Object Info */}
             <div className="space-y-6">
-              <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] border-b border-slate-100 pb-3 flex items-center gap-2">
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] border-b border-slate-200 pb-4 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                 {t.object}
               </h4>
-              <div className="space-y-5">
+              <div className="space-y-4">
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1 flex items-center justify-between">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-1 flex items-center justify-between">
                     {t.address}
-                    <span className="text-[8px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded-md">{inputLang.toUpperCase()}</span>
+                    <span className="text-[8px] bg-slate-200 text-slate-500 px-2 py-1 rounded-md">{inputLang.toUpperCase()}</span>
                   </label>
                   <div className="relative group">
-                    <MapPin size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
+                    <MapPin size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
                     <input
                       required
                       type="text"
@@ -369,33 +370,33 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                           : { ...(formData.address as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
                         setFormData({ ...formData, address: newAddr });
                       }}
-                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:shadow-md transition-all appearance-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.contract_details}</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-1">{t.contract_details}</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="relative group">
-                      <FileText size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
+                      <FileText size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
                       <input
                         required
                         type="text"
                         value={formData.contractNumber}
                         onChange={(e) => setFormData({ ...formData, contractNumber: e.target.value })}
-                        className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all text-sm"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:bg-white focus:shadow-md transition-all text-sm"
                         placeholder="№ "
                       />
                     </div>
                     <div className="relative group">
-                      <DollarSign size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
+                      <DollarSign size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
                       <input
                         required
                         type="number"
                         value={formData.totalEstimate || ''}
                         onChange={(e) => setFormData({ ...formData, totalEstimate: Number(e.target.value) })}
-                        className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all text-sm"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:bg-white focus:shadow-md transition-all text-sm"
                         placeholder={t.total}
                       />
                     </div>
@@ -403,14 +404,14 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.tg_id}</label>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-1">{t.tg_id}</label>
                   <div className="relative group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-white border border-slate-100 rounded-lg flex items-center justify-center text-[9px] font-black text-slate-300 group-focus-within:border-primary/30 group-focus-within:text-primary transition-all">ID</div>
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-slate-200 border border-slate-300 rounded-lg flex items-center justify-center text-[9px] font-black text-slate-500 group-focus-within:border-primary/50 group-focus-within:text-primary transition-all">ID</div>
                     <input
                       type="text"
                       value={formData.telegramId || ''}
                       onChange={(e) => setFormData({ ...formData, telegramId: e.target.value })}
-                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-16 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-16 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:bg-white focus:shadow-md transition-all"
                       placeholder="123456789"
                     />
                   </div>
@@ -419,36 +420,36 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
             </div>
           </div>
 
-          <div className="space-y-6 bg-slate-50/30 p-6 rounded-[24px] border border-slate-100/50">
-            <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
-              <Calendar size={16} className="text-primary" />
+          <div className="space-y-6 bg-slate-50/50 p-6 rounded-[24px] border border-slate-200">
+            <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
+              <Calendar size={14} className="text-primary" />
               {t.terms}
             </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.start_date}</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">{t.start_date}</label>
                 <div className="relative group">
                   <input
                     required
                     type="date"
                     value={formData.startDate}
                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    className="w-full bg-white border border-slate-100 rounded-[18px] py-4 px-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:shadow-md transition-all appearance-none"
+                    className="w-full bg-white border border-slate-200 rounded-full py-4 pl-5 pr-10 font-bold text-slate-900 outline-none focus:border-primary/50 focus:shadow-md transition-all appearance-none text-sm"
                   />
-                  <Calendar size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none group-focus-within:text-primary transition-colors" />
+                  <Calendar size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-focus-within:text-primary transition-colors" />
                 </div>
               </div>
-              <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.deadline}</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">{t.deadline}</label>
                 <div className="relative group">
                   <input
                     required
                     type="date"
                     value={formData.deadline}
                     onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                    className="w-full bg-white border border-slate-100 rounded-[18px] py-4 px-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:shadow-md transition-all appearance-none"
+                    className="w-full bg-white border border-slate-200 rounded-full py-4 pl-5 pr-10 font-bold text-slate-900 outline-none focus:border-primary/50 focus:shadow-md transition-all appearance-none text-sm"
                   />
-                  <Clock size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none group-focus-within:text-primary transition-colors" />
+                  <Clock size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none group-focus-within:text-primary transition-colors" />
                 </div>
               </div>
             </div>
@@ -458,13 +459,13 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-8 py-5 bg-slate-100 text-slate-500 rounded-full font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-200 transition-all active:scale-95"
+              className="px-8 py-4 bg-slate-100 text-slate-500 rounded-full font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-200 transition-all active:scale-95"
             >
               {t.cancel}
             </button>
             <button
               type="submit"
-              className="flex-1 bg-black text-white rounded-full py-5 font-black text-base md:text-lg shadow-xl shadow-black/10 hover:bg-slate-900 active:scale-[0.98] transition-all uppercase tracking-[0.15em]"
+              className="flex-1 bg-primary text-black rounded-full py-5 font-black text-base shadow-xl shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all uppercase tracking-[0.15em]"
             >
               {t.create}
             </button>

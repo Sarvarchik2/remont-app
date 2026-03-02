@@ -126,7 +126,7 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Поиск по названию..."
-                        className="w-full pl-14 pr-4 py-4 rounded-[24px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary transition-colors placeholder:text-slate-400 shadow-sm"
+                        className="w-full pl-14 pr-4 py-3.5 rounded-[24px] border border-slate-200 bg-white font-bold text-slate-900 outline-none focus:border-primary transition-colors placeholder:text-slate-400 shadow-sm"
                     />
                 </div>
                 <div className="flex overflow-x-auto hide-scrollbar gap-2 md:w-auto w-full py-2 md:py-0">
@@ -181,14 +181,14 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                 maxWidth="max-w-2xl"
             >
                 <form onSubmit={handleSave} className="space-y-10">
-                    <div className="flex space-x-2 mb-6 border-b border-slate-100 pb-4">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest self-center mr-2">Язык ввода:</span>
+                    <div className="flex items-center gap-3 mb-8 bg-slate-50 p-2 rounded-[22px] w-fit border border-slate-200">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mr-2 leading-none">Язык ввода:</span>
                         {(['ru', 'uz', 'en'] as const).map(l => (
                             <button
                                 type="button"
                                 key={l}
                                 onClick={() => setInputLang(l)}
-                                className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-[10px] uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-sm' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+                                className={`w-11 h-11 rounded-full flex items-center justify-center font-black text-[11px] uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-xl shadow-primary/20 scale-110' : 'text-slate-400 hover:bg-white hover:text-slate-600'}`}
                             >
                                 {l}
                             </button>
@@ -196,7 +196,7 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                     </div>
 
                     <div className="space-y-6">
-                        <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                        <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-4 flex items-center gap-2">
                             <Type size={16} className="text-primary" />
                             Основная информация
                         </h4>
@@ -211,13 +211,13 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                                     value={newItem.title?.[inputLang] || ''}
                                     onChange={(e) => handleTitleChange(inputLang, e.target.value)}
                                     required
-                                    className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                                 />
                             </div>
 
                             <div>
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 flex items-center gap-2">
-                                    Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-4 flex items-center gap-2">
+                                    Описание <span className="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
                                 </label>
                                 <textarea
                                     placeholder="Подробное описание товара..."
@@ -228,14 +228,14 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                                             description: { ...prev.description, [inputLang]: e.target.value } as Record<Language, string>
                                         }));
                                     }}
-                                    className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[120px] resize-none"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-[24px] py-4 px-6 font-medium text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400 min-h-[120px] resize-none"
                                 />
                             </div>
                         </div>
                     </div>
 
                     <div className="space-y-6">
-                        <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                        <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-4 flex items-center gap-2">
                             <DollarSign size={16} className="text-primary" />
                             Характеристики
                         </h4>
@@ -249,7 +249,7 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                                     value={newItem.price || ''}
                                     onChange={(e) => setNewItem({ ...newItem, price: Number(e.target.value) })}
                                     required
-                                    className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-black text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-black text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                                 />
                             </div>
                             <div>
@@ -258,7 +258,7 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                                     <select
                                         value={newItem.category || 'materials'}
                                         onChange={(e) => setNewItem({ ...newItem, category: e.target.value as any })}
-                                        className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-bold text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm appearance-none"
+                                        className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm appearance-none"
                                     >
                                         <option value="materials">Материалы</option>
                                         <option value="furniture">Мебель</option>
@@ -266,7 +266,7 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                                         <option value="plumbing">Сантехника</option>
                                         <option value="decor">Декор</option>
                                     </select>
-                                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
                                         <List size={18} />
                                     </div>
                                 </div>
@@ -305,11 +305,11 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                         <button
                             type="button"
                             onClick={handleClose}
-                            className="px-8 bg-slate-100 text-slate-500 rounded-[22px] font-black text-[12px] uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
+                            className="px-8 bg-slate-100 text-slate-500 rounded-full font-black text-[12px] uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
                         >
                             Отмена
                         </button>
-                        <button type="submit" className="flex-1 bg-black text-white rounded-[24px] py-5 font-black text-xl shadow-2xl shadow-black/30 hover:bg-slate-900 active:scale-[0.98] transition-all uppercase tracking-widest">
+                        <button type="submit" className="flex-1 bg-primary text-black rounded-full py-4.5 font-black text-xl shadow-2xl shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all uppercase tracking-widest">
                             {editingId ? 'Сохранить' : 'Добавить'}
                         </button>
                     </div>

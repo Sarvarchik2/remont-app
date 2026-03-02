@@ -151,9 +151,9 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
         title={editingStory ? "Редактировать сторис" : "Новая сторис"}
         maxWidth="max-w-lg"
       >
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="space-y-6">
-            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-5">
+            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-4 flex items-center gap-2">
               <Type size={16} className="text-primary" />
               Заголовки (Title)
             </h4>
@@ -164,7 +164,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
                 { key: 'en', label: 'EN Title', placeholder: 'Installing...' },
               ].map((langItem) => (
                 <div key={langItem.key}>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-4 leading-none">
                     {langItem.label}
                   </label>
                   <input
@@ -172,7 +172,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
                     required
                     value={(formData.title as any)?.[langItem.key] || ''}
                     onChange={(e) => setFormData({ ...formData, title: { ...formData.title!, [langItem.key]: e.target.value } })}
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                     placeholder={langItem.placeholder}
                   />
                 </div>
@@ -228,7 +228,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
                 type="text"
                 value={formData.videoUrl || ''}
                 onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
-                className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-16 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
+                className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-16 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                 placeholder="https://vimeo.com/... / Direct URL"
               />
             </div>
@@ -236,7 +236,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
 
           <button
             type="submit"
-            className="w-full bg-black text-white rounded-[24px] py-5 font-black text-xl shadow-2xl shadow-black/30 hover:bg-slate-900 active:scale-[0.98] transition-all mt-6 uppercase tracking-widest"
+            className="w-full bg-primary text-black rounded-full py-5 font-black text-xl shadow-2xl shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all mt-4 uppercase tracking-widest"
           >
             {lang === 'ru' ? 'Сохранить' : 'Saqlash'}
           </button>

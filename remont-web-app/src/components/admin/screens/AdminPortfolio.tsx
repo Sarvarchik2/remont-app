@@ -185,7 +185,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
         isOpen={isModalOpen}
         onClose={handleClose}
         title={editingId ? "Редактировать проект" : "Новый проект"}
-        maxWidth="max-w-3xl"
+        maxWidth="max-w-2xl"
       >
         {/* Tabs */}
         <div className="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-[24px] w-fit mb-8 border border-slate-100/50">
@@ -213,7 +213,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               key={l}
               type="button"
               onClick={() => setInputLang(l)}
-              className={`w-11 h-11 rounded-full flex items-center justify-center font-black text-[11px] uppercase transition-all ${inputLang === l ? 'bg-black text-white shadow-xl scale-110' : 'text-slate-400 hover:bg-white hover:text-slate-600'}`}
+              className={`w-11 h-11 rounded-full flex items-center justify-center font-black text-[11px] uppercase transition-all ${inputLang === l ? 'bg-primary text-black shadow-xl shadow-primary/20 scale-110' : 'text-slate-400 hover:bg-white hover:text-slate-600'}`}
             >
               {l}
             </button>
@@ -226,14 +226,14 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
           {activeTab === 'general' && (
             <div className="space-y-8 animate-fade-in">
               <div className="space-y-6">
-                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-4 flex items-center gap-2">
                   <Star size={16} className="text-primary" />
                   Информация
                 </h4>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5 flex items-center gap-2">
-                    Название ЖК / Проекта <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 flex items-center gap-2">
+                    Название ЖК / Проекта <span className="bg-slate-200 text-slate-600 px-2 py-1 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
                   </label>
                   <input
                     placeholder="ЖК Infinity"
@@ -245,7 +245,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                       setNewItem({ ...newItem, title: newTitle });
                     }}
                     required
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 px-6 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                   />
                 </div>
 
@@ -254,7 +254,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">Тип помещения</label>
                     <div className="relative">
                       <select
-                        className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 px-6 font-bold text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm appearance-none cursor-pointer"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm appearance-none cursor-pointer"
                         value={newItem.type}
                         onChange={(e) => setNewItem({ ...newItem, type: e.target.value as any })}
                       >
@@ -263,49 +263,49 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                         <option value="bath">Ванная</option>
                         <option value="bedroom">Спальня</option>
                       </select>
-                      <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                      <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
                         <Layers size={18} />
                       </div>
                     </div>
                   </div>
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">Площадь (м²)</label>
-                    <div className="relative">
-                      <Ruler size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <div className="relative group">
+                      <Ruler size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors" />
                       <input
                         type="number"
                         placeholder="85"
                         value={newItem.area}
                         onChange={(e) => setNewItem({ ...newItem, area: e.target.value })}
                         required
-                        className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 pl-14 pr-6 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">Срок реализации</label>
-                    <div className="relative">
-                      <Clock size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-2">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5">Срок реализации</label>
+                    <div className="relative group">
+                      <Clock size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors" />
                       <input
                         placeholder="2 мес"
                         value={newItem.term}
                         onChange={(e) => setNewItem({ ...newItem, term: e.target.value })}
-                        className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 pl-14 pr-6 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                       />
                     </div>
                   </div>
-                  <div>
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">Бюджет</label>
-                    <div className="relative">
-                      <DollarSign size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5">Бюджет</label>
+                    <div className="relative group">
+                      <DollarSign size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors" />
                       <input
                         placeholder="150М"
                         value={newItem.cost}
                         onChange={(e) => setNewItem({ ...newItem, cost: e.target.value })}
-                        className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 pl-14 pr-6 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                       />
                     </div>
                   </div>
@@ -319,7 +319,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                       placeholder="Ташкент, Шайхантахур"
                       value={newItem.location}
                       onChange={(e) => setNewItem({ ...newItem, location: e.target.value })}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 pl-14 pr-6 font-bold text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                     />
                   </div>
                 </div>
@@ -331,14 +331,14 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
           {activeTab === 'details' && (
             <div className="space-y-10 animate-fade-in">
               <div className="space-y-6">
-                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-4 flex items-center gap-2">
                   <List size={16} className="text-primary" />
                   Подробности
                 </h4>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5 flex items-center gap-2">
-                    Описание <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 flex items-center gap-2">
+                    Описание <span className="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
                   </label>
                   <textarea
                     placeholder="Расскажите о проекте подробнее..."
@@ -349,28 +349,28 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                         : { ...(newItem.description as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
                       setNewItem({ ...newItem, description: newDesc });
                     }}
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-[28px] py-5 px-7 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[140px] resize-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-[28px] py-5 px-7 font-medium text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400 min-h-[140px] resize-none"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">Теги (через запятую)</label>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 font-black">Теги (через запятую)</label>
                     <input
                       placeholder="Минимализм, Лофт"
                       value={newItem.tags?.join(', ') || ''}
                       onChange={(e) => handleArrayInput('tags', e.target.value)}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 px-6 font-bold text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                     />
                   </div>
 
-                  <div>
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">Материалы (через запятую)</label>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 font-black">Материалы (через запятую)</label>
                     <input
                       placeholder="Knauf, Egger"
                       value={newItem.materials?.join(', ') || ''}
                       onChange={(e) => handleArrayInput('materials', e.target.value)}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 px-6 font-bold text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 px-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                     />
                   </div>
                 </div>
@@ -413,7 +413,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                       });
                       setNewItem({ ...newItem, worksCompleted: works });
                     }}
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-[28px] py-5 px-7 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[120px] resize-none"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-[28px] py-5 px-7 font-medium text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400 min-h-[120px] resize-none"
                   />
                 </div>
               </div>
@@ -446,7 +446,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                       });
                       setNewItem({ ...newItem, team: team });
                     }}
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-[28px] py-5 px-7 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[120px] resize-none"
+                    className="w-full bg-slate-50 border-2 border-transparent rounded-[28px] py-4 px-7 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[120px] resize-none"
                   />
                 </div>
               </div>
@@ -509,7 +509,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                     placeholder="https://vimeo.com/... / Direct URL"
                     value={newItem.videoUrl || ''}
                     onChange={(e) => setNewItem({ ...newItem, videoUrl: e.target.value })}
-                    className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-4 pl-20 pr-6 font-bold text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-20 pr-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                   />
                 </div>
               </div>
@@ -520,13 +520,13 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
             <button
               type="button"
               onClick={handleClose}
-              className="px-10 bg-slate-100 text-slate-500 rounded-[24px] font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
+              className="px-10 bg-slate-100 text-slate-500 rounded-full font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
             >
               Отмена
             </button>
             <button
               type="submit"
-              className="flex-1 bg-black text-white rounded-[26px] py-5 font-black text-xl shadow-2xl shadow-black/30 active:scale-[0.98] transition-transform hover:bg-slate-900 uppercase tracking-widest"
+              className="flex-1 bg-primary text-black rounded-full py-4.5 font-black text-lg shadow-2xl shadow-primary/20 active:scale-[0.98] transition-transform hover:bg-primary/90 uppercase tracking-widest"
             >
               {editingId ? 'Сохранить изменения' : 'Опубликовать проект'}
             </button>

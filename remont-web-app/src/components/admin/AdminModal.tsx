@@ -43,7 +43,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose, title, 
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="flex items-center justify-between px-8 py-6 sticky top-0 bg-white/95 backdrop-blur-md z-[100] rounded-t-[32px] border-b border-slate-50 shrink-0">
+                <div className="flex items-center justify-between px-8 py-6 sticky top-0 bg-white/95 backdrop-blur-md z-[100] rounded-t-[32px] border-b border-slate-100 shrink-0">
                     <h3 className="text-xl font-bold text-slate-900 tracking-tight">
                         {title}
                     </h3>
