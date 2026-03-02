@@ -293,7 +293,12 @@ export const translations = {
         start_date: "Дата начала",
         deadline: "Дедлайн (Прогноз)",
         cancel: "Отмена",
-        create: "Создать проект"
+        create: "Создать проект",
+        foreman_salary: "ЗП Прораба",
+        monthly_rate: "Ставка в мес.",
+        add_month: "Добавить месяц",
+        paid_label: "Оплачено",
+        not_paid_label: "Ожидает"
       },
       users: {
         title: "Пользователи бота",
@@ -608,7 +613,12 @@ export const translations = {
         start_date: "Boshlanish sanasi",
         deadline: "Dedlayn (Prognoz)",
         cancel: "Bekor qilish",
-        create: "Loyiha yaratish"
+        create: "Loyiha yaratish",
+        foreman_salary: "Prorab oyligi",
+        monthly_rate: "Oylik stavka",
+        add_month: "Oy qo'shish",
+        paid_label: "To'langan",
+        not_paid_label: "Kutilmoqda"
       },
       users: {
         title: "Bot foydalanuvchilari",
@@ -923,7 +933,12 @@ export const translations = {
         start_date: "Start date",
         deadline: "Deadline (Forecast)",
         cancel: "Cancel",
-        create: "Create Project"
+        create: "Create Project",
+        foreman_salary: "Foreman Salary",
+        monthly_rate: "Monthly rate",
+        add_month: "Add month",
+        paid_label: "Paid",
+        not_paid_label: "Pending"
       },
       users: {
         title: "Bot Users",

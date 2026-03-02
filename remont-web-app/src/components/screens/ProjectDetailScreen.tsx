@@ -206,6 +206,34 @@ const FinanceTab = ({ project, progressPercentage, lang }: any) => (
         </div>
       </div>
     </div>
+
+    {/* Foreman Salary (if exists) */}
+    {project.foremanSalary && project.foremanSalary.records.length > 0 && (
+      <div className="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-bold text-slate-900">{lang === 'ru' ? 'Выплаты прорабу' : lang === 'en' ? 'Foreman payments' : 'Prorab to\'lovlari'}</h3>
+          <span className="text-xs font-bold text-primary px-2 py-1 bg-primary/10 rounded-full">USD</span>
+        </div>
+        <div className="space-y-3">
+          {project.foremanSalary.records.map((record: any) => (
+            <div key={record.id} className="flex justify-between items-center p-3 rounded-2xl bg-slate-50 border border-slate-100">
+              <div className="flex items-center space-x-3">
+                <div className={`w-2 h-2 rounded-full ${record.isPaid ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                <div>
+                  <p className="text-sm font-bold text-slate-900 leading-none mb-1">{record.month}</p>
+                  <p className="text-[10px] text-slate-400 font-medium">
+                    {record.isPaid
+                      ? (lang === 'ru' ? 'Оплачено' : lang === 'en' ? 'Paid' : 'To\'langan')
+                      : (lang === 'ru' ? 'Ожидает' : lang === 'en' ? 'Pending' : 'Kutilmoqda')}
+                  </p>
+                </div>
+              </div>
+              <span className="font-bold text-slate-900">${record.amount}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 );
 

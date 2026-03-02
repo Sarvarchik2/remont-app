@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, DollarSign, Plus, Upload, CheckCircle, Clock, FileText, X, ChevronRight, MapPin, Play, Video } from 'lucide-react';
+import { ArrowLeft, Calendar, DollarSign, Plus, Upload, CheckCircle, Clock, FileText, X, ChevronRight, MapPin, Play, Video, User, Edit2, Check } from 'lucide-react';
 import { Language, translations } from '../../../utils/translations';
 import { Project } from '../../../utils/types';
 import { AdminModal } from '../AdminModal';
@@ -44,6 +44,58 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
   const [eventType, setEventType] = useState<'photo' | 'doc' | 'info' | 'video'>('info');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [eventInputLang, setEventInputLang] = useState<Language>(lang);
+  const [isEditingRate, setIsEditingRate] = useState(false);
+  const [newRate, setNewRate] = useState(project.foremanSalary?.monthlyRate || 0);
+
+  const handleUpdateMonthlyRate = () => {
+    const updatedSalary = {
+      monthlyRate: Number(newRate),
+      records: project.foremanSalary?.records || []
+    };
+    const updatedProject = { ...project, foremanSalary: updatedSalary };
+    setProject(updatedProject);
+    if (onUpdateProject) onUpdateProject(updatedProject);
+    setIsEditingRate(false);
+  };
+
+  const handleAddSalaryMonth = () => {
+    const monthsRu = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+    const now = new Date();
+    const monthName = monthsRu[now.getMonth()] + ' ' + now.getFullYear();
+
+    const newRecord = {
+      id: Date.now().toString(),
+      month: monthName,
+      amount: project.foremanSalary?.monthlyRate || 0,
+      isPaid: false,
+      date: now.toISOString().split('T')[0]
+    };
+
+    const updatedSalary = {
+      monthlyRate: project.foremanSalary?.monthlyRate || 0,
+      records: [newRecord, ...(project.foremanSalary?.records || [])]
+    };
+
+    const updatedProject = { ...project, foremanSalary: updatedSalary };
+    setProject(updatedProject);
+    if (onUpdateProject) onUpdateProject(updatedProject);
+  };
+
+  const toggleSalaryPaid = (recordId: string) => {
+    const updatedRecords = project.foremanSalary?.records.map(r =>
+      r.id === recordId ? { ...r, isPaid: !r.isPaid } : r
+    ) || [];
+
+    const updatedProject = {
+      ...project,
+      foremanSalary: {
+        ...project.foremanSalary!,
+        records: updatedRecords
+      }
+    };
+    setProject(updatedProject);
+    if (onUpdateProject) onUpdateProject(updatedProject);
+  };
 
   const totalPaid = project.finance?.paid || project.payments.reduce((sum, p) => sum + p.amount, 0);
   const totalEstimate = project.finance?.total || project.totalEstimate;
@@ -152,7 +204,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
 
         {/* Left Column: Finance */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white rounded-[32px] p-8 shadow-sm border border-slate-100 h-full">
+          <div className="bg-white rounded-[32px] p-8 shadow-sm border border-slate-100">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-lg font-extrabold flex items-center gap-3 text-slate-900">
                 <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-900">
@@ -223,11 +275,86 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
               </div>
             </div>
           </div>
+
+          {/* Foreman Salary Card */}
+          <div className="bg-white rounded-[32px] p-8 shadow-sm border border-slate-100">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-lg font-extrabold flex items-center gap-3 text-slate-900">
+                <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-900">
+                  <User size={20} />
+                </div>
+                {translations[lang].admin.project.foreman_salary}
+              </h2>
+              <button
+                onClick={handleAddSalaryMonth}
+                className="bg-primary text-black w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
+              >
+                <Plus size={20} />
+              </button>
+            </div>
+
+            {/* Monthly Rate Display/Edit */}
+            <div className="mb-8 p-4 bg-slate-50 rounded-2xl border border-slate-100 flex justify-between items-center">
+              <div>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{translations[lang].admin.project.monthly_rate}</p>
+                {isEditingRate ? (
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-slate-900">$</span>
+                    <input
+                      type="number"
+                      value={newRate}
+                      onChange={(e) => setNewRate(Number(e.target.value))}
+                      className="w-20 bg-white border border-slate-200 rounded-lg px-2 py-1 font-bold text-slate-900 outline-none focus:border-primary"
+                      autoFocus
+                    />
+                  </div>
+                ) : (
+                  <p className="text-xl font-black text-slate-900">${project.foremanSalary?.monthlyRate || 0}</p>
+                )}
+              </div>
+              <button
+                onClick={() => isEditingRate ? handleUpdateMonthlyRate() : setIsEditingRate(true)}
+                className="p-2 text-slate-400 hover:text-slate-900 transition-colors"
+              >
+                {isEditingRate ? <Check size={18} className="text-emerald-500" /> : <Edit2 size={18} />}
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {project.foremanSalary?.records.map(record => (
+                <div key={record.id} className="flex justify-between items-center group bg-white border border-slate-100 p-4 rounded-2xl hover:border-slate-300 transition-all">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${record.isPaid ? 'bg-emerald-50 text-emerald-500' : 'bg-amber-50 text-amber-500'}`}>
+                      {record.isPaid ? <CheckCircle size={14} /> : <Clock size={14} />}
+                    </div>
+                    <div>
+                      <h4 className="text-slate-900 font-bold text-sm tracking-tight">{record.month}</h4>
+                      <p className={`text-[10px] font-black uppercase tracking-widest ${record.isPaid ? 'text-emerald-500' : 'text-amber-500'}`}>
+                        {record.isPaid ? translations[lang].admin.project.paid_label : translations[lang].admin.project.not_paid_label}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-black text-slate-900 text-base">${record.amount}</span>
+                    <button
+                      onClick={() => toggleSalaryPaid(record.id)}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${record.isPaid ? 'text-emerald-500 bg-emerald-50 hover:bg-emerald-100' : 'text-slate-400 bg-slate-50 hover:bg-slate-100'}`}
+                    >
+                      {record.isPaid ? <Check size={14} /> : <Plus size={14} />}
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {(!project.foremanSalary?.records || project.foremanSalary.records.length === 0) && (
+                <p className="text-center text-slate-400 text-xs font-medium py-4 italic">Нет записей о зарплате</p>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Right Column: Timeline */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-[32px] p-8 shadow-sm border border-slate-100 h-full min-h-[500px]">
+          <div className="bg-white rounded-[32px] p-8 shadow-sm border border-slate-100 min-h-[500px]">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-lg font-extrabold flex items-center gap-3 text-slate-900">
                 <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-900">

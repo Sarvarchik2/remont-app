@@ -68,6 +68,14 @@ export interface Lead {
     notes?: string;
 }
 
+export interface ForemanSalaryRecord {
+    id: string;
+    month: string; // e.g. "Март 2024"
+    amount: number; // USD
+    isPaid: boolean;
+    date: string;
+}
+
 export interface Project {
     id: string; // Changed to string for consistency
     clientName: Record<Language, string> | string;
@@ -89,6 +97,10 @@ export interface Project {
         total: number;
         paid: number;
         remaining: number;
+    };
+    foremanSalary?: {
+        monthlyRate: number; // USD
+        records: ForemanSalaryRecord[];
     };
 }
 

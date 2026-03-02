@@ -23,3 +23,4 @@ class Project(Base):
     # Convert relations to JSON to easily serialize/deserialize complex nested types
     payments = Column(JSON, nullable=True)
     timeline = Column(JSON, nullable=True)
+    foremanSalary = Column(JSON, nullable=True) # { monthlyRate: number, records: [] }
