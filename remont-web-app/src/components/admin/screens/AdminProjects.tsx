@@ -3,7 +3,7 @@ import { translations, Language } from '../../../utils/translations';
 import { Project, AppUser } from '../../../utils/types';
 import { AdminProjectDetail } from './AdminProjectDetail';
 import { AdminModal } from '../AdminModal';
-import { Search, Plus, MapPin, Calendar, X, DollarSign, User, Phone, FileText } from 'lucide-react';
+import { Search, Plus, MapPin, Calendar, X, DollarSign, User, Phone, FileText, Clock } from 'lucide-react';
 
 interface AdminProjectsProps {
   lang: Language;
@@ -248,30 +248,30 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
           ))}
         </div>
 
-        <form onSubmit={handleCreateProject} className="space-y-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <form onSubmit={handleCreateProject} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             {/* Client Info */}
             <div className="space-y-6">
-              <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
-                <User size={16} className="text-primary" />
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] border-b border-slate-100 pb-3 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 {t.client}
               </h4>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div className="relative">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.select_from_db}</label>
-                  <div className="relative">
-                    <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.select_from_db}</label>
+                  <div className="relative group">
+                    <Search size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
                     <input
                       type="text"
                       placeholder={t.search_client}
                       value={clientSearchQuery}
                       onFocus={() => setIsClientSearchOpen(true)}
                       onChange={(e) => setClientSearchQuery(e.target.value)}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all placeholder:text-slate-300"
                     />
                     {isClientSearchOpen && (
-                      <div className="absolute z-50 w-full mt-3 bg-white/9 worst-blur-xl border border-slate-100 rounded-[28px] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] max-h-[300px] overflow-y-auto animate-fade-in divide-y divide-slate-50">
+                      <div className="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-[22px] shadow-2xl max-h-[250px] overflow-y-auto animate-in fade-in slide-in-from-top-2 divide-y divide-slate-50">
                         {(Array.isArray(users) ? users : []).filter(u =>
                           (u.first_name || '').toLowerCase().includes(clientSearchQuery.toLowerCase()) ||
                           (u.last_name || '').toLowerCase().includes(clientSearchQuery.toLowerCase()) ||
@@ -279,7 +279,7 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                         ).map(u => (
                           <div
                             key={u.id}
-                            className="px-6 py-4 hover:bg-slate-50 cursor-pointer flex flex-col transition-colors"
+                            className="px-5 py-3 hover:bg-slate-50 cursor-pointer flex flex-col transition-colors"
                             onClick={() => {
                               const fullName = `${u.first_name} ${u.last_name || ''}`.trim();
                               setFormData({
@@ -292,8 +292,8 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                               setIsClientSearchOpen(false);
                             }}
                           >
-                            <span className="font-black text-slate-900 text-sm">{u.first_name} {u.last_name || ''}</span>
-                            <span className="text-xs text-primary font-bold">@{u.username || 'no_username'} • ID: {u.telegram_id}</span>
+                            <span className="font-bold text-slate-900 text-sm">{u.first_name} {u.last_name || ''}</span>
+                            <span className="text-[10px] text-slate-400 font-medium">@{u.username || 'no_username'} • ID: {u.telegram_id}</span>
                           </div>
                         ))}
                       </div>
@@ -301,18 +301,19 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 py-2">
+                <div className="flex items-center gap-3 py-1">
                   <div className="h-[1px] flex-grow bg-slate-100"></div>
-                  <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">{t.or_manual}</span>
+                  <span className="text-[8px] font-black text-slate-300 uppercase tracking-[0.3em]">{t.or_manual}</span>
                   <div className="h-[1px] flex-grow bg-slate-100"></div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none flex items-center gap-2">
-                    {t.fio} <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1 flex items-center justify-between">
+                    {t.fio}
+                    <span className="text-[8px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded-md">{inputLang.toUpperCase()}</span>
                   </label>
-                  <div className="relative">
-                    <User size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <div className="relative group">
+                    <User size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
                     <input
                       required
                       type="text"
@@ -323,23 +324,21 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                           : { ...(formData.clientName as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
                         setFormData({ ...formData, clientName: newName });
                       }}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
-                      placeholder="Иванов Иван"
+                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.phone}</label>
-                  <div className="relative">
-                    <Phone size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.phone}</label>
+                  <div className="relative group">
+                    <Phone size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
                     <input
                       required
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
-                      placeholder="+998 90 123 45 67"
+                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all"
                     />
                   </div>
                 </div>
@@ -348,17 +347,18 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
 
             {/* Object Info */}
             <div className="space-y-6">
-              <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
-                <MapPin size={16} className="text-primary" />
+              <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] border-b border-slate-100 pb-3 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                 {t.object}
               </h4>
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none flex items-center gap-2">
-                    {t.address} <span className="bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1 flex items-center justify-between">
+                    {t.address}
+                    <span className="text-[8px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded-md">{inputLang.toUpperCase()}</span>
                   </label>
-                  <div className="relative">
-                    <MapPin size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <div className="relative group">
+                    <MapPin size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
                     <input
                       required
                       type="text"
@@ -369,34 +369,33 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                           : { ...(formData.address as any) || { ru: '', uz: '', en: '' }, [inputLang]: e.target.value };
                         setFormData({ ...formData, address: newAddr });
                       }}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
-                      placeholder="ЖК Infinity, блок А"
+                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.contract_details}</label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="relative">
-                      <FileText size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.contract_details}</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="relative group">
+                      <FileText size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
                       <input
                         required
                         type="text"
                         value={formData.contractNumber}
                         onChange={(e) => setFormData({ ...formData, contractNumber: e.target.value })}
-                        className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
-                        placeholder="№ 123"
+                        className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all text-sm"
+                        placeholder="№ "
                       />
                     </div>
-                    <div className="relative">
-                      <DollarSign size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <div className="relative group">
+                      <DollarSign size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" />
                       <input
                         required
                         type="number"
                         value={formData.totalEstimate || ''}
                         onChange={(e) => setFormData({ ...formData, totalEstimate: Number(e.target.value) })}
-                        className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                        className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-14 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all text-sm"
                         placeholder={t.total}
                       />
                     </div>
@@ -404,14 +403,14 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.tg_id}</label>
-                  <div className="relative">
-                    <div className="absolute left-5 top-1/2 -translate-y-1/2 w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 font-black text-[9px]">ID</div>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.tg_id}</label>
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-white border border-slate-100 rounded-lg flex items-center justify-center text-[9px] font-black text-slate-300 group-focus-within:border-primary/30 group-focus-within:text-primary transition-all">ID</div>
                     <input
                       type="text"
                       value={formData.telegramId || ''}
                       onChange={(e) => setFormData({ ...formData, telegramId: e.target.value })}
-                      className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 pl-16 pr-5 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
+                      className="w-full bg-slate-50/50 border border-slate-100 rounded-[18px] py-4 pl-16 pr-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:bg-white focus:shadow-md transition-all"
                       placeholder="123456789"
                     />
                   </div>
@@ -420,51 +419,58 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
             </div>
           </div>
 
-          <div className="space-y-6">
-            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+          <div className="space-y-6 bg-slate-50/30 p-6 rounded-[24px] border border-slate-100/50">
+            <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2">
               <Calendar size={16} className="text-primary" />
               {t.terms}
             </h4>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.start_date}</label>
-                <input
-                  required
-                  type="date"
-                  value={formData.startDate}
-                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                  className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
-                />
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.start_date}</label>
+                <div className="relative group">
+                  <input
+                    required
+                    type="date"
+                    value={formData.startDate}
+                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    className="w-full bg-white border border-slate-100 rounded-[18px] py-4 px-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:shadow-md transition-all appearance-none"
+                  />
+                  <Calendar size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none group-focus-within:text-primary transition-colors" />
+                </div>
               </div>
               <div>
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-4 leading-none">{t.deadline}</label>
-                <input
-                  required
-                  type="date"
-                  value={formData.deadline}
-                  onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                  className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-bold text-slate-900 outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm"
-                />
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block ml-1">{t.deadline}</label>
+                <div className="relative group">
+                  <input
+                    required
+                    type="date"
+                    value={formData.deadline}
+                    onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                    className="w-full bg-white border border-slate-100 rounded-[18px] py-4 px-5 font-bold text-slate-900 outline-none focus:border-primary/30 focus:shadow-md transition-all appearance-none"
+                  />
+                  <Clock size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none group-focus-within:text-primary transition-colors" />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-slate-100 flex gap-4">
+          <div className="pt-2 flex flex-col-reverse sm:flex-row gap-3">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-8 bg-slate-100 text-slate-500 rounded-[22px] font-black text-sm uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95"
+              className="px-8 py-5 bg-slate-100 text-slate-500 rounded-full font-black text-xs uppercase tracking-[0.2em] hover:bg-slate-200 transition-all active:scale-95"
             >
               {t.cancel}
             </button>
             <button
               type="submit"
-              className="flex-1 bg-black text-white rounded-[24px] py-5 font-black text-lg shadow-2xl shadow-black/20 hover:bg-slate-900 active:scale-[0.98] transition-all uppercase tracking-widest"
+              className="flex-1 bg-black text-white rounded-full py-5 font-black text-base md:text-lg shadow-xl shadow-black/10 hover:bg-slate-900 active:scale-[0.98] transition-all uppercase tracking-[0.15em]"
             >
               {t.create}
             </button>
           </div>
-        </form>      </AdminModal>
+        </form>
+      </AdminModal>
     </div>
   );
 };

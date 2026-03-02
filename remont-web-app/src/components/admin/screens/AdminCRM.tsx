@@ -241,7 +241,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                   {lead.phone && (
                     <a
                       href={`tel:${lead.phone}`}
-                      className="flex-1 bg-white border border-slate-200 text-slate-900 py-3 rounded-xl flex items-center justify-center font-bold text-sm hover:bg-slate-50 transition-colors"
+                      className="flex-1 bg-white border border-slate-200 text-slate-900 py-3 rounded-full flex items-center justify-center font-bold text-sm hover:bg-slate-50 transition-colors"
                     >
                       <Phone size={16} className="mr-2" />
                       {t.actions.call}
@@ -250,7 +250,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                   {lead.status === 'new' && onUpdateLeadStatus && (
                     <button
                       onClick={() => onUpdateLeadStatus(lead.id, 'contacted')}
-                      className="flex-1 bg-black text-white py-3 rounded-xl flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
+                      className="flex-1 bg-black text-white py-3 rounded-full flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
                     >
                       {t.status.contacted}
                       <ArrowRight size={16} className="ml-2" />
@@ -259,7 +259,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                   {lead.status === 'contacted' && onUpdateLeadStatus && (
                     <button
                       onClick={() => onUpdateLeadStatus(lead.id, 'measuring')}
-                      className="flex-1 bg-black text-white py-3 rounded-xl flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
+                      className="flex-1 bg-black text-white py-3 rounded-full flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
                     >
                       {t.status.measure}
                       <ArrowRight size={16} className="ml-2" />
@@ -268,7 +268,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                   {lead.status === 'measuring' && onUpdateLeadStatus && (
                     <button
                       onClick={() => onUpdateLeadStatus(lead.id, 'contract')}
-                      className="flex-1 bg-black text-white py-3 rounded-xl flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
+                      className="flex-1 bg-black text-white py-3 rounded-full flex items-center justify-center font-bold text-sm shadow-lg hover:bg-slate-800 transition-colors"
                     >
                       {t.status.contract}
                       <ArrowRight size={16} className="ml-2" />
@@ -277,7 +277,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({ lang, leads = [], onUpdateLe
                   {lead.status !== 'declined' && lead.status !== 'contract' && onUpdateLeadStatus && (
                     <button
                       onClick={() => onUpdateLeadStatus(lead.id, 'declined')}
-                      className="w-12 h-12 bg-white border border-slate-200 text-slate-400 rounded-xl flex items-center justify-center hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all"
+                      className="w-12 h-12 bg-white border border-slate-200 text-slate-400 rounded-full flex items-center justify-center hover:text-red-500 hover:border-red-100 hover:bg-red-50 transition-all"
                       title={t.status.reject}
                     >
                       <X size={20} />
