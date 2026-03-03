@@ -5,7 +5,7 @@ class PortfolioItem(Base):
     __tablename__ = "portfolio"
 
     id = Column(Integer, primary_key=True, index=True)
-    type = Column(String) # 'living' | 'kitchen' | 'bath' | 'bedroom'
+    type = Column(String) # 'living' | 'kitchen' | 'bath' | 'bedroom' | 'full'
     title = Column(JSON)
     imgBefore = Column(String)
     imgAfter = Column(String)

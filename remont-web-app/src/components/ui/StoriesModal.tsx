@@ -32,7 +32,7 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
           handleNext();
           return 0;
         }
-        return prev + 1.5;
+        return prev + 0.7;
       });
     }, 50);
 
@@ -94,14 +94,39 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
 
       {/* Content */}
       <div className="flex-1 relative flex items-center justify-center bg-zinc-900">
-        <ImageWithFallback
-          src={currentStory.imageUrl}
-          alt="Story"
-          className="w-full h-full object-cover"
-        />
+        {currentStory.videoUrl ? (
+          <div className="w-full h-full relative">
+            {currentStory.videoUrl.includes('vimeo') || currentStory.videoUrl.includes('youtube') || currentStory.videoUrl.includes('youtu.be') ? (
+              <iframe
+                src={currentStory.videoUrl.includes('vimeo')
+                  ? `https://player.vimeo.com/video/${currentStory.videoUrl.split('/').pop()}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&background=1`
+                  : `https://www.youtube.com/embed/${currentStory.videoUrl.includes('v=') ? currentStory.videoUrl.split('v=')[1].split('&')[0] : currentStory.videoUrl.split('/').pop()}?autoplay=1&mute=1&controls=0&loop=1&playlist=${currentStory.videoUrl.includes('v=') ? currentStory.videoUrl.split('v=')[1].split('&')[0] : currentStory.videoUrl.split('/').pop()}`
+                }
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                allow="autoplay; fullscreen"
+                title="Story Video"
+              ></iframe>
+            ) : (
+              <video
+                src={currentStory.videoUrl}
+                className="w-full h-full object-cover"
+                autoPlay
+                muted
+                playsInline
+                loop
+              />
+            )}
+          </div>
+        ) : (
+          <ImageWithFallback
+            src={currentStory.imageUrl}
+            alt="Story"
+            className="w-full h-full object-cover"
+          />
+        )}
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 z-10" />
 
         {/* Navigation Areas */}
         <div className="absolute inset-0 flex z-20">

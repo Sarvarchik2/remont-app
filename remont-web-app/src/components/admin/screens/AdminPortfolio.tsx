@@ -3,7 +3,7 @@ import { translations, Language } from '../../../utils/translations';
 import { PortfolioItem } from '../../../utils/types';
 import { AdminModal } from '../AdminModal';
 import { MediaUpload } from '../MediaUpload';
-import { Plus, Trash2, MapPin, Ruler, Clock, X, Image as ImageIcon, Pencil, CheckSquare, List, Type, Video, Play, DollarSign, Layers, Users, Star, Sofa, Utensils, Bath, Bed } from 'lucide-react';
+import { Plus, Trash2, MapPin, Ruler, Clock, X, Image as ImageIcon, Pencil, CheckSquare, List, Type, Video, Play, DollarSign, Layers, Users, Star, Sofa, Utensils, Bath, Bed, Home } from 'lucide-react';
 
 interface AdminPortfolioProps {
   lang: Language;
@@ -259,6 +259,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                       { id: 'kitchen', icon: Utensils },
                       { id: 'bath', icon: Bath },
                       { id: 'bedroom', icon: Bed },
+                      { id: 'full', icon: Home },
                     ].map((type) => (
                       <button
                         key={type.id}

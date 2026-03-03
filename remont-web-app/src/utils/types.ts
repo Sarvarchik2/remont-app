@@ -106,7 +106,7 @@ export interface Project {
 
 export interface PortfolioItem {
     id: number;
-    type: 'living' | 'kitchen' | 'bath' | 'bedroom';
+    type: 'living' | 'kitchen' | 'bath' | 'bedroom' | 'full';
     title: Record<Language, string> | string;
     imgBefore: string;
     imgAfter: string;
