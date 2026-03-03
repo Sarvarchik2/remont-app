@@ -457,7 +457,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
               value={paymentAmount}
               onChange={(e) => setPaymentAmount(e.target.value)}
               required
-              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 shadow-sm"
+              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-8 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 shadow-sm"
             />
           </div>
           <div>
@@ -467,7 +467,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
               value={paymentDate}
               onChange={(e) => setPaymentDate(e.target.value)}
               required
-              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 shadow-sm"
+              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-8 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 shadow-sm"
             />
           </div>
           <div>
@@ -477,10 +477,10 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
               value={paymentComment}
               onChange={(e) => setPaymentComment(e.target.value)}
               required
-              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-6 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 shadow-sm"
+              className="w-full bg-slate-50 border-none rounded-2xl py-5 px-8 font-bold text-lg outline-none focus:ring-2 focus:ring-black/5 placeholder:text-slate-300 shadow-sm"
             />
           </div>
-          <button type="submit" className="w-full bg-primary text-black rounded-2xl py-5 font-bold text-xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-colors active:scale-[0.98]">Сохранить</button>
+          <button type="submit" className="w-full bg-primary text-black h-16 rounded-[24px] font-black text-xl shadow-2xl shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98] uppercase tracking-widest">Сохранить</button>
         </form>
       </AdminModal>
 
@@ -549,7 +549,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
                   });
                 }}
                 required
-                className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-4 px-6 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
+                className="w-full bg-slate-50 border-2 border-transparent rounded-[20px] py-5 px-8 font-bold text-lg outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300"
               />
             </div>
             <div>
@@ -567,11 +567,11 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
                     return { ...current, [eventInputLang]: val } as any;
                   });
                 }}
-                className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] py-5 px-6 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[120px] resize-none"
+                className="w-full bg-slate-50 border-2 border-transparent rounded-[24px] p-8 font-medium text-base outline-none focus:border-primary/20 focus:bg-white transition-all shadow-sm placeholder:text-slate-300 min-h-[140px] resize-none"
               />
             </div>
           </div>
-          <button type="submit" className="w-full bg-primary text-black rounded-[24px] py-5 font-black text-xl shadow-2xl shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98] uppercase tracking-widest">Добавить в ленту</button>
+          <button type="submit" className="w-full bg-primary text-black h-16 rounded-[24px] font-black text-xl shadow-2xl shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98] uppercase tracking-widest">Добавить в ленту</button>
         </form>
       </AdminModal>
 

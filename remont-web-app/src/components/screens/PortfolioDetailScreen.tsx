@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { translations, Language } from '../../utils/translations';
 import { PortfolioItem } from '../../utils/types';
-import { ArrowLeft, Clock, MapPin, CheckCircle2, User, Share2 } from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, CheckCircle2, User, Share2, Video, Play } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 
 interface PortfolioDetailScreenProps {
@@ -97,37 +97,72 @@ export const PortfolioDetailScreen: React.FC<PortfolioDetailScreenProps> = ({
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-white p-5 rounded-[24px] border border-slate-100 shadow-sm">
-            <div className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Бюджет</div>
+            <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.15em] mb-1">{translations[lang].project.stats.budget}</div>
             <div className="text-slate-900 font-extrabold text-lg">{project.cost || project.budget}</div>
           </div>
           <div className="bg-white p-5 rounded-[24px] border border-slate-100 shadow-sm">
-            <div className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Срок</div>
+            <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.15em] mb-1">{translations[lang].project.stats.term}</div>
             <div className="text-slate-900 font-extrabold text-lg">{project.term || project.duration}</div>
           </div>
           <div className="bg-white p-5 rounded-[24px] border border-slate-100 shadow-sm">
-            <div className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Площадь</div>
+            <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.15em] mb-1">{translations[lang].project.stats.area}</div>
             <div className="text-slate-900 font-extrabold text-lg">{project.area} м²</div>
           </div>
           <div className="bg-white p-5 rounded-[24px] border border-slate-100 shadow-sm">
-            <div className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Тип</div>
+            <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.15em] mb-1">{translations[lang].project.stats.type}</div>
             <div className="text-slate-900 font-bold text-sm">
-              {project.isNewBuilding ? 'Новостройка' : 'Вторичка'}
+              {project.isNewBuilding ? translations[lang].calc.types.new : translations[lang].calc.types.secondary}
             </div>
           </div>
         </div>
 
         {/* Description */}
-        <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
-          <h3 className="font-bold text-slate-900 text-lg mb-3">О проекте</h3>
-          <p className="text-slate-500 text-sm leading-relaxed font-medium">
+        <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full blur-3xl -mr-10 -mt-10 opacity-50 transition-opacity group-hover:opacity-100" />
+          <h3 className="font-black text-slate-900 text-lg mb-3 relative z-10">{translations[lang].project.about_title}</h3>
+          <p className="text-slate-500 text-sm leading-relaxed font-medium relative z-10">
             {typeof project.description === 'string' ? project.description : project.description?.[lang] || (project.description as any)?.ru}
           </p>
         </div>
 
+        {/* Video Review */}
+        {project.videoUrl && (
+          <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm overflow-hidden">
+            <h3 className="font-black text-slate-900 text-lg mb-4 flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <Video size={18} />
+              </div>
+              {translations[lang].project.video_review}
+            </h3>
+            <div className="relative rounded-[24px] overflow-hidden bg-black aspect-video group shadow-xl">
+              {project.videoUrl.includes('vimeo') || project.videoUrl.includes('youtube') || project.videoUrl.includes('youtu.be') ? (
+                <iframe
+                  src={project.videoUrl.includes('vimeo')
+                    ? `https://player.vimeo.com/video/${project.videoUrl.split('/').pop()}?badge=0&autopause=0&player_id=0&app_id=58479`
+                    : `https://www.youtube.com/embed/${project.videoUrl.includes('v=') ? project.videoUrl.split('v=')[1].split('&')[0] : project.videoUrl.split('/').pop()}`
+                  }
+                  className="absolute inset-0 w-full h-full"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  title="Video review"
+                ></iframe>
+              ) : (
+                <div className="w-full h-full relative group cursor-pointer">
+                  <video
+                    src={project.videoUrl}
+                    className="w-full h-full object-cover"
+                    controls
+                    playsInline
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Works Completed */}
         {project.worksCompleted && (
           <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
-            <h3 className="font-bold text-slate-900 text-lg mb-4">Выполненные работы</h3>
+            <h3 className="font-black text-slate-900 text-lg mb-4">{translations[lang].project.works_title}</h3>
             <div className="space-y-6">
               {project.worksCompleted.map((section, idx) => (
                 <div key={idx}>
@@ -152,7 +187,7 @@ export const PortfolioDetailScreen: React.FC<PortfolioDetailScreenProps> = ({
         {/* Team */}
         {project.team && (
           <div>
-            <h3 className="font-bold text-slate-900 text-lg mb-3 px-2">Команда проекта</h3>
+            <h3 className="font-black text-slate-900 text-lg mb-3 px-2">{translations[lang].project.team_title}</h3>
             <div className="grid grid-cols-2 gap-3">
               {project.team.map((member, idx) => (
                 <div key={idx} className="bg-white p-4 rounded-[24px] border border-slate-100 shadow-sm flex items-center space-x-3">
@@ -174,7 +209,7 @@ export const PortfolioDetailScreen: React.FC<PortfolioDetailScreenProps> = ({
         {/* Materials Used */}
         {project.materials && (
           <div className="bg-slate-900 rounded-[32px] p-6 text-white shadow-lg shadow-slate-900/20">
-            <h3 className="font-bold text-lg mb-4">Материалы</h3>
+            <h3 className="font-black text-lg mb-4">{translations[lang].project.materials}</h3>
             <div className="flex flex-wrap gap-2">
               {project.materials.map((mat, idx) => (
                 <span key={idx} className="bg-white/10 px-3 py-1.5 rounded-xl text-xs font-medium border border-white/10">
@@ -191,9 +226,9 @@ export const PortfolioDetailScreen: React.FC<PortfolioDetailScreenProps> = ({
       <div className="fixed bottom-6 left-6 right-6 z-20">
         <button
           onClick={() => onNavigate('calc')}
-          className="w-full bg-[#FFB800] text-black rounded-[24px] py-4 shadow-xl shadow-[#FFB800]/20 flex items-center justify-center font-bold text-lg active:scale-[0.98] transition-transform hover:bg-[#E5A600]"
+          className="w-full bg-[#FFB800] text-black h-16 rounded-[24px] shadow-2xl shadow-[#FFB800]/30 flex items-center justify-center font-black text-lg active:scale-[0.98] transition-all hover:bg-[#E5A600] uppercase tracking-widest"
         >
-          Хочу такой же ремонт
+          {translations[lang].project.cta}
         </button>
       </div>
     </div>

@@ -63,11 +63,11 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         {/* Project Info Overlay */}
         <div className="absolute bottom-6 left-4 right-4 text-white">
           <div className="flex items-center space-x-2 mb-2">
-            <span className="bg-primary text-black text-[10px] font-bold px-3 py-1.5 rounded-full">
-              {lang === 'ru' ? 'В РАБОТЕ' : lang === 'en' ? 'IN PROGRESS' : 'JARAYONDA'}
+            <span className="bg-primary text-black text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
+              {translations[lang].admin.crm.status.process}
             </span>
-            <span className="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/20">
-              {lang === 'ru' ? 'Договор №' : lang === 'en' ? 'Contract #' : 'Shartnoma №'}{project.contractNumber}
+            <span className="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/20 whitespace-nowrap">
+              {translations[lang].dashboard.docs.contract.split(' №')[0]} №{project.contractNumber}
             </span>
           </div>
           <h1 className="text-2xl font-bold mb-1">{typeof project.clientName === 'string' ? project.clientName : project.clientName?.[lang] || (project.clientName as any)?.ru}</h1>
@@ -82,19 +82,19 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
             active={activeTab === 'finance'}
             onClick={() => setActiveTab('finance')}
             icon={DollarSign}
-            label={lang === 'ru' ? 'Финансы' : lang === 'en' ? 'Finance' : 'Moliya'}
+            label={translations[lang].dashboard.finance.title}
           />
           <TabButton
             active={activeTab === 'payments'}
             onClick={() => setActiveTab('payments')}
             icon={CreditCard}
-            label={lang === 'ru' ? 'Платежи' : lang === 'en' ? 'Payments' : 'To\'lovlar'}
+            label={translations[lang].dashboard.finance.history.split(' ')[0]}
           />
           <TabButton
             active={activeTab === 'timeline'}
             onClick={() => setActiveTab('timeline')}
             icon={Package}
-            label={lang === 'ru' ? 'Работы' : lang === 'en' ? 'Works' : 'Ishlar'}
+            label={translations[lang].dashboard.timeline.title.split(' ')[0]}
           />
         </div>
       </div>
@@ -137,7 +137,7 @@ const TabButton: React.FC<TabButtonProps> = ({ active, onClick, icon: Icon, labe
 );
 
 // Finance Tab
-const FinanceTab = ({ project, progressPercentage, lang }: any) => (
+const FinanceTab = ({ project, progressPercentage, lang }: { project: any, progressPercentage: number, lang: Language }) => (
   <div className="space-y-4">
     {/* Summary Cards */}
     <div className="grid grid-cols-2 gap-3">
@@ -160,16 +160,17 @@ const FinanceTab = ({ project, progressPercentage, lang }: any) => (
     </div>
 
     {/* Remaining Amount */}
-    <div className="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-slate-900">{lang === 'ru' ? 'Остаток к оплате' : lang === 'en' ? 'Remaining amount' : 'To\'lanishi kerak'}</h3>
+    <div className="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm relative overflow-hidden group">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full blur-3xl -mr-10 -mt-10 opacity-30 transition-opacity group-hover:opacity-100" />
+      <div className="flex items-center justify-between mb-4 relative z-10">
+        <h3 className="font-bold text-slate-900">{translations[lang].dashboard.finance.left}</h3>
         <AlertCircle size={20} className="text-slate-900" />
       </div>
-      <div className="text-3xl font-bold text-slate-900 mb-1">
-        {(project.finance.remaining / 1000000).toFixed(2)} {lang === 'ru' ? 'млн' : lang === 'en' ? 'm' : 'mln'}
+      <div className="text-3xl font-bold text-slate-900 mb-1 relative z-10">
+        {(project.finance.remaining / 1000000).toFixed(2)} {translations[lang].calc.result.range.split(' ')[0]}
       </div>
-      <p className="text-sm text-slate-500">
-        {project.finance.remaining.toLocaleString('ru-RU')} {lang === 'ru' ? 'сум' : lang === 'en' ? 'sum' : 'so\'m'}
+      <p className="text-sm text-slate-500 relative z-10">
+        {project.finance.remaining.toLocaleString('ru-RU')} {translations[lang].admin.project.currency}
       </p>
     </div>
 
@@ -211,24 +212,24 @@ const FinanceTab = ({ project, progressPercentage, lang }: any) => (
     {project.foremanSalary && project.foremanSalary.records.length > 0 && (
       <div className="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-slate-900">{lang === 'ru' ? 'Выплаты прорабу' : lang === 'en' ? 'Foreman payments' : 'Prorab to\'lovlari'}</h3>
-          <span className="text-xs font-bold text-primary px-2 py-1 bg-primary/10 rounded-full">USD</span>
+          <h3 className="font-black text-slate-900">{translations[lang].admin.project.foreman_salary}</h3>
+          <span className="text-xs font-black text-primary px-3 py-1 bg-primary/10 rounded-full border border-primary/20">USD</span>
         </div>
         <div className="space-y-3">
           {project.foremanSalary.records.map((record: any) => (
-            <div key={record.id} className="flex justify-between items-center p-3 rounded-2xl bg-slate-50 border border-slate-100">
+            <div key={record.id} className="flex justify-between items-center p-4 rounded-2xl bg-slate-50 border border-slate-200/50 hover:bg-slate-100/50 transition-colors">
               <div className="flex items-center space-x-3">
-                <div className={`w-2 h-2 rounded-full ${record.isPaid ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                <div className={`w-2.5 h-2.5 rounded-full ${record.isPaid ? 'bg-emerald-500 shadow-sm shadow-emerald-200' : 'bg-amber-500 shadow-sm shadow-amber-200'}`} />
                 <div>
-                  <p className="text-sm font-bold text-slate-900 leading-none mb-1">{record.month}</p>
-                  <p className="text-[10px] text-slate-400 font-medium">
+                  <p className="text-sm font-black text-slate-900 leading-none mb-1.5">{record.month}</p>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
                     {record.isPaid
-                      ? (lang === 'ru' ? 'Оплачено' : lang === 'en' ? 'Paid' : 'To\'langan')
-                      : (lang === 'ru' ? 'Ожидает' : lang === 'en' ? 'Pending' : 'Kutilmoqda')}
+                      ? translations[lang].admin.project.paid_label
+                      : translations[lang].admin.project.not_paid_label}
                   </p>
                 </div>
               </div>
-              <span className="font-bold text-slate-900">${record.amount}</span>
+              <span className="font-black text-slate-900 text-lg">${record.amount}</span>
             </div>
           ))}
         </div>
@@ -238,11 +239,11 @@ const FinanceTab = ({ project, progressPercentage, lang }: any) => (
 );
 
 // Payments Tab
-const PaymentsTab = ({ project, lang }: any) => (
+const PaymentsTab = ({ project, lang }: { project: any, lang: Language }) => (
   <div className="space-y-3">
     <div className="flex items-center justify-between mb-2">
       <h3 className="font-bold text-slate-900 text-lg">{lang === 'ru' ? 'История платежей' : lang === 'en' ? 'Payment history' : 'To\'lovlar tarixi'}</h3>
-      <span className="text-xs text-slate-400 font-medium">{project.payments.length} {lang === 'ru' ? 'операций' : lang === 'en' ? 'transactions' : 'operatsiyalar'}</span>
+      <span className="text-xs text-slate-400 font-medium">{project.payments.length} {translations[lang].dashboard.finance.transactions}</span>
     </div>
 
     {project.payments.length === 0 ? (
@@ -288,11 +289,11 @@ const PaymentsTab = ({ project, lang }: any) => (
 );
 
 // Timeline Tab - Chat Style
-const TimelineTab = ({ project, lang, onSelectMedia }: any) => (
+const TimelineTab = ({ project, lang, onSelectMedia }: { project: any, lang: Language, onSelectMedia: (url: string) => void }) => (
   <div className="space-y-4">
     <div className="flex items-center justify-between mb-3">
       <h3 className="font-bold text-slate-900 text-lg">{lang === 'ru' ? 'Хронология работ' : lang === 'en' ? 'Work timeline' : 'Ish xronologiyasi'}</h3>
-      <span className="text-xs text-slate-400 font-medium">{project.timeline.length} {lang === 'ru' ? 'обновлений' : lang === 'en' ? 'updates' : 'yangilanishlar'}</span>
+      <span className="text-xs text-slate-400 font-medium">{project.timeline.length} {translations[lang].dashboard.stage.updates}</span>
     </div>
 
     <div className="space-y-3">

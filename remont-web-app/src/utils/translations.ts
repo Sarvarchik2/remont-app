@@ -113,6 +113,16 @@ export const translations = {
       hide: "Свернуть",
       materials: "Используемые материалы",
       cta: "Хочу такой же ремонт",
+      video_review: "Видео-обзор объекта",
+      team_title: "Команда проекта",
+      works_title: "Выполненные работы",
+      about_title: "О проекте",
+      stats: {
+        budget: "Бюджет",
+        term: "Срок",
+        area: "Площадь",
+        type: "Тип"
+      }
     },
     dashboard: {
       title: "Мой объект",
@@ -126,12 +136,14 @@ export const translations = {
         paid: "Оплачено",
         left: "Остаток к оплате",
         history: "История платежей",
+        transactions: "операций",
       },
       stage: {
         title: "Текущий статус",
         name: "Этап 3: Чистовая отделка",
         status: "В работе",
         forecast: "Прогноз завершения:",
+        updates: "обновлений",
       },
       timeline: {
         title: "Хронология работ",
@@ -298,7 +310,14 @@ export const translations = {
         monthly_rate: "Ставка в мес.",
         add_month: "Добавить месяц",
         paid_label: "Оплачено",
-        not_paid_label: "Ожидает"
+        not_paid_label: "Ожидает",
+        video_review: "Видео обзор",
+        upload_video: "Загрузить видео",
+        video_url: "Ссылка на видео",
+        works_completed: "Выполненные работы",
+        team: "Команда проекта",
+        budget: "Бюджет",
+        currency: "сум"
       },
       users: {
         title: "Пользователи бота",
@@ -433,6 +452,16 @@ export const translations = {
       hide: "Yashirish",
       materials: "Ishlatilgan materiallar",
       cta: "Xuddi shunday ta'mirni xohlayman",
+      video_review: "Obyektning video sharhi",
+      team_title: "Loyiha jamoasi",
+      works_title: "Bajarilgan ishlar",
+      about_title: "Loyiha haqida",
+      stats: {
+        budget: "Byudjet",
+        term: "Muddat",
+        area: "Maydon",
+        type: "Turi"
+      }
     },
     dashboard: {
       title: "Mening obyektim",
@@ -446,12 +475,14 @@ export const translations = {
         paid: "To'landi",
         left: "To'lov uchun qoldiq",
         history: "To'lovlar tarixi",
+        transactions: "operatsiyalar",
       },
       stage: {
         title: "Joriy holat",
         name: "3-bosqich: Toza pardozlash",
         status: "Jarayonda",
         forecast: "Yakunlash prognozi:",
+        updates: "yangilanishlar",
       },
       timeline: {
         title: "Ishlar xronologiyasi",
@@ -618,7 +649,14 @@ export const translations = {
         monthly_rate: "Oylik stavka",
         add_month: "Oy qo'shish",
         paid_label: "To'langan",
-        not_paid_label: "Kutilmoqda"
+        not_paid_label: "Kutilmoqda",
+        video_review: "Video sharh",
+        upload_video: "Video yuklash",
+        video_url: "Video havolasi",
+        works_completed: "Bajarilgan ishlar",
+        team: "Loyiha jamoasi",
+        budget: "Byudjet",
+        currency: "so'm"
       },
       users: {
         title: "Bot foydalanuvchilari",
@@ -753,6 +791,16 @@ export const translations = {
       hide: "Hide",
       materials: "Materials Used",
       cta: "I want the exact same renovation",
+      video_review: "Project Video Review",
+      team_title: "Project Team",
+      works_title: "Completed Works",
+      about_title: "About Project",
+      stats: {
+        budget: "Budget",
+        term: "Term",
+        area: "Area",
+        type: "Type"
+      }
     },
     dashboard: {
       title: "My Property",
@@ -766,12 +814,14 @@ export const translations = {
         paid: "Paid",
         left: "Balance Due",
         history: "Payment History",
+        transactions: "transactions",
       },
       stage: {
         title: "Current Status",
         name: "Stage 3: Fine Finishing",
         status: "In Progress",
         forecast: "Forecasted Completion:",
+        updates: "updates",
       },
       timeline: {
         title: "Work Timeline",
@@ -938,7 +988,14 @@ export const translations = {
         monthly_rate: "Monthly rate",
         add_month: "Add month",
         paid_label: "Paid",
-        not_paid_label: "Pending"
+        not_paid_label: "Pending",
+        video_review: "Video Review",
+        upload_video: "Upload Video",
+        video_url: "Video URL",
+        works_completed: "Completed Works",
+        team: "Project Team",
+        budget: "Budget",
+        currency: "sum"
       },
       users: {
         title: "Bot Users",
