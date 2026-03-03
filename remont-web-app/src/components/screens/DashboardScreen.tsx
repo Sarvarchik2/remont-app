@@ -17,9 +17,18 @@ interface DashboardScreenProps {
   onNavigate?: (tab: string, params?: any) => void;
   projects?: Project[];
   tgUser: any;
+  isTgAdmin?: boolean;
+  onAdminLogin?: () => void;
 }
 
-export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNavigate, projects = [], tgUser }) => {
+export const DashboardScreen: React.FC<DashboardScreenProps> = ({
+  lang,
+  onNavigate,
+  projects = [],
+  tgUser,
+  isTgAdmin,
+  onAdminLogin
+}) => {
   const t = translations[lang].dashboard;
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
 
@@ -49,7 +58,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNaviga
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-extrabold text-slate-900">{lang === 'ru' ? 'профиль' : lang === 'en' ? 'profile' : 'profil'}</h1>
-        <div className="w-10 h-10"></div> {/* Empty space for alignment */}
+        <div className="w-10 h-10"></div>
       </div>
 
       {/* Avatar & Stats */}
@@ -80,6 +89,27 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNaviga
           </div>
         </div>
       </div>
+
+      {/* Admin Quick Access */}
+      {isTgAdmin && (
+        <div className="mb-6">
+          <button
+            onClick={onAdminLogin}
+            className="w-full bg-slate-900 text-white p-6 rounded-[28px] flex items-center justify-between shadow-lg shadow-slate-200 active:scale-[0.98] transition-transform group"
+          >
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-primary transition-colors">
+                <Lock size={22} className="fill-current" />
+              </div>
+              <div className="text-left">
+                <span className="font-bold text-white text-base block">Админ-панель</span>
+                <span className="text-xs text-slate-400 font-medium tracking-wide uppercase">Управление проектами</span>
+              </div>
+            </div>
+            <ChevronRight size={20} className="text-slate-500 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+      )}
 
       {currentProject ? (
         <div className="mb-3">
@@ -122,7 +152,6 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ lang, onNaviga
               </div>
             </div>
 
-            {/* Progress Bar */}
             <div className="px-6 pb-6">
               <div className="bg-slate-100 rounded-full h-2 overflow-hidden">
                 <div

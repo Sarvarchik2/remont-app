@@ -31,7 +31,11 @@ import { Lock, ArrowLeft } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ru');
-  const initialViewMode = window.location.pathname === '/admin' || window.location.hash === '#admin' || window.location.search.includes('admin=true') ? 'admin_login' : 'client';
+
+  // Persistence for Admin Mode
+  const savedViewMode = localStorage.getItem('admin_session') === 'active' ? 'admin' : null;
+  const initialViewMode = savedViewMode || (window.location.pathname === '/admin' || window.location.hash === '#admin' || window.location.search.includes('admin=true') ? 'admin_login' : 'client');
+
   const [viewMode, setViewMode] = useState<'client' | 'admin_login' | 'admin'>(initialViewMode);
 
   // Client State
@@ -96,7 +100,7 @@ export default function App() {
 
   const handleRegisterUser = async (user: any) => {
     try {
-      await fetch('/api/v1/users/register', {
+      const res = await fetch('/api/v1/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -106,6 +110,10 @@ export default function App() {
           last_name: user.last_name
         })
       });
+      if (res.ok) {
+        const userData = await res.json();
+        setTgUser((prev: any) => ({ ...prev, ...userData }));
+      }
     } catch (e) {
       console.error("User registration failed", e);
     }
@@ -237,12 +245,18 @@ export default function App() {
     e.preventDefault();
     if (username === 'admin' && password === 'admin123') {
       setViewMode('admin');
+      localStorage.setItem('admin_session', 'active');
       setLoginError('');
       setUsername('');
       setPassword('');
     } else {
       setLoginError('Неверный логин или пароль');
     }
+  };
+
+  const handleLogout = () => {
+    setViewMode('client');
+    localStorage.removeItem('admin_session');
   };
 
   const handleAdminNavigate = (tab: string) => {
@@ -304,6 +318,8 @@ export default function App() {
       );
     }
   };
+  const ADMIN_USER_IDS = ['123456789', '436423456']; // placeholder for admin TG IDs
+  const isTgAdmin = tgUser?.is_admin || (tgUser && ADMIN_USER_IDS.includes(String(tgUser.id)));
 
   // --- Render ---
 
@@ -366,7 +382,7 @@ export default function App() {
           onNavigate={handleAdminNavigate}
           lang={lang}
           setLang={setLang}
-          onLogout={() => setViewMode('client')}
+          onLogout={handleLogout}
         >
           {renderAdminScreen()}
         </AdminLayout>
@@ -461,6 +477,8 @@ export default function App() {
               onNavigate={handleClientNavigate}
               projects={projects}
               tgUser={tgUser}
+              onAdminLogin={() => setViewMode('admin_login')}
+              isTgAdmin={isTgAdmin}
             />
           )}
           {activeTab === 'booking' && (

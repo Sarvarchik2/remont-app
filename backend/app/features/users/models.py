@@ -11,3 +11,4 @@ class User(Base):
     last_name = Column(String, nullable=True)
     phone = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
+    is_admin = Column(Boolean, default=False)

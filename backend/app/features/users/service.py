@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.features.users.repository import UserRepository
 from app.features.users.schemas import UserCreate
 from app.features.users.models import User
+from app.core.config import settings
 
 class UserService:
     def __init__(self, session: AsyncSession):
@@ -16,7 +17,11 @@ class UserService:
         # First check if the user already exists
         existing_user = await self.repository.get_by_telegram_id(user_in.telegram_id)
         if existing_user:
-            # We can also update fields if they changed, omitted for brevity
+            # Sync is_admin status if it changed in config
+            is_admin = user_in.telegram_id in settings.ADMIN_TELEGRAM_IDS
+            if existing_user.is_admin != is_admin:
+                existing_user.is_admin = is_admin
+                await self.repository.session.commit()
             return existing_user
         
         # Additional business rules can be validated here

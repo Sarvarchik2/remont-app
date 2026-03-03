@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.features.users.models import User
 from app.features.users.schemas import UserCreate
+from app.core.config import settings
 from typing import Optional
 
 class UserRepository:
@@ -25,7 +26,8 @@ class UserRepository:
             username=user_in.username,
             first_name=user_in.first_name,
             last_name=user_in.last_name,
-            phone=user_in.phone
+            phone=user_in.phone,
+            is_admin=user_in.telegram_id in settings.ADMIN_TELEGRAM_IDS
         )
         self.session.add(db_user)
         await self.session.commit()
