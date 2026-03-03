@@ -12,3 +12,4 @@ class CatalogItem(Base):
     image = Column(String)
     images = Column(JSON)
     specs = Column(JSON, nullable=True) # arrays of {label: {ru, uz}, value: {ru, uz}}
+    videoUrl = Column(String, nullable=True)

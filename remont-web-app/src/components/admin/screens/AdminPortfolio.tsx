@@ -3,7 +3,7 @@ import { translations, Language } from '../../../utils/translations';
 import { PortfolioItem } from '../../../utils/types';
 import { AdminModal } from '../AdminModal';
 import { MediaUpload } from '../MediaUpload';
-import { Plus, Trash2, MapPin, Ruler, Clock, X, Image as ImageIcon, Pencil, CheckSquare, List, Type, Video, Play, DollarSign, Layers, Users, Star } from 'lucide-react';
+import { Plus, Trash2, MapPin, Ruler, Clock, X, Image as ImageIcon, Pencil, CheckSquare, List, Type, Video, Play, DollarSign, Layers, Users, Star, Sofa, Utensils, Bath, Bed } from 'lucide-react';
 
 interface AdminPortfolioProps {
   lang: Language;
@@ -12,6 +12,8 @@ interface AdminPortfolioProps {
 }
 
 export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio, onUpdatePortfolio }) => {
+  const t = translations[lang].admin.project;
+  const pt = (translations[lang].admin as any).portfolio;
   const setPortfolio = onUpdatePortfolio;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -110,7 +112,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
           <p className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1">
             PORTFOLIO
           </p>
-          <h1 className="text-3xl font-bold text-slate-900">Наши работы</h1>
+          <h1 className="text-3xl font-bold text-slate-900">{pt.title}</h1>
         </div>
         <button
           onClick={() => {
@@ -121,7 +123,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
           className="bg-primary text-black px-6 py-3 rounded-full flex items-center justify-center shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all font-bold text-sm active:scale-95"
         >
           <Plus size={18} className="mr-2" />
-          Добавить проект
+          {pt.add_project}
         </button>
       </div>
 
@@ -135,7 +137,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-bold text-slate-900 uppercase tracking-wider shadow-sm border border-white/50">
-                {item.type === 'living' ? 'Гостиная' : item.type === 'kitchen' ? 'Кухня' : item.type === 'bath' ? 'Ванная' : 'Спальня'}
+                {translations[lang].portfolio.filters[item.type as keyof typeof translations.ru.portfolio.filters] || item.type}
               </div>
 
               {/* Actions */}
@@ -162,17 +164,17 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Площадь</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">{translations[lang].portfolio.area}</span>
                   <span className="text-sm font-bold text-slate-900">{item.area} м²</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Срок</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">{translations[lang].portfolio.term}</span>
                   <span className="text-sm font-bold text-slate-900">{item.term}</span>
                 </div>
               </div>
 
               <div className="mt-auto pt-4 border-t border-slate-100 flex justify-between items-center">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Бюджет</span>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{t.budget}</span>
                 <span className="font-black text-slate-900 text-lg tracking-tight">{item.cost}</span>
               </div>
             </div>
@@ -184,15 +186,15 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
       <AdminModal
         isOpen={isModalOpen}
         onClose={handleClose}
-        title={editingId ? "Редактировать проект" : "Новый проект"}
+        title={editingId ? t.edit_project : pt.add_project}
         maxWidth="max-w-2xl"
       >
         {/* Tabs */}
         <div className="flex items-center gap-1.5 bg-slate-50 p-1.5 rounded-[24px] w-fit mb-8 border border-slate-100/50">
           {[
-            { id: 'general', label: 'Основное', icon: Type },
-            { id: 'details', label: 'Детали', icon: List },
-            { id: 'media', label: 'Медиа', icon: ImageIcon },
+            { id: 'general', label: t.general_tab, icon: Type },
+            { id: 'details', label: t.details_tab, icon: List },
+            { id: 'media', label: t.media_tab, icon: ImageIcon },
           ].map(tab => (
             <button
               key={tab.id}
@@ -207,7 +209,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
 
         {/* Language Switcher for Inputs */}
         <div className="flex items-center gap-2 mb-8 bg-slate-50 p-2 rounded-[22px] w-fit">
-          <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest ml-4 mr-2 leading-none">Язык:</span>
+          <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest ml-4 mr-2 leading-none">{t.input_lang}:</span>
           {(['ru', 'uz', 'en'] as const).map(l => (
             <button
               key={l}
@@ -228,12 +230,12 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               <div className="space-y-6">
                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-4 flex items-center gap-2">
                   <Star size={16} className="text-primary" />
-                  Информация
+                  {t.info}
                 </h4>
 
                 <div>
                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 flex items-center gap-2">
-                    Название ЖК / Проекта <span className="bg-slate-200 text-slate-600 px-2 py-1 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                    {t.project_name} <span className="bg-slate-200 text-slate-600 px-2 py-1 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
                   </label>
                   <input
                     placeholder="ЖК Infinity"
@@ -249,29 +251,40 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                   />
                 </div>
 
+                <div className="col-span-full">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 block ml-5">{t.room_type}</label>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    {[
+                      { id: 'living', icon: Sofa },
+                      { id: 'kitchen', icon: Utensils },
+                      { id: 'bath', icon: Bath },
+                      { id: 'bedroom', icon: Bed },
+                    ].map((type) => (
+                      <button
+                        key={type.id}
+                        type="button"
+                        onClick={() => setNewItem({ ...newItem, type: type.id as any })}
+                        className={`flex flex-col items-center gap-3 p-5 rounded-[32px] border-2 transition-all ${newItem.type === type.id
+                          ? 'bg-primary border-primary text-black shadow-lg shadow-primary/20 scale-[1.02]'
+                          : 'bg-slate-50 text-slate-400 border-transparent hover:text-slate-600 hover:bg-slate-100'
+                          }`}
+                      >
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${newItem.type === type.id ? 'bg-black/10' : 'bg-white shadow-sm'}`}>
+                          <type.icon size={22} className={newItem.type === type.id ? 'text-black' : 'text-slate-400'} />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.1em]">
+                          {translations[lang].portfolio.filters[type.id as keyof typeof translations.ru.portfolio.filters]}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">Тип помещения</label>
-                    <div className="relative">
-                      <select
-                        className="w-full bg-slate-50 border border-slate-200 rounded-full py-5 px-8 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm appearance-none cursor-pointer"
-                        value={newItem.type}
-                        onChange={(e) => setNewItem({ ...newItem, type: e.target.value as any })}
-                      >
-                        <option value="living">Гостиная</option>
-                        <option value="kitchen">Кухня</option>
-                        <option value="bath">Ванная</option>
-                        <option value="bedroom">Спальня</option>
-                      </select>
-                      <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
-                        <Layers size={18} />
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">Площадь (м²)</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">{t.area_sqm}</label>
                     <div className="relative group">
-                      <Ruler size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors" />
+                      <Ruler size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
                       <input
                         type="number"
                         placeholder="85"
@@ -282,45 +295,45 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                       />
                     </div>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-2">
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5">Срок реализации</label>
-                    <div className="relative group">
-                      <Clock size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-2">
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5">{t.term_realization}</label>
+                      <div className="relative group">
+                        <Clock size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors" />
+                        <input
+                          placeholder="2 мес"
+                          value={newItem.term}
+                          onChange={(e) => setNewItem({ ...newItem, term: e.target.value })}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-full py-5 pl-14 pr-8 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5">{t.budget}</label>
+                      <div className="relative group">
+                        <DollarSign size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors" />
+                        <input
+                          placeholder="150М"
+                          value={newItem.cost}
+                          onChange={(e) => setNewItem({ ...newItem, cost: e.target.value })}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">{t.location}</label>
+                    <div className="relative">
+                      <MapPin size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
                       <input
-                        placeholder="2 мес"
-                        value={newItem.term}
-                        onChange={(e) => setNewItem({ ...newItem, term: e.target.value })}
+                        placeholder="Тащкент, Шайхантахур"
+                        value={newItem.location}
+                        onChange={(e) => setNewItem({ ...newItem, location: e.target.value })}
                         className="w-full bg-slate-50 border border-slate-200 rounded-full py-5 pl-14 pr-8 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
                       />
                     </div>
-                  </div>
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5">Бюджет</label>
-                    <div className="relative group">
-                      <DollarSign size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors" />
-                      <input
-                        placeholder="150М"
-                        value={newItem.cost}
-                        onChange={(e) => setNewItem({ ...newItem, cost: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-14 pr-6 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 block ml-5">Локация</label>
-                  <div className="relative">
-                    <MapPin size={18} className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input
-                      placeholder="Ташкент, Шайхантахур"
-                      value={newItem.location}
-                      onChange={(e) => setNewItem({ ...newItem, location: e.target.value })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-full py-5 pl-14 pr-8 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
-                    />
                   </div>
                 </div>
               </div>
@@ -333,12 +346,12 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               <div className="space-y-6">
                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-4 flex items-center gap-2">
                   <List size={16} className="text-primary" />
-                  Подробности
+                  {t.details}
                 </h4>
 
                 <div>
                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 flex items-center gap-2">
-                    Описание <span className="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
+                    {t.description} <span className="bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded-md text-[9px]">{inputLang.toUpperCase()}</span>
                   </label>
                   <textarea
                     placeholder="Расскажите о проекте подробнее..."
@@ -355,7 +368,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 font-black">Теги (через запятую)</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 font-black">{t.tags}</label>
                     <input
                       placeholder="Минимализм, Лофт"
                       value={newItem.tags?.join(', ') || ''}
@@ -365,7 +378,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 font-black">Материалы (через запятую)</label>
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block ml-5 font-black">{t.materials_input}</label>
                     <input
                       placeholder="Knauf, Egger"
                       value={newItem.materials?.join(', ') || ''}
@@ -383,8 +396,8 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                     <CheckSquare size={20} />
                   </div>
                   <div>
-                    <p className="font-black text-slate-900 leading-none mb-1">Новостройка</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Отметьте, если это новый жилой комплекс</p>
+                    <p className="font-black text-slate-900 leading-none mb-1">{t.new_building}</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t.new_building_desc}</p>
                   </div>
                 </div>
               </div>
@@ -393,11 +406,11 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               <div className="space-y-6">
                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
                   <CheckSquare size={16} className="text-primary" />
-                  Выполненные работы
+                  {t.works_completed}
                 </h4>
                 <div className="space-y-4">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100/50 p-3 rounded-xl border border-slate-100">
-                    Формат: Категория: работа 1, работа 2 (каждая категория с новой строки)
+                    {t.works_placeholder}
                   </p>
                   <textarea
                     placeholder={"Черновая: Стяжка, Штукатурка\nЧистовая: Покраска, Обои"}
@@ -422,11 +435,11 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               <div className="space-y-6">
                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
                   <Users size={16} className="text-primary" />
-                  Команда проекта
+                  {t.team}
                 </h4>
                 <div className="space-y-4">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100/50 p-3 rounded-xl border border-slate-100">
-                    Формат: Имя | Роль (каждый участник с новой строки)
+                    {t.team_placeholder}
                   </p>
                   <textarea
                     placeholder={"Иван Иванов | Дизайнер\nПетр Петров | Прораб"}
@@ -460,7 +473,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                 <div className="space-y-4">
                   <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2 flex items-center gap-2">
                     <Star size={14} className="text-amber-400" />
-                    Фото ДО
+                    {t.photo_before}
                   </h4>
                   <MediaUpload
                     multiple={false}
@@ -472,7 +485,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                 <div className="space-y-4">
                   <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2 flex items-center gap-2">
                     <Star size={14} className="text-green-500" />
-                    Фото ПОСЛЕ
+                    {t.photo_after}
                   </h4>
                   <MediaUpload
                     multiple={false}
@@ -486,7 +499,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               <div className="space-y-6">
                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
                   <ImageIcon size={16} className="text-primary" />
-                  Галерея проекта (Все фото)
+                  {t.gallery}
                 </h4>
                 <MediaUpload
                   multiple={true}
@@ -499,13 +512,13 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               <div className="space-y-6">
                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
                   <Video size={16} className="text-primary" />
-                  {translations[lang].admin.project.video_review}
+                  {t.video_review}
                 </h4>
 
                 <div className="space-y-6">
                   <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-100">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-2">
-                      {translations[lang].admin.project.upload_video}
+                      {t.upload_video}
                     </p>
                     <MediaUpload
                       multiple={false}
@@ -518,7 +531,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
 
                   <div className="relative group">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-6">
-                      {translations[lang].admin.project.video_url} (Vimeo / YouTube)
+                      {t.video_url} (Vimeo / YouTube)
                     </p>
                     <div className="relative">
                       <div className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400">
@@ -544,13 +557,13 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               onClick={handleClose}
               className="px-12 h-16 bg-slate-100 text-slate-500 rounded-full font-black text-sm uppercase tracking-[0.15em] hover:bg-slate-200 transition-all active:scale-95 border-2 border-transparent"
             >
-              Отмена
+              {t.cancel}
             </button>
             <button
               type="submit"
               className="flex-1 bg-primary text-black h-16 rounded-full font-black text-base shadow-[0_12px_40px_rgba(255,184,0,0.25)] active:scale-[0.98] transition-all hover:bg-primary/90 uppercase tracking-[0.1em]"
             >
-              {editingId ? 'Сохранить изменения' : 'Опубликовать проект'}
+              {editingId ? t.save_changes : t.publish}
             </button>
           </div>
         </form>

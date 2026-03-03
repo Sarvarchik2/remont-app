@@ -142,6 +142,7 @@ export interface CatalogItem {
     image: string;
     images: string[];
     specs?: { label: Record<Language, string>; value: Record<Language, string> }[];
+    videoUrl?: string;
 }
 
 export interface ServiceItem {

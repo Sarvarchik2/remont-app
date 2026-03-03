@@ -3,7 +3,7 @@ import { translations, Language } from '../../../utils/translations';
 import { Story } from '../../../utils/types';
 import { AdminModal } from '../AdminModal';
 import { MediaUpload } from '../MediaUpload';
-import { Plus, Trash2, Edit2, Play, Image as ImageIcon, Check, X, Search, Type, List, Video } from 'lucide-react';
+import { Plus, Trash2, Edit2, Play, Image as ImageIcon, Check, X, Search, Type, List, Video, Star, Users, Zap } from 'lucide-react';
 
 interface AdminStoriesProps {
   lang: Language;
@@ -12,6 +12,7 @@ interface AdminStoriesProps {
 }
 
 export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpdateStories }) => {
+  const t = (translations[lang].admin as any).stories;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStory, setEditingStory] = useState<Story | null>(null);
 
@@ -24,10 +25,10 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
   });
 
   const categories = [
-    { id: 'process', label: 'Процесс / Jarayon' },
-    { id: 'reviews', label: 'Отзывы / Sharhlar' },
-    { id: 'team', label: 'Команда / Jamoa' },
-    { id: 'promo', label: 'Акции / Aksiya' }
+    { id: 'process', icon: Play },
+    { id: 'reviews', icon: Star },
+    { id: 'team', icon: Users },
+    { id: 'promo', icon: Zap }
   ];
 
   const handleEdit = (story: Story) => {
@@ -37,7 +38,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Вы уверены? / Ishonchingiz komilmi?')) {
+    if (window.confirm(t.confirm_delete)) {
       onUpdateStories(stories.filter(s => s.id !== id));
     }
   };
@@ -46,7 +47,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
     e.preventDefault();
 
     if (!formData.imageUrl || !formData.title?.ru || !formData.title?.uz || !formData.title?.en) {
-      alert('Заполните все обязательные поля');
+      alert(t.required_fields);
       return;
     }
 
@@ -81,7 +82,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
             CONTENT
           </p>
           <h1 className="text-3xl font-bold text-slate-900">
-            {lang === 'ru' ? 'Сторис' : 'Stories'}
+            {t.title}
           </h1>
         </div>
         <button
@@ -95,10 +96,10 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
             });
             setIsModalOpen(true);
           }}
-          className="bg-primary text-primary-foreground px-6 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2 active:scale-95"
+          className="bg-primary text-black px-6 py-3 rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2 active:scale-95"
         >
           <Plus size={18} />
-          {lang === 'ru' ? 'Добавить' : 'Qo\'shish'}
+          {t.add}
         </button>
       </div>
 
@@ -112,7 +113,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-4 flex flex-col justify-end">
               <span className="text-[10px] font-bold text-white/60 uppercase tracking-wider mb-1">
-                {categories.find(c => c.id === story.category)?.label.split('/')[lang === 'ru' ? 0 : lang === 'en' ? 2 : 1] || categories.find(c => c.id === story.category)?.label.split('/')[0]}
+                {(translations[lang].home.stories as any)[story.category]}
               </span>
               <h3 className="text-white font-bold text-sm leading-tight line-clamp-2">
                 {story.title[lang]}
@@ -148,19 +149,19 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
       <AdminModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingStory ? "Редактировать сторис" : "Новая сторис"}
+        title={editingStory ? t.edit_story : t.new_story}
         maxWidth="max-w-lg"
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-5">
             <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-4 flex items-center gap-2">
               <Type size={16} className="text-primary" />
-              Заголовки (Title)
+              {t.titles}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { key: 'ru', label: 'RU Sarlavha', placeholder: 'Монтаж...' },
-                { key: 'uz', label: 'UZ Sarlavha', placeholder: 'Montaj...' },
+                { key: 'ru', label: 'RU Title', placeholder: 'Монтаж...' },
+                { key: 'uz', label: 'UZ Title', placeholder: 'Montaj...' },
                 { key: 'en', label: 'EN Title', placeholder: 'Installing...' },
               ].map((langItem) => (
                 <div key={langItem.key}>
@@ -183,20 +184,25 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
           <div className="space-y-4">
             <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
               <List size={16} className="text-primary" />
-              Категория
+              {t.category}
             </h4>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 p-1.5 bg-slate-50 rounded-[24px]">
+            <div className="grid grid-cols-2 gap-3">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   type="button"
                   onClick={() => setFormData({ ...formData, category: cat.id as any })}
-                  className={`py-3.5 px-3 rounded-[18px] text-[11px] font-black uppercase tracking-wider transition-all border-2 ${formData.category === cat.id
+                  className={`flex items-center gap-3 p-4 rounded-[24px] border-2 transition-all ${formData.category === cat.id
                     ? 'bg-primary border-primary text-black shadow-lg shadow-primary/20 scale-[1.02]'
-                    : 'bg-transparent text-slate-400 border-transparent hover:text-slate-600 hover:bg-slate-100'
+                    : 'bg-slate-50 text-slate-400 border-transparent hover:text-slate-600 hover:bg-slate-100'
                     }`}
                 >
-                  {cat.label.split('/')[lang === 'ru' ? 0 : lang === 'en' ? 2 : 1] || cat.label.split('/')[0]}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${formData.category === cat.id ? 'bg-black/10' : 'bg-white shadow-sm'}`}>
+                    <cat.icon size={18} className={formData.category === cat.id ? 'text-black' : 'text-slate-400'} />
+                  </div>
+                  <span className="text-[11px] font-black uppercase tracking-widest">
+                    {(translations[lang].home.stories as any)[cat.id]}
+                  </span>
                 </button>
               ))}
             </div>
@@ -205,7 +211,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
           <div className="space-y-4">
             <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
               <ImageIcon size={16} className="text-primary" />
-              Обложка
+              {t.cover}
             </h4>
             <MediaUpload
               label={null as any}
@@ -215,22 +221,43 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
             />
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
               <Video size={16} className="text-primary" />
-              Видео (Optional)
+              {t.video_review || 'Видео обзор'}
             </h4>
-            <div className="relative">
-              <div className="absolute left-5 top-1/2 -translate-y-1/2 w-8 h-8 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">
-                <Play size={14} className="fill-current" />
+
+            <div className="space-y-6">
+              <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-100">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ml-2">
+                  {t.upload_video || 'Загрузить видео'}
+                </p>
+                <MediaUpload
+                  multiple={false}
+                  accept="video/*"
+                  values={formData.videoUrl && !formData.videoUrl.startsWith('http') ? [formData.videoUrl] : []}
+                  onUpload={(urls) => setFormData({ ...formData, videoUrl: urls[0] })}
+                  label={null as any}
+                />
               </div>
-              <input
-                type="text"
-                value={formData.videoUrl || ''}
-                onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-full py-4 pl-16 pr-5 font-bold text-slate-900 outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
-                placeholder="https://vimeo.com/... / Direct URL"
-              />
+
+              <div className="relative group">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-6">
+                  {t.video_url || 'Ссылка на видео'} (Vimeo / YouTube)
+                </p>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400">
+                    <Play size={16} className="fill-current" />
+                  </div>
+                  <input
+                    placeholder="https://vimeo.com/..."
+                    value={formData.videoUrl || ''}
+                    style={{ padding: '10px 60px' }}
+                    onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-full py-5 pl-20 pr-8 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -238,7 +265,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
             type="submit"
             className="w-full bg-primary text-black rounded-full py-5 font-black text-xl shadow-2xl shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all mt-4 uppercase tracking-widest"
           >
-            {lang === 'ru' ? 'Сохранить' : 'Saqlash'}
+            {t.save}
           </button>
         </form>
       </AdminModal>
