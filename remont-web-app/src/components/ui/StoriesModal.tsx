@@ -15,16 +15,29 @@ interface StoriesModalProps {
 export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialIndex, isOpen, onClose, lang }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [progress, setProgress] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [duration, setDuration] = useState(5000); // Default 5s
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(initialIndex);
       setProgress(0);
+      setIsPaused(false);
     }
   }, [isOpen, initialIndex]);
 
+  // Image story timer
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || isPaused) return;
+
+    const currentStory = stories[currentIndex];
+    const isDirectVideo = !!currentStory.videoUrl && !currentStory.videoUrl.includes('youtube') && !currentStory.videoUrl.includes('vimeo');
+
+    if (isDirectVideo) return; // Video handles its own progress through onTimeUpdate
+
+    const interval = 50;
+    const increment = (interval / duration) * 100;
 
     const timer = setInterval(() => {
       setProgress((prev) => {
@@ -32,17 +45,19 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
           handleNext();
           return 0;
         }
-        return prev + 0.7;
+        return prev + increment;
       });
-    }, 50);
+    }, interval);
 
     return () => clearInterval(timer);
-  }, [currentIndex, isOpen]);
+  }, [currentIndex, isOpen, isPaused, duration]);
 
   const handleNext = () => {
     if (currentIndex < stories.length - 1) {
       setCurrentIndex(currentIndex + 1);
       setProgress(0);
+      setDuration(5000);
+      setIsPaused(false);
     } else {
       onClose();
     }
@@ -52,6 +67,21 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
       setProgress(0);
+      setDuration(5000);
+      setIsPaused(false);
+    }
+  };
+
+  const onVideoTimeUpdate = () => {
+    if (videoRef.current) {
+      const p = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+      setProgress(p);
+    }
+  };
+
+  const onVideoLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration * 1000);
     }
   };
 
@@ -77,17 +107,19 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
       {/* Header */}
       <div className="absolute top-8 left-4 right-4 flex justify-between items-center z-30 pt-2">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-rose-400 to-orange-400 p-0.5">
-            <div className="w-full h-full bg-black rounded-full flex items-center justify-center font-bold text-xs">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary via-amber-400 to-yellow-200 p-[2px]">
+            <div className="w-full h-full bg-black rounded-full flex items-center justify-center font-bold text-sm text-primary">
               R
             </div>
           </div>
           <div className="flex flex-col">
             <span className="font-bold text-sm leading-none mb-0.5">RemontUz</span>
-            <span className="text-white/60 text-[10px] font-bold">только что</span>
+            <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider">
+              {lang === 'ru' ? 'сейчас' : lang === 'en' ? 'now' : 'hozir'}
+            </span>
           </div>
         </div>
-        <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md">
+        <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md hover:bg-black/40 transition-colors">
           <X size={20} />
         </button>
       </div>
@@ -108,12 +140,17 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
               ></iframe>
             ) : (
               <video
+                ref={videoRef}
                 src={currentStory.videoUrl}
                 className="w-full h-full object-cover"
                 autoPlay
                 muted
                 playsInline
-                loop
+                onWaiting={() => setIsPaused(true)}
+                onPlaying={() => setIsPaused(false)}
+                onTimeUpdate={onVideoTimeUpdate}
+                onLoadedMetadata={onVideoLoadedMetadata}
+                onEnded={handleNext}
               />
             )}
           </div>
@@ -136,9 +173,12 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
 
         {/* Caption & CTA */}
         <div className="absolute bottom-10 left-6 right-6 z-30">
-          <h3 className="text-3xl font-black mb-6 leading-tight tracking-tight">{currentStory.title[lang]}</h3>
+          <h3 className="text-3xl font-black mb-6 leading-tight tracking-tight drop-shadow-lg">{currentStory.title[lang]}</h3>
 
-          <button className="w-full bg-white text-black py-4 rounded-2xl font-bold text-sm uppercase tracking-widest active:scale-95 transition-transform flex items-center justify-center">
+          <button
+            onClick={onClose}
+            className="w-full bg-white text-black py-4 rounded-2xl font-bold text-sm uppercase tracking-widest active:scale-95 transition-transform flex items-center justify-center shadow-xl shadow-black/40"
+          >
             {lang === 'ru' ? 'Подробнее' : lang === 'en' ? 'Details' : 'Batafsil'}
           </button>
         </div>

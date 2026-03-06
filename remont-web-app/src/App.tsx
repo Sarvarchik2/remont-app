@@ -107,7 +107,7 @@ export default function App() {
       // Fallback only for LOCAL development
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         user = {
-          id: 123456789,
+          id: 340659823, // Use user's ID for local testing
           first_name: 'Local',
           last_name: 'Test',
           username: 'local_test'
@@ -119,10 +119,11 @@ export default function App() {
       setTgUser(user);
       handleRegisterUser(user);
     }
-  }, [lang]);
+  }, []); // Run ONLY once on mount
 
   const handleRegisterUser = async (user: any) => {
     try {
+      console.log("Registering user:", user);
       const res = await fetch(`${API_BASE_URL}/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -136,6 +137,7 @@ export default function App() {
       });
       if (res.ok) {
         const userData = await res.json();
+        console.log("User registered successfully:", userData);
         setTgUser((prev: any) => ({
           ...prev,
           ...userData,
