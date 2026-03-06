@@ -1,7 +1,0 @@
-#!/usr/bin/expect -f
-set password "Sarik0770"
-spawn ssh -o StrictHostKeyChecking=no root@83.171.249.103 "docker exec -t remont_db psql -U postgres -d remont_db -c 'SELECT * FROM users;'"
-expect {
-    "*assword:*" { send "$password\r"; exp_continue }
-    eof
-}
