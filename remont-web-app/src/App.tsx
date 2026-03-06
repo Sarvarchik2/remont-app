@@ -77,42 +77,70 @@ export default function App() {
   // User State
   const [tgUser, setTgUser] = useState<any>(null);
 
+  const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname))
+    ? '/api/v1'
+    : 'https://api.ulaskins.uz/api/v1';
+
   useEffect(() => {
-    const initDataUnsafe = (window as any)?.Telegram?.WebApp?.initDataUnsafe;
+    const webapp = (window as any)?.Telegram?.WebApp;
+    if (webapp) {
+      webapp.ready();
+      webapp.expand();
+      // Optional: Set header color to match app theme
+      webapp.setHeaderColor('#F9F9F7');
+    }
+
+    const initDataUnsafe = webapp?.initDataUnsafe;
     let user = null;
 
+    console.log("WebApp InitDataUnsafe:", initDataUnsafe);
+    console.log("WebApp Platform:", webapp?.platform);
+    console.log("WebApp Version:", webapp?.version);
+
     if (initDataUnsafe && initDataUnsafe.user) {
+      // Real Telegram User
       user = initDataUnsafe.user;
+      console.log("Detected Telegram User:", user);
     } else {
-      // Fallback for local testing
-      user = {
-        id: 123456789,
-        first_name: lang === 'ru' ? 'Тестовый' : lang === 'en' ? 'Test' : 'Sinov',
-        last_name: lang === 'ru' ? 'Пользователь' : lang === 'en' ? 'User' : 'Foydalanuvchi',
-        username: 'test_user'
-      };
+      console.warn("No Telegram user found in initDataUnsafe.");
+
+      // Fallback only for LOCAL development
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        user = {
+          id: 123456789,
+          first_name: 'Local',
+          last_name: 'Test',
+          username: 'local_test'
+        };
+      }
     }
-    setTgUser(user);
+
     if (user) {
+      setTgUser(user);
       handleRegisterUser(user);
     }
   }, [lang]);
 
   const handleRegisterUser = async (user: any) => {
     try {
-      const res = await fetch('/api/v1/users/register', {
+      const res = await fetch(`${API_BASE_URL}/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           telegram_id: String(user.id),
           username: user.username,
           first_name: user.first_name,
-          last_name: user.last_name
+          last_name: user.last_name,
+          photo_url: user.photo_url
         })
       });
       if (res.ok) {
         const userData = await res.json();
-        setTgUser((prev: any) => ({ ...prev, ...userData }));
+        setTgUser((prev: any) => ({
+          ...prev,
+          ...userData,
+          telegram_id: String(user.id) // Ensure we keep the string version of TG ID
+        }));
       }
     } catch (e) {
       console.error("User registration failed", e);
@@ -123,7 +151,7 @@ export default function App() {
   useEffect(() => {
     const initData = async () => {
       try {
-        const url = '/api/v1';
+        const url = API_BASE_URL;
 
         const settingsRes = await fetch(`${url}/settings/`);
         const settingsData = await settingsRes.json();
@@ -163,7 +191,7 @@ export default function App() {
       }
     };
     initData();
-  }, []);
+  }, [API_BASE_URL]);
 
   // --- Client Navigation ---
   const handleClientNavigate = (tab: string, params?: any) => {
@@ -212,7 +240,7 @@ export default function App() {
   // --- Lead Management ---
   const handleSubmitLead = async (lead: Lead) => {
     try {
-      await fetch('/api/v1/leads/', {
+      await fetch(`${API_BASE_URL}/leads/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(lead)
@@ -277,7 +305,7 @@ export default function App() {
         // Perform background sync to backend
         Promise.resolve().then(async () => {
           try {
-            await fetch(`/api/v1/${endpoint}`, {
+            await fetch(`${API_BASE_URL}/${endpoint}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(isBatch ? newValue : newValue),

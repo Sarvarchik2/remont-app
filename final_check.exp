@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+set password "Sarik0770"
+spawn ssh -o StrictHostKeyChecking=no root@83.171.249.103 "docker logs remont_backend --tail 50"
+expect {
+    "*assword:*" { send "$password\r"; exp_continue }
+    eof
+}

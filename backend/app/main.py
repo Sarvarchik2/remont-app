@@ -23,8 +23,10 @@ from app.features.services.router import router as services_router
 from app.features.stories.router import router as stories_router
 from app.features.settings.router import router as settings_router
 from app.features.media_router import router as media_router
+from app.features.bot.bot import start_bot
 from fastapi.staticfiles import StaticFiles
 import os
+import asyncio
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -32,6 +34,8 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
     # Ensure static directory exists
     os.makedirs("static/uploads", exist_ok=True)
+    # Start bot in background
+    asyncio.create_task(start_bot())
     yield
 
 app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)

@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+set password "Sarik0770"
+spawn ssh -o StrictHostKeyChecking=no root@83.171.249.103 "cat /etc/nginx/sites-available/default || cat /etc/nginx/conf.d/default.conf || cat /etc/nginx/nginx.conf"
+expect {
+    "*assword:*" { send "$password\r"; exp_continue }
+    eof
+}

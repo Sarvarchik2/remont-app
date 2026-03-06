@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+set password "Sarik0770"
+# Using single quotes for the value and double quotes for the command to avoid type mismatch
+spawn ssh -o StrictHostKeyChecking=no root@83.171.249.103 "docker exec -t remont_db psql -U postgres -d remont_db -c \"DELETE FROM users WHERE telegram_id = '340659823';\""
+expect {
+    "*assword:*" { send "$password\r"; exp_continue }
+    eof
+}

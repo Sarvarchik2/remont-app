@@ -27,6 +27,7 @@ class UserRepository:
             first_name=user_in.first_name,
             last_name=user_in.last_name,
             phone=user_in.phone,
+            photo_url=user_in.photo_url,
             is_admin=user_in.telegram_id in settings.ADMIN_TELEGRAM_IDS
         )
         self.session.add(db_user)

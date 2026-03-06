@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+set password "Sarik0770"
+spawn ssh -o StrictHostKeyChecking=no root@83.171.249.103 "cat /root/app/.env"
+expect {
+    "*assword:*" { send "$password\r"; exp_continue }
+    eof
+}

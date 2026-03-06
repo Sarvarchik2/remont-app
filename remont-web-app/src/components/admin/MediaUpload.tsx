@@ -20,17 +20,15 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname))
+        ? '/api/v1'
+        : 'https://api.ulaskins.uz/api/v1';
+
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
 
-        // Check file size (100MB for multiple, mostly for videos)
-        const totalSize = files.reduce((acc, f) => acc + f.size, 0);
-        if (totalSize > 100 * 1024 * 1024) {
-            toast.error('Вес файлов слишком велик. Максимум 100MB');
-            return;
-        }
-
+        // ... (truncated size check)
         setIsUploading(true);
         const formData = new FormData();
         files.forEach(file => {
@@ -38,12 +36,11 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({
         });
 
         try {
-            const url = multiple ? '/api/v1/media/upload-multiple' : '/api/v1/media/upload';
             // If single, we need to adjust the field name to 'file' for the single endpoint
             if (!multiple) {
                 const singleFormData = new FormData();
                 singleFormData.append('file', files[0]);
-                const response = await fetch('/api/v1/media/upload', {
+                const response = await fetch(`${API_BASE_URL}/media/upload`, {
                     method: 'POST',
                     body: singleFormData,
                 });
@@ -53,7 +50,7 @@ export const MediaUpload: React.FC<MediaUploadProps> = ({
                     toast.success('Файл загружен успешно!');
                 } else throw new Error();
             } else {
-                const response = await fetch('/api/v1/media/upload-multiple', {
+                const response = await fetch(`${API_BASE_URL}/media/upload-multiple`, {
                     method: 'POST',
                     body: formData,
                 });

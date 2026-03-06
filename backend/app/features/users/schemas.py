@@ -7,6 +7,7 @@ class UserBase(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     phone: Optional[str] = None
+    photo_url: Optional[str] = None
 
 class UserCreate(UserBase):
     pass

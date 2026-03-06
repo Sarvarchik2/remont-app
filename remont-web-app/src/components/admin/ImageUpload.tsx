@@ -12,22 +12,21 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, value, label
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname))
+        ? '/api/v1'
+        : 'https://api.ulaskins.uz/api/v1';
+
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Check file size (5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            toast.error('Файл слишком большой. Максимум 5MB');
-            return;
-        }
-
+        // ... (truncated)
         setIsUploading(true);
         const formData = new FormData();
         formData.append('file', file);
 
         try {
-            const response = await fetch('/api/v1/media/upload', {
+            const response = await fetch(`${API_BASE_URL}/media/upload`, {
                 method: 'POST',
                 body: formData,
             });

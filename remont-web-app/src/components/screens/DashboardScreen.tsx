@@ -35,8 +35,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   // Auto-login logic
   useEffect(() => {
     if (tgUser && projects.length > 0) {
+      const userIdStr = String(tgUser.telegram_id || tgUser.id);
       // Find project by telegramId
-      const matchedProject = projects.find(p => p.telegramId === String(tgUser.id));
+      const matchedProject = projects.find(p => String(p.telegramId) === userIdStr);
       if (matchedProject) {
         setCurrentProject(matchedProject);
       }
@@ -63,18 +64,31 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
 
       {/* Avatar & Stats */}
       <div className="bg-white rounded-[40px] p-8 mb-6 text-center shadow-sm border border-slate-100">
-        <div className="w-28 h-28 mx-auto bg-primary rounded-full flex items-center justify-center text-primary-foreground text-4xl font-bold mb-6 shadow-xl shadow-primary/20 uppercase">
-          {tgUser?.first_name ? tgUser.first_name.charAt(0) : 'U'}
+        <div className="w-28 h-28 mx-auto bg-primary rounded-full flex items-center justify-center text-primary-foreground text-4xl font-bold mb-6 shadow-xl shadow-primary/20 uppercase overflow-hidden">
+          {tgUser?.photo_url ? (
+            <img src={tgUser.photo_url} alt="Profile" className="w-full h-full object-cover" />
+          ) : (
+            tgUser?.first_name ? tgUser.first_name.charAt(0) : 'U'
+          )}
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">
+        <h2 className="text-2xl font-bold text-slate-900 mb-1">
           {tgUser ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() : (lang === 'ru' ? 'Загрузка...' : lang === 'en' ? 'Loading...' : 'Yuklanmoqda...')}
         </h2>
+        {tgUser?.username && (
+          <p className="text-primary font-bold text-sm mb-2">@{tgUser.username}</p>
+        )}
+        {tgUser?.phone && (
+          <div className="flex items-center justify-center text-slate-500 text-sm mb-4">
+            <Phone size={14} className="mr-1.5" />
+            <span className="font-medium">{tgUser.phone}</span>
+          </div>
+        )}
 
         {currentProject ? (
           <p className="text-slate-400 font-medium text-sm">{lang === 'ru' ? 'Договор №' : lang === 'en' ? 'Contract #' : 'Shartnoma №'}{currentProject.contractNumber}</p>
         ) : (
           <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-full inline-block mt-1">
-            Ваш ID: {tgUser?.id || '-'}
+            Ваш ID: {tgUser?.telegram_id || tgUser?.id || '-'}
           </p>
         )}
 

@@ -17,11 +17,29 @@ class UserService:
         # First check if the user already exists
         existing_user = await self.repository.get_by_telegram_id(user_in.telegram_id)
         if existing_user:
-            # Sync is_admin status if it changed in config
+            # Sync user info (name, photo, etc.) if it changed
+            updated = False
+            if existing_user.first_name != user_in.first_name:
+                existing_user.first_name = user_in.first_name
+                updated = True
+            if existing_user.last_name != user_in.last_name:
+                existing_user.last_name = user_in.last_name
+                updated = True
+            if existing_user.username != user_in.username:
+                existing_user.username = user_in.username
+                updated = True
+            if user_in.photo_url and existing_user.photo_url != user_in.photo_url:
+                existing_user.photo_url = user_in.photo_url
+                updated = True
+            
             is_admin = user_in.telegram_id in settings.ADMIN_TELEGRAM_IDS
             if existing_user.is_admin != is_admin:
                 existing_user.is_admin = is_admin
+                updated = True
+            
+            if updated:
                 await self.repository.session.commit()
+                await self.repository.session.refresh(existing_user)
             return existing_user
         
         # Additional business rules can be validated here

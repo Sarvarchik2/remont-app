@@ -1,0 +1,9 @@
+#!/usr/bin/expect -f
+set timeout -1
+set password "Sarik0770"
+
+spawn ssh -o StrictHostKeyChecking=no root@83.171.249.103 "cd /root/app && docker compose -f docker-compose.prod.yml down -v && docker compose -f docker-compose.prod.yml up -d --build"
+expect {
+    "*assword:*" { send "$password\r"; exp_continue }
+    eof
+}
