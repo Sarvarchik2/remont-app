@@ -77,7 +77,12 @@ export default function App() {
   // User State
   const [tgUser, setTgUser] = useState<any>(null);
 
-  const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname))
+  const API_BASE_URL = (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1' ||
+    /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname) ||
+    window.location.hostname.endsWith('ulaskins.uz')
+  )
     ? '/api/v1'
     : 'https://api.ulaskins.uz/api/v1';
 
