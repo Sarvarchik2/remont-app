@@ -90,18 +90,11 @@ async def seed_data():
         result = await session.execute(select(CalculatorSetting))
         if not result.scalars().first():
             calc_settings = CalculatorSetting(
-                prices={
-                    "new": {
-                        "economy": 1200000,
-                        "standard": 2500000,
-                        "premium": 4500000
-                    },
-                    "secondary": {
-                        "economy": 1500000,
-                        "standard": 2800000,
-                        "premium": 4800000
-                    }
-                }
+                prices=[
+                    { "id": "new", "label": "Новостройка", "economy": 1200000, "standard": 2500000, "premium": 4500000 },
+                    { "id": "secondary", "label": "Вторичка", "economy": 1500000, "standard": 2800000, "premium": 4800000 },
+                    { "id": "house", "label": "Частный дом", "economy": 2000000, "standard": 3500000, "premium": 5500000 }
+                ]
             )
             session.add(calc_settings)
             print("Added CalculatorSetting")
