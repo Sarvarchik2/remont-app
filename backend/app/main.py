@@ -24,6 +24,7 @@ from app.features.stories.router import router as stories_router
 from app.features.settings.router import router as settings_router
 from app.features.media_router import router as media_router
 from app.features.bot.bot import start_bot
+from app.seed import seed_data
 from fastapi.staticfiles import StaticFiles
 import os
 import asyncio
@@ -32,6 +33,13 @@ import asyncio
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    
+    # Run seeding
+    try:
+        await seed_data()
+    except Exception as e:
+        print(f"Error during seeding: {e}")
+
     # Ensure static directory exists
     os.makedirs("static/uploads", exist_ok=True)
     # Start bot in background
