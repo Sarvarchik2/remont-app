@@ -22,6 +22,8 @@ services:
       PROJECT_NAME: "Remont App Backend"
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       WEB_APP_URL: ${WEB_APP_URL}
+    env_file:
+      - .env
     depends_on:
       - db
     ports:
