@@ -315,7 +315,7 @@ export default function App() {
             await fetch(`${API_BASE_URL}/${endpoint}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(isBatch ? newValue : newValue),
+              body: JSON.stringify(isBatch ? newValue : { id: 1, prices: newValue }),
             });
           } catch (e) {
             console.error('Failed to sync state:', e);

@@ -7,7 +7,7 @@ class Lead(Base):
     __tablename__ = "leads"
 
     id = Column(String, primary_key=True, index=True)
-    name = Column(String, nullable=True)
+    name = Column(JSON, nullable=True)
     phone = Column(String, nullable=True)
     source = Column(String) # 'calculator', 'booking', 'phone', 'other'
     status = Column(String, default='new') # 'new', 'contacted', 'measuring', 'contract', 'declined'
