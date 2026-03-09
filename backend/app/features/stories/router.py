@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete, select
+from datetime import datetime
 from app.core.database import get_db
 from app.features.stories.models import Story
 
@@ -29,8 +30,17 @@ async def create_batch_stories(data_list: list[dict], db: AsyncSession = Depends
         for data in data_list:
             # Filter dict to only include model keys to avoid unexpected fields
             # Story model has id, category, imageUrl, title, videoUrl
-            allowed_keys = ['id', 'category', 'imageUrl', 'title', 'videoUrl']
+            allowed_keys = ['id', 'category', 'imageUrl', 'title', 'videoUrl', 'linkUrl', 'createdAt']
             filtered_data = {k: v for k, v in data.items() if k in allowed_keys}
+            
+            if 'createdAt' in filtered_data and isinstance(filtered_data['createdAt'], str):
+                try:
+                    # Remove 'Z' and parse ISO format
+                    dt_str = filtered_data['createdAt'].replace('Z', '')
+                    filtered_data['createdAt'] = datetime.fromisoformat(dt_str)
+                except Exception:
+                    # If parsing fails, delete the key so DB uses its default
+                    del filtered_data['createdAt']
             
             item = Story(**filtered_data)
             db.add(item)

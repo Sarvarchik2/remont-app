@@ -190,23 +190,17 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
               {lang === 'ru' ? 'Нет активных проектов' : lang === 'en' ? 'No active projects' : 'Faol loyihalar yo\'q'}
             </h3>
             <p className="text-slate-500 text-sm mb-8 leading-relaxed">
-              {lang === 'ru' ? 'Начните свой идеальный ремонт вместе с нами. Рассчитайте стоимость или запишитесь на бесплатный замер.' :
-                lang === 'en' ? 'Start your perfect renovation with us. Calculate the cost or book a free measurement.' :
-                  'Mukammal ta\'miringizni biz bilan boshlang. Narxni hisoblang yoki bepul o\'lchovga yoziling.'}
+              {lang === 'ru' ? 'Начните свой идеальный ремонт вместе с нами. Рассчитайте стоимость за 1 минуту.' :
+                lang === 'en' ? 'Start your perfect renovation with us. Calculate the cost in 1 minute.' :
+                  'Mukammal ta\'miringizni biz bilan boshlang. 1 daqiqada narxni hisoblang.'}
             </p>
 
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => onNavigate && onNavigate('calculator')}
+                onClick={() => onNavigate && onNavigate('calc')}
                 className="w-full bg-primary text-black rounded-2xl py-4 font-bold text-sm hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/20"
               >
                 {lang === 'ru' ? 'Рассчитать стоимость ремонта' : lang === 'en' ? 'Calculate Renovation Cost' : 'Ta\'mirlash narxini hisoblash'}
-              </button>
-              <button
-                onClick={() => onNavigate && onNavigate('booking')}
-                className="w-full bg-slate-100 text-slate-900 rounded-2xl py-4 font-bold text-sm hover:bg-slate-200 active:scale-[0.98] transition-all"
-              >
-                {lang === 'ru' ? 'Заказать бесплатный замер' : lang === 'en' ? 'Book Free Measurement' : 'Bepul o\'lchovni buyurtma qilish'}
               </button>
             </div>
           </div>

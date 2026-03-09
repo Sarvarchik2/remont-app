@@ -63,15 +63,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           </div>
           <span className="font-extrabold text-lg">Admin<span className="text-slate-400">Panel</span></span>
         </div>
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 bg-slate-50 rounded-full hover:bg-slate-100 transition-colors">
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 bg-slate-50 rounded-full hover:bg-slate-100 transition-colors z-[110]">
           {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
       {/* Sidebar (Desktop & Mobile Drawer) */}
       <div className={`
-        fixed inset-y-0 left-0 z-40 w-72 bg-white text-slate-900 transform transition-transform duration-300 ease-in-out border-r border-slate-100
-        md:relative md:translate-x-0
+        fixed inset-y-0 left-0 z-[100] w-72 bg-white text-slate-900 transform transition-transform duration-300 ease-in-out border-r border-slate-100 shadow-2xl
+        md:relative md:translate-x-0 md:shadow-none md:z-auto
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="p-8 hidden md:flex items-center space-x-3 mb-4">
@@ -81,7 +81,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           <span className="font-black text-2xl tracking-tight">Remont<span className="text-slate-300">Uz</span></span>
         </div>
 
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 pt-24 md:pt-4 space-y-2">
           {navItems.map((item) => (
             <button
               key={item.id}

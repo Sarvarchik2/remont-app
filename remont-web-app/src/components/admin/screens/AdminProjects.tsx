@@ -3,6 +3,7 @@ import { translations, Language } from '../../../utils/translations';
 import { Project, AppUser } from '../../../utils/types';
 import { AdminProjectDetail } from './AdminProjectDetail';
 import { AdminModal } from '../AdminModal';
+import { MediaUpload } from '../MediaUpload';
 import { Search, Plus, MapPin, Calendar, X, DollarSign, User, Phone, FileText, Clock } from 'lucide-react';
 
 interface AdminProjectsProps {
@@ -34,7 +35,8 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
     startDate: '',
     deadline: '',
     status: 'new',
-    currentStage: 'Подготовка'
+    currentStage: 'Подготовка',
+    imageUrl: ''
   });
 
   const handleCreateProject = (e: React.FormEvent) => {
@@ -69,7 +71,8 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
           type: 'info',
           status: 'completed'
         }
-      ]
+      ],
+      imageUrl: formData.imageUrl || ''
     };
 
     onUpdateProjects([newProject, ...projects]);
@@ -84,7 +87,8 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
       startDate: '',
       deadline: '',
       status: 'new',
-      currentStage: 'Подготовка'
+      currentStage: 'Подготовка',
+      imageUrl: ''
     });
   };
 
@@ -419,6 +423,19 @@ export const AdminProjects: React.FC<AdminProjectsProps> = ({ lang, projects, on
                 </div>
               </div>
             </div>
+          </div>
+          
+          <div className="space-y-4">
+            <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em] border-b border-slate-100 pb-3 flex items-center gap-2">
+              <Plus size={14} className="text-primary" />
+              ФОТО ОБЪЕКТА
+            </h4>
+            <MediaUpload
+              values={formData.imageUrl ? [formData.imageUrl] : []}
+              onUpload={(urls) => setFormData({ ...formData, imageUrl: urls[0] || '' })}
+              multiple={false}
+              label="Главное фото проекта"
+            />
           </div>
 
           <div className="space-y-6 bg-slate-50/50 p-6 rounded-[24px] border border-slate-200">

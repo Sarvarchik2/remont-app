@@ -21,7 +21,8 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
     category: 'process',
     title: { ru: '', uz: '', en: '' },
     imageUrl: '',
-    videoUrl: ''
+    videoUrl: '',
+    linkUrl: ''
   });
 
   const categories = [
@@ -60,6 +61,7 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
       const newStory: Story = {
         ...formData as Story,
         id: Date.now().toString(),
+        createdAt: new Date().toISOString()
       };
       onUpdateStories([newStory, ...stories]);
     }
@@ -70,7 +72,8 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
       category: 'process',
       title: { ru: '', uz: '', en: '' },
       imageUrl: '',
-      videoUrl: ''
+      videoUrl: '',
+      linkUrl: ''
     });
   };
 
@@ -92,7 +95,8 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
               category: 'process',
               title: { ru: '', uz: '', en: '' },
               imageUrl: '',
-              videoUrl: ''
+              videoUrl: '',
+              linkUrl: ''
             });
             setIsModalOpen(true);
           }}
@@ -258,6 +262,21 @@ export const AdminStories: React.FC<AdminStoriesProps> = ({ lang, stories, onUpd
                   />
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-3 flex items-center gap-2">
+              <Plus size={16} className="text-primary" />
+              {lang === 'ru' ? 'Ссылка "Подробнее"' : lang === 'en' ? 'Learn More URL' : '"Batafsil" havolasi'}
+            </h4>
+            <div className="relative group">
+              <input
+                placeholder="https://t.me/remontuz_bot?start=..."
+                value={formData.linkUrl || ''}
+                onChange={(e) => setFormData({ ...formData, linkUrl: e.target.value })}
+                className="w-full bg-slate-50 border border-slate-200 rounded-full py-5 px-8 font-bold text-base outline-none focus:border-primary/50 focus:bg-white transition-all shadow-sm placeholder:text-slate-400"
+              />
             </div>
           </div>
 

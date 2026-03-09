@@ -46,7 +46,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
       {/* Header with Hero Image */}
       <div className="relative h-72 overflow-hidden">
         <ImageWithFallback
-          src="https://images.unsplash.com/photo-1687669930011-65755484a0a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBwcm9ncmVzcyUyMHRpbWVsaW5lfGVufDF8fHx8MTc3MTAwNTI4Mnww&ixlib=rb-4.1.0&q=80&w=1080"
+          src={project.imageUrl || "/project-hero.png"}
           alt="Project"
           className="w-full h-full object-cover"
         />
@@ -63,8 +63,18 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         {/* Project Info Overlay */}
         <div className="absolute bottom-6 left-4 right-4 text-white">
           <div className="flex items-center space-x-2 mb-2">
-            <span className="bg-primary text-black text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
-              {translations[lang].admin.crm.status.process}
+            <span className={`text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider ${
+              project.status === 'finished' 
+                ? 'bg-emerald-500 text-white' 
+                : project.status === 'new'
+                ? 'bg-blue-500 text-white'
+                : 'bg-primary text-black'
+            }`}>
+              {project.status === 'finished' 
+                ? (lang === 'ru' ? 'Завершен' : lang === 'en' ? 'Finished' : 'Tugallangan')
+                : project.status === 'new'
+                ? (lang === 'ru' ? 'Новый' : lang === 'en' ? 'New' : 'Yangi')
+                : translations[lang].admin.crm.status.process}
             </span>
             <span className="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/20 whitespace-nowrap">
               {translations[lang].dashboard.docs.contract.split(' №')[0]} №{project.contractNumber}

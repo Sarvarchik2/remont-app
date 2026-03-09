@@ -191,9 +191,9 @@ export const HomeScreen = ({
               <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 backdrop-blur-xl rounded-xl mb-3 border border-white/10">
                 <Target size={24} className="text-primary" strokeWidth={2.5} />
               </div>
-              <h4 className="text-lg font-bold text-white mb-2">{lang === 'ru' ? 'Контроль 24/7' : lang === 'en' ? '24/7 Control' : '24/7 Nazorat'}</h4>
+              <h4 className="text-lg font-bold text-white mb-2">{lang === 'ru' ? 'Прозрачный процесс' : lang === 'en' ? 'Transparent Process' : 'Shaffof jarayon'}</h4>
               <p className="text-white/90 text-xs leading-relaxed">
-                {lang === 'ru' ? 'Онлайн-камера на объекте и ежедневные отчёты в Telegram' : lang === 'en' ? 'Online camera on site and daily reports in Telegram' : 'Obyektda onlayn kamera va Telegramda kundalik hisobotlar'}
+                {lang === 'ru' ? 'Ежедневные фото-отчеты в Telegram и полная прозрачность всех работ' : lang === 'en' ? 'Daily photo reports in Telegram and full transparency of all work' : 'Telegramda kundalik foto-hisobotlar va barcha ishlar jarayonining to\'liq nazorati'}
               </p>
             </div>
           </div>
@@ -224,8 +224,8 @@ export const HomeScreen = ({
             <div className="text-xs text-slate-500">{lang === 'ru' ? 'Проектов' : lang === 'en' ? 'Projects' : 'Loyihalar'}</div>
           </div>
           <div className="text-center border-l border-r border-slate-100">
-            <div className="text-2xl font-bold text-slate-900 mb-1">4.9</div>
-            <div className="text-xs text-slate-500">{lang === 'ru' ? 'Рейтинг' : lang === 'en' ? 'Rating' : 'Reyting'}</div>
+            <div className="text-2xl font-bold text-slate-900 mb-1">{lang === 'ru' ? '3 года' : lang === 'en' ? '3 years' : '3 yil'}</div>
+            <div className="text-xs text-slate-500">{lang === 'ru' ? 'Гарантия' : lang === 'en' ? 'Warranty' : 'Kafolat'}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-slate-900 mb-1">{lang === 'ru' ? '8 лет' : lang === 'en' ? '8 years' : '8 yil'}</div>

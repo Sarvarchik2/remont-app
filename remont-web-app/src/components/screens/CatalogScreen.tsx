@@ -25,7 +25,8 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
 
   const filteredItems = catalog.filter(item => {
     const matchesCategory = activeCategory === 'all' || item.category === activeCategory;
-    const matchesSearch = item.title[lang].toLowerCase().includes(searchQuery.toLowerCase());
+    const itemTitle = typeof item.title === 'string' ? item.title : item.title?.[lang] || (item.title as any)?.ru || '';
+    const matchesSearch = itemTitle.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -97,7 +98,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
                   {t.categories[item.category] || item.category}
                 </div>
                 <div className="text-lg font-bold leading-tight line-clamp-2 mb-2">
-                  {item.title[lang]}
+                  {item.title[lang] || (item.title as any)?.ru || ''}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium opacity-90">

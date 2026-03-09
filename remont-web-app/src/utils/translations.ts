@@ -361,7 +361,12 @@ export const translations = {
         cancel: "Отмена",
         confirm_delete: "Вы уверены, что хотите удалить этот товар?",
         input_lang: "Язык ввода",
-        price_label: "Цена"
+        price_label: "Цена",
+        media_assets: "Медиа-ресурсы",
+        title_label: "Название",
+        desc_label: "Описание",
+        category_label: "Категория",
+        price_uzs: "Цена (сум)"
       },
       portfolio: {
         title: "Наши работы",
@@ -765,7 +770,12 @@ export const translations = {
         cancel: "Bekor qilish",
         confirm_delete: "Ushbu mahsulotni o'chirib tashlamoqchimisiz?",
         input_lang: "Kiritish tili",
-        price_label: "Narxi"
+        price_label: "Narxi",
+        media_assets: "Media resurslari",
+        title_label: "Nomi",
+        desc_label: "Tavsif",
+        category_label: "Kategoriya",
+        price_uzs: "Narxi (so'm)"
       },
       portfolio: {
         title: "Bizning ishlarimiz",
@@ -1169,7 +1179,12 @@ export const translations = {
         cancel: "Cancel",
         confirm_delete: "Are you sure you want to delete this item?",
         input_lang: "Input Language",
-        price_label: "Price"
+        price_label: "Price",
+        media_assets: "Media Assets",
+        title_label: "Title",
+        desc_label: "Description",
+        category_label: "Category",
+        price_uzs: "Price (UZS)"
       },
       portfolio: {
         title: "Our Works",

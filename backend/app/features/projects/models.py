@@ -15,6 +15,7 @@ class Project(Base):
     currentStage = Column(JSON)
     contractNumber = Column(String)
     telegramId = Column(String, nullable=True)
+    imageUrl = Column(String, nullable=True)
     
     stage = Column(JSON, nullable=True)
     forecast = Column(JSON, nullable=True)

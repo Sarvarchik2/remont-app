@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, JSON
+from sqlalchemy import Column, String, JSON, DateTime
+from sqlalchemy.sql import func
 from app.core.database import Base
 
 class Story(Base):
@@ -8,3 +9,5 @@ class Story(Base):
     imageUrl = Column(String)
     title = Column(JSON) # e.g. { "ru": "...", "uz": "..." }
     videoUrl = Column(String, nullable=True)
+    linkUrl = Column(String, nullable=True)
+    createdAt = Column(DateTime(timezone=True), server_default=func.now())

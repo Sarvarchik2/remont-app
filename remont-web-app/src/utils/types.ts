@@ -6,6 +6,8 @@ export interface Story {
     imageUrl: string;
     title: Record<Language, string>;
     videoUrl?: string; // Optional
+    linkUrl?: string; // Optional
+    createdAt?: string;
 }
 
 export interface AppUser {
@@ -102,10 +104,11 @@ export interface Project {
         monthlyRate: number; // USD
         records: ForemanSalaryRecord[];
     };
+    imageUrl?: string;
 }
 
 export interface PortfolioItem {
-    id: number;
+    id: string;
     type: 'living' | 'kitchen' | 'bath' | 'bedroom' | 'full';
     title: Record<Language, string> | string;
     imgBefore: string;

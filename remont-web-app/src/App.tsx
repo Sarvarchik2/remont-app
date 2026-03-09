@@ -40,8 +40,8 @@ export default function App() {
 
   // Client State
   const [activeTab, setActiveTab] = useState('home');
-  const [currentProjectId, setCurrentProjectId] = useState<number | undefined>(undefined);
-  const [currentPortfolioId, setCurrentPortfolioId] = useState<number | undefined>(undefined);
+  const [currentProjectId, setCurrentProjectId] = useState<string | undefined>(undefined);
+  const [currentPortfolioId, setCurrentPortfolioId] = useState<string | undefined>(undefined);
   const [currentProductId, setCurrentProductId] = useState<string | undefined>(undefined);
 
   // Admin State

@@ -321,7 +321,7 @@ export const AdminProjectDetail: React.FC<AdminProjectDetailProps> = ({ projectI
             </div>
 
             <div className="space-y-4">
-              {project.foremanSalary?.records.map(record => (
+              {project.foremanSalary?.records?.map(record => (
                 <div key={record.id} className="flex justify-between items-center group bg-white border border-slate-100 p-4 rounded-2xl hover:border-slate-300 transition-all">
                   <div className="flex items-center space-x-3">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${record.isPaid ? 'bg-emerald-50 text-emerald-500' : 'bg-amber-50 text-amber-500'}`}>

@@ -16,7 +16,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
   const pt = (translations[lang].admin as any).portfolio;
   const setPortfolio = onUpdatePortfolio;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'details' | 'media'>('general');
   const [inputLang, setInputLang] = useState<Language>('ru');
 
@@ -50,7 +50,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
     }));
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (confirm('Вы уверены?')) {
       setPortfolio(prev => prev.filter(item => item.id !== id));
     }
@@ -58,7 +58,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
 
   const handleEdit = (item: PortfolioItem) => {
     setNewItem(item);
-    setEditingId(item.id);
+    setEditingId(item.id.toString());
     setActiveTab('general');
     setIsModalOpen(true);
   };
@@ -82,7 +82,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
     } else {
       // Create new
       const item: PortfolioItem = {
-        id: Date.now(),
+        id: Date.now().toString(),
         type: newItem.type as any || 'living',
         title: newItem.title || { ru: 'Новый проект', uz: 'Yangi loyiha', en: 'New project' },
         area: newItem.area!,
@@ -141,16 +141,16 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
               </div>
 
               {/* Actions */}
-              <div className="absolute top-4 left-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+              <div className="absolute top-4 left-4 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all translate-y-0 md:translate-y-2 group-hover:translate-y-0 z-20">
                 <button
                   onClick={(e) => { e.stopPropagation(); handleEdit(item); }}
-                  className="w-10 h-10 flex items-center justify-center bg-white/95 backdrop-blur-md rounded-xl text-slate-900 hover:bg-primary transition-all shadow-md"
+                  className="w-10 h-10 flex items-center justify-center bg-white/95 backdrop-blur-md rounded-xl text-slate-900 hover:bg-primary transition-all shadow-md active:scale-90"
                 >
                   <Pencil size={18} />
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }}
-                  className="w-10 h-10 flex items-center justify-center bg-white/95 backdrop-blur-md rounded-xl text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-md"
+                  className="w-10 h-10 flex items-center justify-center bg-white/95 backdrop-blur-md rounded-xl text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-md active:scale-90"
                 >
                   <Trash2 size={18} />
                 </button>
@@ -415,7 +415,7 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                   </p>
                   <textarea
                     placeholder={"Черновая: Стяжка, Штукатурка\nЧистовая: Покраска, Обои"}
-                    value={newItem.worksCompleted?.map(w => `${w.category}: ${w.items.join(', ')}`).join('\n') || ''}
+                    value={newItem.worksCompleted?.map(w => `${w.category || ''}: ${(w.items || []).join(', ')}`).join('\n') || ''}
                     onChange={(e) => {
                       const lines = e.target.value.split('\n').filter(Boolean);
                       const works = lines.map(line => {
@@ -445,8 +445,8 @@ export const AdminPortfolio: React.FC<AdminPortfolioProps> = ({ lang, portfolio,
                   <textarea
                     placeholder={"Иван Иванов | Дизайнер\nПетр Петров | Прораб"}
                     value={newItem.team?.map(m => {
-                      const name = typeof m.name === 'string' ? m.name : m.name?.[inputLang] || (m.name as any)?.ru;
-                      return `${name} | ${m.role}`;
+                      const nameValue = typeof m.name === 'string' ? m.name : m.name?.[inputLang] || (m.name as any)?.ru || '';
+                      return `${nameValue} | ${m.role || ''}`;
                     }).join('\n') || ''}
                     onChange={(e) => {
                       const lines = e.target.value.split('\n').filter(Boolean);

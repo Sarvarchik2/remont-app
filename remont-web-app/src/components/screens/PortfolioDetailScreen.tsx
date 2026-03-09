@@ -7,7 +7,7 @@ import { ImageWithFallback } from '../figma/ImageWithFallback';
 interface PortfolioDetailScreenProps {
   lang: Language;
   onNavigate: (tab: string, params?: any) => void;
-  projectId: number;
+  projectId: string;
   portfolio?: PortfolioItem[];
 }
 
@@ -164,14 +164,14 @@ export const PortfolioDetailScreen: React.FC<PortfolioDetailScreenProps> = ({
           <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
             <h3 className="font-black text-slate-900 text-lg mb-4">{translations[lang].project.works_title}</h3>
             <div className="space-y-6">
-              {project.worksCompleted.map((section, idx) => (
+              {project.worksCompleted?.map((section, idx) => (
                 <div key={idx}>
                   <h4 className="font-bold text-slate-900 text-sm mb-3 flex items-center">
                     <div className="w-2 h-2 rounded-full bg-[#FFB800] mr-2" />
                     {section.category}
                   </h4>
                   <div className="space-y-2 pl-4 border-l-2 border-slate-100">
-                    {section.items.map((item, i) => (
+                    {section.items?.map((item, i) => (
                       <div key={i} className="flex items-start text-sm text-slate-500">
                         <CheckCircle2 size={16} className="mr-2 text-[#FFB800] flex-shrink-0 mt-0.5" />
                         <span>{item}</span>
@@ -189,14 +189,14 @@ export const PortfolioDetailScreen: React.FC<PortfolioDetailScreenProps> = ({
           <div>
             <h3 className="font-black text-slate-900 text-lg mb-3 px-2">{translations[lang].project.team_title}</h3>
             <div className="grid grid-cols-2 gap-3">
-              {project.team.map((member, idx) => (
+              {project.team?.map((member, idx) => (
                 <div key={idx} className="bg-white p-4 rounded-[24px] border border-slate-100 shadow-sm flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex-shrink-0">
                     <ImageWithFallback src={member.avatar} className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <div className="font-bold text-slate-900 text-sm">
-                      {typeof member.name === 'string' ? member.name : member.name?.[lang] || (member.name as any)?.ru}
+                      {typeof member.name === 'string' ? member.name : member.name?.[lang] || (member.name as any)?.ru || ''}
                     </div>
                     <div className="text-xs text-slate-400">{member.role}</div>
                   </div>
@@ -211,7 +211,7 @@ export const PortfolioDetailScreen: React.FC<PortfolioDetailScreenProps> = ({
           <div className="bg-slate-900 rounded-[32px] p-6 text-white shadow-lg shadow-slate-900/20">
             <h3 className="font-black text-lg mb-4">{translations[lang].project.materials}</h3>
             <div className="flex flex-wrap gap-2">
-              {project.materials.map((mat, idx) => (
+              {project.materials?.map((mat, idx) => (
                 <span key={idx} className="bg-white/10 px-3 py-1.5 rounded-xl text-xs font-medium border border-white/10">
                   {mat}
                 </span>
