@@ -14,7 +14,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onUpload, value, label
 
     const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname))
         ? '/api/v1'
-        : 'https://api.ulaskins.uz/api/v1';
+        : 'https://api.velaro.uz/api/v1';
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

@@ -81,10 +81,11 @@ export default function App() {
     window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname) ||
-    window.location.hostname.endsWith('ulaskins.uz')
+    window.location.hostname.endsWith('ulaskins.uz') ||
+    window.location.hostname.endsWith('velaro.uz')
   )
     ? '/api/v1'
-    : 'https://api.ulaskins.uz/api/v1';
+    : 'https://api.velaro.uz/api/v1';
 
   useEffect(() => {
     const webapp = (window as any)?.Telegram?.WebApp;
