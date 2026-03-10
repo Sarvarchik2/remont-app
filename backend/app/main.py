@@ -53,7 +53,13 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "https://velaro.uz",
+        "https://www.velaro.uz",
+        "https://app.velaro.uz",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
