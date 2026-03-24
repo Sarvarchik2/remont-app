@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
 
-# Change if your group ID is different, the one provided was -5283833189
-ADMIN_GROUP_ID = -5283833189
+# Change if your group ID is different, the one provided was -1003597948956
+ADMIN_GROUP_ID = -1003597948956
 
 async def notify_admin(message_text: str):
     try:
