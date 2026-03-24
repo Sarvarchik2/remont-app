@@ -92,6 +92,10 @@ export default function App() {
     if (webapp) {
       webapp.ready();
       webapp.expand();
+      // Disable vertical swipe to prevent accidental closure
+      if (webapp.isVerticalSwipeEnabled !== undefined) {
+        webapp.isVerticalSwipeEnabled = false;
+      }
       // Optional: Set header color to match app theme
       webapp.setHeaderColor('#F9F9F7');
     }

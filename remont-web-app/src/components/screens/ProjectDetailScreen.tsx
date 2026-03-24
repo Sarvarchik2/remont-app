@@ -63,18 +63,17 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         {/* Project Info Overlay */}
         <div className="absolute bottom-6 left-4 right-4 text-white">
           <div className="flex items-center space-x-2 mb-2">
-            <span className={`text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider ${
-              project.status === 'finished' 
-                ? 'bg-emerald-500 text-white' 
+            <span className={`text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider ${project.status === 'finished'
+                ? 'bg-emerald-500 text-white'
                 : project.status === 'new'
-                ? 'bg-blue-500 text-white'
-                : 'bg-primary text-black'
-            }`}>
-              {project.status === 'finished' 
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-primary text-black'
+              }`}>
+              {project.status === 'finished'
                 ? (lang === 'ru' ? 'Завершен' : lang === 'en' ? 'Finished' : 'Tugallangan')
                 : project.status === 'new'
-                ? (lang === 'ru' ? 'Новый' : lang === 'en' ? 'New' : 'Yangi')
-                : translations[lang].admin.crm.status.process}
+                  ? (lang === 'ru' ? 'Новый' : lang === 'en' ? 'New' : 'Yangi')
+                  : translations[lang].admin.crm.status.process}
             </span>
             <span className="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/20 whitespace-nowrap">
               {translations[lang].dashboard.docs.contract.split(' №')[0]} №{project.contractNumber}
