@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X, Volume2, VolumeX } from 'lucide-react';
-import { Language } from '../../utils/translations';
+import { translations, Language } from '../../utils/translations';
 import { Story } from '../../utils/types';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 
@@ -13,21 +13,22 @@ interface StoriesModalProps {
 }
 
 const getRelativeTime = (date?: string, lang: Language = 'ru') => {
-  if (!date) return lang === 'ru' ? 'сейчас' : lang === 'en' ? 'now' : 'hozir';
+  const t = translations[lang].home.stories;
+  if (!date) return t.now;
 
   const now = new Date();
   const created = new Date(date);
   const diffInMinutes = Math.floor((now.getTime() - created.getTime()) / (1000 * 60));
 
   // Handle potential negative diff or nearly current as "now"
-  if (diffInMinutes < 1) return lang === 'ru' ? 'сейчас' : lang === 'en' ? 'now' : 'hozir';
-  if (diffInMinutes < 60) return `${diffInMinutes}${lang === 'ru' ? 'м' : lang === 'en' ? 'm' : 'daq'}`;
+  if (diffInMinutes < 1) return t.now;
+  if (diffInMinutes < 60) return `${diffInMinutes}${t.m}`;
 
   const diffInHours = Math.floor(diffInMinutes / 60);
-  if (diffInHours < 24) return `${diffInHours} ${lang === 'ru' ? 'ч' : lang === 'en' ? 'h' : 's'}`;
+  if (diffInHours < 24) return `${diffInHours} ${t.h}`;
 
   const diffInDays = Math.floor(diffInHours / 24);
-  return `${diffInDays} ${lang === 'ru' ? 'д' : lang === 'en' ? 'd' : 'k'}`;
+  return `${diffInDays} ${t.d}`;
 };
 
 export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialIndex, isOpen, onClose, lang }) => {
@@ -211,7 +212,7 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
               rel="noopener noreferrer"
               className="w-full bg-white text-black py-4 rounded-2xl font-bold text-sm uppercase tracking-widest active:scale-95 transition-transform flex items-center justify-center shadow-xl shadow-black/40"
             >
-              {lang === 'ru' ? 'Подробнее' : lang === 'en' ? 'Details' : 'Batafsil'}
+              {(translations[lang].home.stories as any).details}
             </a>
           )}
         </div>

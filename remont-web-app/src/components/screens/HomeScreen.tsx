@@ -224,11 +224,11 @@ export const HomeScreen = ({
             <div className="text-xs text-slate-500">{(t as any).projectsCount}</div>
           </div>
           <div className="text-center border-l border-r border-slate-100">
-            <div className="text-2xl font-bold text-slate-900 mb-1">{lang === 'ru' ? '3 года' : lang === 'en' ? '3 years' : '3 yil'}</div>
+            <div className="text-2xl font-bold text-slate-900 mb-1">{(t as any).warranty_years}</div>
             <div className="text-xs text-slate-500">{(t as any).warranty}</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-slate-900 mb-1">{lang === 'ru' ? '8 лет' : lang === 'en' ? '8 years' : '8 yil'}</div>
+            <div className="text-2xl font-bold text-slate-900 mb-1">{(t as any).experience_years}</div>
             <div className="text-xs text-slate-500">{(t as any).experience}</div>
           </div>
         </div>

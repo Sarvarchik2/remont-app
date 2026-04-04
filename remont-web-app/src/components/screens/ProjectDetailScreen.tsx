@@ -70,10 +70,10 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
                   : 'bg-primary text-black'
               }`}>
               {project.status === 'finished'
-                ? (lang === 'ru' ? 'Завершен' : lang === 'en' ? 'Finished' : 'Tugallangan')
+                ? translations[lang].dashboard.status.finished
                 : project.status === 'new'
-                  ? (lang === 'ru' ? 'Новый' : lang === 'en' ? 'New' : 'Yangi')
-                  : translations[lang].admin.crm.status.process}
+                  ? translations[lang].dashboard.status.new
+                  : translations[lang].dashboard.status.process}
             </span>
             <span className="bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/20 whitespace-nowrap">
               {translations[lang].dashboard.docs.contract.split(' №')[0]} №{project.contractNumber}
@@ -155,7 +155,7 @@ const FinanceTab = ({ project, progressPercentage, lang }: { project: any, progr
         <div className="relative z-10">
           <DollarSign size={28} className="mb-3 opacity-80" />
           <div className="text-3xl font-bold mb-1">{(project.finance.total / 1000000).toFixed(1)}М</div>
-          <div className="text-xs text-black/60 font-medium">{lang === 'ru' ? 'Общая смета' : lang === 'en' ? 'Total estimate' : 'Umumiy smeta'}</div>
+          <div className="text-xs text-black/60 font-medium">{translations[lang].dashboard.finance.total}</div>
         </div>
       </div>
 
@@ -163,7 +163,7 @@ const FinanceTab = ({ project, progressPercentage, lang }: { project: any, progr
         <div className="relative z-10">
           <CheckCircle2 size={28} className="mb-3 text-slate-900" />
           <div className="text-3xl font-bold mb-1">{(project.finance.paid / 1000000).toFixed(1)}М</div>
-          <div className="text-xs text-slate-400 font-medium">{lang === 'ru' ? 'Оплачено' : lang === 'en' ? 'Paid' : 'To\'langan'}</div>
+          <div className="text-xs text-slate-400 font-medium">{translations[lang].dashboard.finance.paid}</div>
         </div>
       </div>
     </div>
@@ -179,14 +179,14 @@ const FinanceTab = ({ project, progressPercentage, lang }: { project: any, progr
         {(project.finance.remaining / 1000000).toFixed(2)} {translations[lang].calc.result.range.split(' ')[0]}
       </div>
       <p className="text-sm text-slate-500 relative z-10">
-        {project.finance.remaining.toLocaleString('ru-RU')} {translations[lang].admin.project.currency}
+        {project.finance.remaining.toLocaleString('ru-RU')} {translations[lang].admin.catalog.price_uzs.split('(')[1].split(')')[0]}
       </p>
     </div>
 
     {/* Progress Card */}
     <div className="bg-white rounded-[28px] p-6 border border-slate-100 shadow-sm">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-slate-900">{lang === 'ru' ? 'Прогресс оплаты' : lang === 'en' ? 'Payment progress' : 'To\'lov jarayoni'}</h3>
+        <h3 className="font-bold text-slate-900">{translations[lang].dashboard.payment_progress}</h3>
         <span className="text-2xl font-bold text-slate-900">{progressPercentage}%</span>
       </div>
       <div className="bg-slate-100 rounded-full h-3 overflow-hidden mb-4">
@@ -208,10 +208,10 @@ const FinanceTab = ({ project, progressPercentage, lang }: { project: any, progr
           <Clock size={24} className="text-slate-900" />
         </div>
         <div className="flex-1">
-          <h3 className="font-bold text-slate-900 mb-1">{lang === 'ru' ? 'Текущий этап' : lang === 'en' ? 'Current stage' : 'Joriy bosqich'}</h3>
+          <h3 className="font-bold text-slate-900 mb-1">{translations[lang].dashboard.stage}</h3>
           <p className="text-slate-600 text-sm mb-2">{typeof project.currentStage === 'string' ? project.currentStage : (project.currentStage as any)?.[lang] || (project.currentStage as any)?.ru}</p>
           <p className="text-xs text-slate-400">
-            {lang === 'ru' ? 'Прогноз завершения:' : lang === 'en' ? 'Estimated completion:' : 'Tugatish prognozi:'} {project.forecast}
+            {translations[lang].dashboard.stage_info.forecast} {project.forecast}
           </p>
         </div>
       </div>
@@ -251,7 +251,7 @@ const FinanceTab = ({ project, progressPercentage, lang }: { project: any, progr
 const PaymentsTab = ({ project, lang }: { project: any, lang: Language }) => (
   <div className="space-y-3">
     <div className="flex items-center justify-between mb-2">
-      <h3 className="font-bold text-slate-900 text-lg">{lang === 'ru' ? 'История платежей' : lang === 'en' ? 'Payment history' : 'To\'lovlar tarixi'}</h3>
+      <h3 className="font-bold text-slate-900 text-lg">{translations[lang].dashboard.finance.history}</h3>
       <span className="text-xs text-slate-400 font-medium">{project.payments.length} {translations[lang].dashboard.finance.transactions}</span>
     </div>
 
@@ -287,7 +287,7 @@ const PaymentsTab = ({ project, lang }: { project: any, lang: Language }) => (
                 +{(payment.amount / 1000000).toFixed(2)}М
               </div>
               <div className="text-xs text-slate-400">
-                {payment.amount.toLocaleString('ru-RU')} {lang === 'ru' ? 'сум' : lang === 'en' ? 'sum' : 'so\'m'}
+                {payment.amount.toLocaleString('ru-RU')} {translations[lang].catalog.currency}
               </div>
             </div>
           </div>
@@ -301,8 +301,8 @@ const PaymentsTab = ({ project, lang }: { project: any, lang: Language }) => (
 const TimelineTab = ({ project, lang, onSelectMedia }: { project: any, lang: Language, onSelectMedia: (url: string) => void }) => (
   <div className="space-y-4">
     <div className="flex items-center justify-between mb-3">
-      <h3 className="font-bold text-slate-900 text-lg">{lang === 'ru' ? 'Хронология работ' : lang === 'en' ? 'Work timeline' : 'Ish xronologiyasi'}</h3>
-      <span className="text-xs text-slate-400 font-medium">{project.timeline.length} {translations[lang].dashboard.stage.updates}</span>
+      <h3 className="font-bold text-slate-900 text-lg">{translations[lang].dashboard.timeline.title}</h3>
+      <span className="text-xs text-slate-400 font-medium">{project.timeline.length} {translations[lang].dashboard.stage_info.updates}</span>
     </div>
 
     <div className="space-y-3">
@@ -315,23 +315,23 @@ const TimelineTab = ({ project, lang, onSelectMedia }: { project: any, lang: Lan
                 <span className="text-black text-xs font-bold">A</span>
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-900">{lang === 'ru' ? 'Менеджер' : lang === 'en' ? 'Manager' : 'Menejer'}</p>
+                <p className="text-xs font-bold text-slate-900">{translations[lang].dashboard.manager}</p>
                 <p className="text-[10px] text-slate-400">{event.date}</p>
               </div>
             </div>
             {event.status === 'completed' && (
               <span className="text-[10px] font-bold text-slate-900 bg-slate-100 px-2 py-1 rounded-full border border-slate-200">
-                {lang === 'ru' ? 'Завершено' : lang === 'en' ? 'Completed' : 'Tugallandi'}
+                {translations[lang].dashboard.status.finished}
               </span>
             )}
             {event.status === 'in_progress' && (
               <span className="text-[10px] font-bold text-black bg-[#FFB800] px-2 py-1 rounded-full">
-                {lang === 'ru' ? 'В работе' : lang === 'en' ? 'In progress' : 'Jarayonda'}
+                {translations[lang].dashboard.status.process}
               </span>
             )}
             {event.status === 'planned' && (
               <span className="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-full border border-slate-100">
-                {lang === 'ru' ? 'Запланировано' : lang === 'en' ? 'Planned' : 'Rejalashtirilgan'}
+                {translations[lang].dashboard.status.new}
               </span>
             )}
           </div>
@@ -398,7 +398,11 @@ const TimelineTab = ({ project, lang, onSelectMedia }: { project: any, lang: Lan
     {/* Info Note */}
     <div className="bg-slate-50 rounded-2xl p-4 text-center border border-slate-100">
       <p className="text-xs text-slate-500">
-        {lang === 'ru' ? 'Здесь менеджер публикует обновления о ходе работ на вашем объекте' : lang === 'en' ? 'Here the manager publishes updates on the progress of your project' : 'Bu yerda menejer obyektingizdagi ish jarayoni haqida ma\'lumot qoldiradi'}
+        {translations[lang].dashboard.title === 'Мой объект' 
+          ? 'Здесь менеджер публикует обновления о ходе работ на вашем объекте' 
+          : lang === 'en' 
+            ? 'Here the manager publishes updates on the progress of your project' 
+            : 'Bu yerda menejer obyektingizdagi ish jarayoni haqida ma\'lumot qoldiradi'}
       </p>
     </div>
   </div>
