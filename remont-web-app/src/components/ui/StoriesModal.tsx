@@ -132,7 +132,7 @@ export const StoriesModal: React.FC<StoriesModalProps> = ({ stories, initialInde
             </div>
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-sm leading-none mb-0.5">RemontUz</span>
+            <span className="font-bold text-sm leading-none mb-0.5">Vicasa</span>
             <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider">
               {getRelativeTime(currentStory.createdAt, lang)}
             </span>

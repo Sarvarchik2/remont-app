@@ -43,7 +43,7 @@ async def create_or_update_leads(data: dict, db: AsyncSession = Depends(get_db))
             phone = data.get('phone', 'Не указан')
             
             msg = (
-                f"🔔 <b>НОВАЯ ЗАЯВКА - Velaro</b>\n\n"
+                f"🔔 <b>НОВАЯ ЗАЯВКА - Vicasa</b>\n\n"
                 f"📍 <b>Источник:</b> {source_label}\n"
                 f"👤 <b>Клиент:</b> {client_name or 'Не указан'}\n"
                 f"📱 <b>Телефон:</b> {phone}\n"
