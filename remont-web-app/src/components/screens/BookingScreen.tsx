@@ -102,7 +102,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate, 
         <div>
           <label className="block text-xs font-bold text-slate-900 mb-2 uppercase tracking-wide ml-2">{t.phone}</label>
           <input
-            placeholder="+998 90 123 45 67"
+            placeholder="+998 90 354 76 66"
             required
             type="tel"
             value={phone}

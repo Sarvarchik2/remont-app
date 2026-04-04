@@ -54,7 +54,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
     icon: 'Hammer',
     name: { ru: '', uz: '', en: '' },
     price: '',
-    unit: { ru: 'сум/м²', uz: 'so\'m/m²', en: 'sum/m²' }
+    unit: { ru: '$/м²', uz: 'so\'m/m²', en: '$/m²' }
   });
 
   const toggleCategory = (id: string) => {
@@ -66,7 +66,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
   const handleAddCategory = () => {
     setModalMode('category');
     setEditingCategory(null);
-    setFormData({ title: { ru: '', uz: '', en: '' }, icon: 'Hammer', name: { ru: '', uz: '', en: '' }, price: '', unit: { ru: 'сум/м²', uz: 'so\'m/m²', en: 'sum/m²' } });
+    setFormData({ title: { ru: '', uz: '', en: '' }, icon: 'Hammer', name: { ru: '', uz: '', en: '' }, price: '', unit: { ru: '$/м²', uz: 'so\'m/m²', en: '$/m²' } });
     setIsModalOpen(true);
   };
 
@@ -89,7 +89,7 @@ export const AdminServices: React.FC<AdminServicesProps> = ({ lang, categories, 
     setModalMode('service');
     setParentId(categoryId);
     setEditingService(null);
-    setFormData({ title: { ru: '', uz: '', en: '' }, icon: '', name: { ru: '', uz: '', en: '' }, price: '', unit: { ru: 'сум/м²', uz: 'so\'m/m²', en: 'sum/m²' } });
+    setFormData({ title: { ru: '', uz: '', en: '' }, icon: '', name: { ru: '', uz: '', en: '' }, price: '', unit: { ru: '$/м²', uz: 'so\'m/m²', en: '$/m²' } });
     setIsModalOpen(true);
   };
 

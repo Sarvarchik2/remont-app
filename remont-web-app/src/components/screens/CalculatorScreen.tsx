@@ -96,7 +96,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
             <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">Примерная стоимость</p>
             <div className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
               {formatPrice(total)}
-              <span className="text-lg text-slate-400 ml-1 font-bold">UZS</span>
+              <span className="text-lg text-slate-400 ml-1 font-bold">$</span>
             </div>
           </div>
 
@@ -222,7 +222,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+998 XX XXX XX XX"
+                    placeholder="+998 90 354 76 66"
                     className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-slate-900 outline-none focus:ring-2 focus:ring-[#FFB800]/20 placeholder:text-slate-300"
                   />
                 </div>
@@ -259,7 +259,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
               <div className="border-t border-slate-200 mt-3 pt-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-bold text-slate-900">Примерная стоимость:</span>
-                  <span className="text-lg font-bold text-slate-900">{formatPrice(total)} сум</span>
+                  <span className="text-lg font-bold text-slate-900">{formatPrice(total)} $</span>
                 </div>
               </div>
             </div>

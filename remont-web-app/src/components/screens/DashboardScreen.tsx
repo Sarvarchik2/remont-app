@@ -51,7 +51,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   };
 
   const handleCallManager = () => {
-    window.location.href = 'tel:+998901234567';
+    window.location.href = 'tel:+998903547666';
   };
 
   return (
@@ -219,7 +219,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             </div>
             <div className="text-left">
               <span className="font-bold text-slate-900 text-base block">{lang === 'ru' ? 'Связаться с менеджером' : lang === 'en' ? 'Contact manager' : 'Menejer bilan aloqa'}</span>
-              <span className="text-sm text-slate-500 font-medium">+998 90 123 45 67</span>
+              <span className="text-sm text-slate-500 font-medium">+998 90 354 76 66</span>
             </div>
           </div>
           <ChevronRight size={20} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
