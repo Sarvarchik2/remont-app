@@ -80,7 +80,7 @@ export const translations = {
         rough_mat: "Черновые материалы",
         finish_mat: "Чистовые материалы",
         total: "Итого под ключ:",
-        range: "млн сум",
+        range: "$",
         download: "Скачать смету (PDF)",
         cta: "Вызвать инженера",
       },
@@ -318,7 +318,7 @@ export const translations = {
         works_completed: "Выполненные работы",
         team: "Команда проекта",
         budget: "Бюджет",
-        currency: "сум",
+        currency: "$",
         edit_project: "Редактировать проект",
         general_tab: "Основное",
         details_tab: "Детали",
@@ -366,7 +366,7 @@ export const translations = {
         title_label: "Название",
         desc_label: "Описание",
         category_label: "Категория",
-        price_uzs: "Цена (сум)"
+        price_uzs: "Цена ($)"
       },
       portfolio: {
         title: "Наши работы",
@@ -489,7 +489,7 @@ export const translations = {
         rough_mat: "Qora materiallar",
         finish_mat: "Toza materiallar",
         total: "Jami kalitgacha:",
-        range: "mln so'm",
+        range: "$",
         download: "Smetani yuklab olish (PDF)",
         cta: "Muhandisni chaqirish",
       },
@@ -727,7 +727,7 @@ export const translations = {
         works_completed: "Bajarilgan ishlar",
         team: "Loyiha jamoasi",
         budget: "Byudjet",
-        currency: "so'm",
+        currency: "$",
         edit_project: "Loyihani tahrirlash",
         general_tab: "Asosiy",
         details_tab: "Tafsilotlar",
@@ -775,7 +775,7 @@ export const translations = {
         title_label: "Nomi",
         desc_label: "Tavsif",
         category_label: "Kategoriya",
-        price_uzs: "Narxi (so'm)"
+        price_uzs: "Narxi ($)"
       },
       portfolio: {
         title: "Bizning ishlarimiz",

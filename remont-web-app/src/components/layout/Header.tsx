@@ -1,6 +1,6 @@
 import React from 'react';
-import { Search, Bell, Lock } from 'lucide-react';
 import { Language } from '../../utils/translations';
+import logofull from '../../assets/logofull.png';
 
 interface HeaderProps {
   lang: Language;
@@ -16,9 +16,7 @@ export const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
 
         {/* Logo / Brand */}
         <div className="flex flex-col items-center">
-          <span className="text-xl font-bold tracking-tight text-slate-900">
-            Remont<span className="text-primary">Uz</span>
-          </span>
+          <img src={logofull} alt="Vicasa Logo" className="h-8 object-contain" />
         </div>
 
         {/* Lang Switcher - Cycle through ru -> uz -> en -> ru */}

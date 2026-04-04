@@ -15,6 +15,8 @@ import {
   LayoutTemplate,
   ShoppingCart
 } from 'lucide-react';
+import logo from '../../assets/logo.png';
+import logofull from '../../assets/logofull.png';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -58,9 +60,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       {/* Mobile Header */}
       <div className="md:hidden bg-white text-slate-900 p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm border-b border-slate-100">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
-            <span className="font-bold text-sm">R</span>
-          </div>
+          <img src={logo} alt="Vicasa" className="h-8 w-8 object-contain" />
           <span className="font-extrabold text-lg">Admin<span className="text-slate-400">Panel</span></span>
         </div>
         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 bg-slate-50 rounded-full hover:bg-slate-100 transition-colors z-[110]">
@@ -74,11 +74,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         md:relative md:translate-x-0 md:shadow-none md:z-auto
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        <div className="p-8 hidden md:flex items-center space-x-3 mb-4">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20">
-            <Ruler size={20} />
-          </div>
-          <span className="font-black text-2xl tracking-tight">Remont<span className="text-slate-300">Uz</span></span>
+        <div className="p-8 hidden md:flex items-center mb-4">
+          <img src={logofull} alt="Vicasa" className="h-10 object-contain" />
         </div>
 
         <nav className="p-4 pt-24 md:pt-4 space-y-2">

@@ -84,9 +84,23 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ lang, users }) => {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button className="p-2 text-slate-400 hover:text-primary transition-colors">
-                                            <ExternalLink size={18} />
-                                        </button>
+                                        {u.username ? (
+                                            <a
+                                                href={`https://t.me/${u.username}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="p-2 text-slate-400 hover:text-primary transition-colors inline-block"
+                                            >
+                                                <ExternalLink size={18} />
+                                            </a>
+                                        ) : (
+                                            <button
+                                                className="p-2 text-slate-200 cursor-not-allowed"
+                                                title="No username"
+                                            >
+                                                <ExternalLink size={18} />
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             )) : (
