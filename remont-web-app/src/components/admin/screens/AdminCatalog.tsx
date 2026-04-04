@@ -151,38 +151,43 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                 {filteredCatalog.map(item => (
                     <div key={item.id} className="bg-white rounded-[32px] overflow-hidden shadow-sm border border-slate-100 group flex flex-col hover:shadow-xl transition-all duration-500 h-full">
-                        <div className="relative h-60 bg-slate-50 shrink-0 overflow-hidden">
-                            <img
-                                src={item.image}
-                                alt="preview"
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            />
-                            {/* Glass-style Category Badge */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-5 py-2.5 bg-black/30 backdrop-blur-md rounded-full text-[10px] uppercase font-black text-white shadow-2xl border border-white/10 tracking-[0.2em] pointer-events-none">
+                        <div className="relative h-48 bg-slate-50 overflow-hidden shrink-0">
+                            {item.image ? (
+                                <img
+                                    src={item.image}
+                                    alt="preview"
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center text-slate-200">
+                                    <ImageIcon size={48} />
+                                </div>
+                            )}
+                            <div className="absolute top-4 left-4 px-3 py-1 bg-black/30 backdrop-blur-md rounded-full text-[9px] uppercase font-black text-white border border-white/10 tracking-widest">
                                 {catLabels[item.category as keyof typeof catLabels]}
-                            </div>
-
-                            {/* Hover Actions */}
-                            <div className="absolute top-4 right-4 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-all translate-y-0 md:translate-y-2 group-hover:translate-y-0 z-20">
-                                <button
-                                    onClick={() => handleEdit(item)}
-                                    className="w-10 h-10 bg-white/95 backdrop-blur-sm rounded-2xl flex items-center justify-center text-slate-600 shadow-xl hover:bg-white hover:text-black hover:scale-110 transition-all active:scale-90"
-                                >
-                                    <Pencil size={18} />
-                                </button>
-                                <button
-                                    onClick={(e) => handleDelete(item.id, e)}
-                                    className="w-10 h-10 bg-white/95 backdrop-blur-sm rounded-2xl flex items-center justify-center text-red-400 shadow-xl hover:bg-red-500 hover:text-white hover:scale-110 transition-all active:scale-90"
-                                >
-                                    <Trash2 size={18} />
-                                </button>
                             </div>
                         </div>
 
                         <div className="p-6 flex flex-col flex-grow">
-                            <h3 className="font-bold text-slate-900 text-lg mb-3 line-clamp-2 leading-snug group-hover:text-primary transition-colors">
-                                {item.title[lang] || (item.title as any)?.ru || ''}
-                            </h3>
+                            <div className="flex justify-between items-start mb-3">
+                                <h3 className="font-bold text-slate-900 text-lg line-clamp-2 leading-snug group-hover:text-primary transition-colors flex-1">
+                                    {item.title[lang] || (item.title as any)?.ru || ''}
+                                </h3>
+                                <div className="flex gap-2 ml-4">
+                                    <button
+                                        onClick={() => handleEdit(item)}
+                                        className="w-8 h-8 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 hover:bg-primary/10 hover:text-primary transition-all active:scale-90"
+                                    >
+                                        <Pencil size={14} />
+                                    </button>
+                                    <button
+                                        onClick={(e) => handleDelete(item.id, e)}
+                                        className="w-8 h-8 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all active:scale-90"
+                                    >
+                                        <Trash2 size={14} />
+                                    </button>
+                                </div>
+                            </div>
 
                             <div className="mt-auto flex items-end justify-between">
                                 <div>
@@ -190,7 +195,7 @@ export const AdminCatalog: React.FC<AdminCatalogProps> = ({ lang, catalog, onUpd
                                     <span className="font-black text-slate-900 text-2xl tracking-tighter">
                                         {item.price.toLocaleString()}
                                     </span>
-                                    <span className="text-slate-400 text-[11px] ml-1.5 uppercase font-black tracking-widest">UZS</span>
+                                    <span className="text-slate-400 text-[11px] ml-1.5 uppercase font-black tracking-widest">$</span>
                                 </div>
 
                                 {item.videoUrl && (
