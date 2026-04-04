@@ -56,9 +56,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:8080",
-        "https://velaro.uz",
-        "https://www.velaro.uz",
-        "https://app.velaro.uz",
+        "https://vicasa.uz",
+        "https://www.vicasa.uz",
+        "https://app.vicasa.uz",
     ],
     allow_credentials=True,
     allow_methods=["*"],
