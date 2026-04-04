@@ -102,7 +102,7 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium opacity-90">
-                    {formatPrice(item.price)} <span className="text-[10px]">{lang === 'ru' ? 'сум' : lang === 'en' ? 'sum' : "so'm"}</span>
+                    {formatPrice(item.price)} <span className="text-[10px]">{t.currency}</span>
                   </span>
                   <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center scale-90 group-hover:scale-100 transition-transform shadow-lg">
                     <ArrowRight size={14} />
@@ -119,8 +119,8 @@ export const CatalogScreen: React.FC<CatalogScreenProps> = ({ lang, onNavigate, 
           <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6 text-slate-300">
             <Search size={32} />
           </div>
-          <h3 className="text-lg font-bold text-slate-900 mb-2">{lang === 'ru' ? 'Ничего не найдено' : lang === 'en' ? 'Nothing found' : 'Hech narsa topilmadi'}</h3>
-          <p className="text-slate-400 text-sm max-w-[200px]">{lang === 'ru' ? 'Попробуйте изменить параметры поиска' : lang === 'en' ? 'Try changing your search parameters' : 'Qidiruv parametrlarini o\'zgartirib ko\'ring'}</p>
+          <h3 className="text-lg font-bold text-slate-900 mb-2">{t.not_found}</h3>
+          <p className="text-slate-400 text-sm max-w-[200px]">{t.try_again}</p>
         </div>
       )}
     </div>

@@ -25,7 +25,7 @@ export const PortfolioDetailScreen: React.FC<PortfolioDetailScreenProps> = ({
   if (!project) {
     return (
       <div className="min-h-screen bg-[#F9F9F7] flex items-center justify-center">
-        <p className="text-slate-400 font-bold">Project not found</p>
+        <p className="text-slate-400 font-bold">{t.project_not_found}</p>
       </div>
     );
   }

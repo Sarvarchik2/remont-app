@@ -21,6 +21,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate, categories = [] }) => {
+  const t = translations[lang].services;
   const [expandedCategory, setExpandedCategory] = useState<string | null>('demolition');
 
   const toggleCategory = (id: string) => {
@@ -32,13 +33,13 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
       {/* Hero Section */}
       <div className="px-4 pt-4 pb-6">
         <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">
-          {lang === 'ru' ? 'ПРАЙС-ЛИСТ' : lang === 'en' ? 'PRICE LIST' : 'PRICEY RO\'YXAT'}
+          {(t as any).price_list}
         </p>
         <h1 className="text-3xl font-bold text-slate-900 leading-tight mb-3">
-          {lang === 'ru' ? 'Каталог работ' : lang === 'en' ? 'Works catalog' : 'Ishlar katalogi'}
+          {(t as any).catalog_title}
         </h1>
         <p className="text-slate-600 leading-relaxed text-sm">
-          {lang === 'ru' ? 'Прозрачное ценообразование на все виды ремонтных работ' : lang === 'en' ? 'Transparent pricing for all types of renovation works' : 'Barcha turdagi ta\'mirlash ishlari uchun shaffof narxlar'}
+          {(t as any).catalog_desc}
         </p>
       </div>
 
@@ -46,46 +47,50 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
       <div className="px-4 mb-8">
         <div className="grid grid-cols-2 gap-3">
           <CategoryCard
-            title={lang === 'ru' ? 'Электрика' : lang === 'en' ? 'Electrical' : 'Elektr'}
+            title={(t as any).electrical}
             image="https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&q=80&w=400"
             icon={Zap}
             onClick={() => {
               setExpandedCategory('electrical');
               setTimeout(() => {
-                document.getElementById('electrical')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const el = document.getElementById('electrical');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
               }, 100);
             }}
           />
           <CategoryCard
-            title={lang === 'ru' ? 'Отделка' : lang === 'en' ? 'Finishing' : 'Pardozlash'}
+            title={(t as any).finishing}
             image="https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&q=80&w=400"
             icon={Paintbrush}
             onClick={() => {
               setExpandedCategory('finishing');
               setTimeout(() => {
-                document.getElementById('finishing')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const el = document.getElementById('finishing');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
               }, 100);
             }}
           />
           <CategoryCard
-            title={lang === 'ru' ? 'Плитка' : lang === 'en' ? 'Tiles' : 'Kafel'}
+            title={(t as any).tiles}
             image="https://images.unsplash.com/photo-1604709177225-055f99402ea3?auto=format&fit=crop&q=80&w=400"
             icon={Grid3x3}
             onClick={() => {
               setExpandedCategory('tiles');
               setTimeout(() => {
-                document.getElementById('tiles')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const el = document.getElementById('tiles');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
               }, 100);
             }}
           />
           <CategoryCard
-            title={lang === 'ru' ? 'Сантехника' : lang === 'en' ? 'Plumbing' : 'Santexnika'}
+            title={(t as any).plumbing}
             image="https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&q=80&w=400"
             icon={Droplet}
             onClick={() => {
               setExpandedCategory('plumbing');
               setTimeout(() => {
-                document.getElementById('plumbing')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const el = document.getElementById('plumbing');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
               }, 100);
             }}
           />
@@ -94,7 +99,7 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
 
       {/* Services Catalog */}
       <div className="px-4">
-        <h2 className="text-xl font-bold text-slate-900 mb-4">{lang === 'ru' ? 'Полный прайс-лист' : lang === 'en' ? 'Full price list' : 'To\'liq narxlar'}</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-4">{(t as any).full_list}</h2>
         <div className="space-y-3">
           {categories.map((category) => (
             <ServiceCategoryRow
@@ -119,16 +124,16 @@ export const ServicesScreen: React.FC<ServicesScreenProps> = ({ lang, onNavigate
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent" />
           <div className="absolute inset-0 flex flex-col justify-end p-8 text-center items-center">
             <h3 className="text-2xl font-bold text-white mb-2">
-              {lang === 'ru' ? 'Нужна консультация?' : lang === 'en' ? 'Need consultation?' : 'Maslahat kerakmi?'}
+              {(t as any).need_consultation}
             </h3>
             <p className="text-white/80 mb-6 text-sm">
-              {lang === 'ru' ? 'Поможем рассчитать точную стоимость ремонта' : lang === 'en' ? 'We will help you calculate the exact cost of renovation' : 'Ta\'mirlashning aniq narxini hisoblashga yordam beramiz'}
+              {(t as any).consultation_desc}
             </p>
             <button
               onClick={() => onNavigate('calc')}
               className="bg-primary text-primary-foreground px-8 py-4 rounded-full font-bold text-sm hover:bg-primary/90 transition-all active:scale-95"
             >
-              {lang === 'ru' ? 'Рассчитать бюджет' : lang === 'en' ? 'Calculate budget' : 'Budjetni hisoblash'}
+              {t.cta}
             </button>
           </div>
         </div>

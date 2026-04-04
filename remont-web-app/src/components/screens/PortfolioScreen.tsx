@@ -22,10 +22,10 @@ export const PortfolioScreen: React.FC<PortfolioScreenProps> = ({ lang, onNaviga
       {/* Header */}
       <div className="mb-2">
         <p className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-          {lang === 'ru' ? 'ПОРТФОЛИО' : lang === 'en' ? 'PORTFOLIO' : 'PORTFOLIO'}
+          {t.portfolio_upper}
         </p>
         <h1 className="text-3xl font-bold text-slate-900">
-          {lang === 'ru' ? 'Наши работы' : lang === 'en' ? 'Our works' : 'Bizning ishlar'}
+          {t.title}
         </h1>
       </div>
 
@@ -38,7 +38,7 @@ export const PortfolioScreen: React.FC<PortfolioScreenProps> = ({ lang, onNaviga
             : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
             }`}
         >
-          {lang === 'ru' ? 'Все проекты' : lang === 'en' ? 'All projects' : 'Barcha loyihalar'}
+          {t.all_projects}
         </button>
         <button
           onClick={() => setFilter('newbuilding')}
@@ -47,7 +47,7 @@ export const PortfolioScreen: React.FC<PortfolioScreenProps> = ({ lang, onNaviga
             : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
             }`}
         >
-          {lang === 'ru' ? 'Новостройки' : lang === 'en' ? 'New buildings' : 'Yangi binolar'}
+          {t.new_buildings}
         </button>
 
         {/* Active indicator line */}
@@ -83,7 +83,7 @@ export const PortfolioScreen: React.FC<PortfolioScreenProps> = ({ lang, onNaviga
                 {typeof project.title === 'string' ? project.title : (project.title as any)?.[lang] || (project.title as any)?.ru}
               </h3>
               <p className="text-sm text-slate-500 font-medium">
-                {lang === 'ru' ? 'Полный ремонт под ключ' : lang === 'en' ? 'Full turnkey renovation' : 'To\'liq kalit taslim ta\'mirlash'}
+                {t.turnkey_renovation}
               </p>
             </div>
           </div>

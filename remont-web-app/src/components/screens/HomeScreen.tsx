@@ -36,10 +36,10 @@ export const HomeScreen = ({
       {/* Hero Title */}
       <div className="px-4 pt-2 pb-4">
         <p className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-          {lang === 'ru' ? 'ДОБРО ПОЖАЛОВАТЬ' : lang === 'en' ? 'WELCOME' : 'XUSH KELIBSIZ'}
+          {(t as any).welcome}
         </p>
         <h1 className="text-3xl font-bold text-slate-900 leading-tight whitespace-pre-line">
-          {lang === 'ru' ? 'Ремонт вашей мечты' : lang === 'en' ? 'Renovation of your dreams' : 'Orzuingizdagi ta\'mir'}
+          {(t as any).heroTitle}
         </h1>
       </div>
 
@@ -91,10 +91,10 @@ export const HomeScreen = ({
           <div className="absolute inset-0 flex flex-col justify-end p-8 text-center items-center">
             <div className="mb-6">
               <h2 className="text-4xl font-bold text-white mb-3 leading-tight whitespace-pre-line">
-                {lang === 'ru' ? 'Ремонт,\nкоторый вдохновляет' : lang === 'en' ? 'Renovation\nthat inspires' : 'Ilhomlantiruvchi\nta\'mirlash'}
+                {(t as any).heroInspire}
               </h2>
               <p className="text-white/90 font-medium text-base">
-                {lang === 'ru' ? 'Создаем уют в каждом метре' : lang === 'en' ? 'Creating comfort in every meter' : 'Har bir metrda qulaylik yaratamiz'}
+                {(t as any).heroComfort}
               </p>
             </div>
 
@@ -102,7 +102,7 @@ export const HomeScreen = ({
               onClick={() => onNavigate('calc')}
               className="bg-primary text-primary-foreground px-10 py-4 rounded-full font-bold text-sm tracking-wide hover:bg-primary/90 transition-all active:scale-95 shadow-2xl"
             >
-              {lang === 'ru' ? 'Рассчитать бюджет' : lang === 'en' ? 'Calculate budget' : 'Budjetni hisoblash'}
+              {t.cta}
             </button>
           </div>
         </div>
@@ -113,17 +113,17 @@ export const HomeScreen = ({
         <div className="flex justify-between items-end mb-4">
           <div>
             <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">
-              {lang === 'ru' ? 'ГОТОВЫЕ РЕШЕНИЯ' : lang === 'en' ? 'READY SOLUTIONS' : 'TAYYOR YECHIMLAR'}
+              {(t as any).readySolutions}
             </p>
             <h2 className="text-2xl font-bold text-slate-900">
-              {lang === 'ru' ? 'Популярные услуги' : lang === 'en' ? 'Popular Services' : 'Ommabop xizmatlar'}
+              {(t as any).popularServices}
             </h2>
           </div>
           <button
             onClick={() => onNavigate('services')}
             className="bg-white px-4 py-2 rounded-full text-xs font-bold border border-slate-200 flex items-center hover:bg-slate-50 transition-colors"
           >
-            {lang === 'ru' ? 'Все услуги' : lang === 'en' ? 'All Services' : 'Barcha xizmatlar'}
+            {(t as any).allServices}
             <ArrowUpRight size={14} className="ml-1" />
           </button>
         </div>
@@ -133,7 +133,7 @@ export const HomeScreen = ({
             <ServiceCard
               key={cat.id}
               title={typeof cat.title === 'string' ? cat.title : cat.title?.[lang] || (cat.title as any)?.ru}
-              price={lang === 'ru' ? 'от 100 тыс.' : lang === 'en' ? 'from 100k' : '100 mingdan'}
+              price={(t as any).fromPrice}
               img={cat.icon === 'Zap' ? "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=400" :
                 cat.icon === 'Hammer' ? "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=400" :
                   "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&q=80&w=400"}
@@ -149,7 +149,7 @@ export const HomeScreen = ({
             <div className="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center">
               <Plus size={28} className="text-slate-600" />
             </div>
-            <span className="font-bold text-sm">{lang === 'ru' ? 'Смотреть все' : lang === 'en' ? 'View all' : 'Barchasini ko\'rish'}</span>
+            <span className="font-bold text-sm">{(t as any).viewAll}</span>
           </div>
         </div>
       </div>
@@ -158,9 +158,9 @@ export const HomeScreen = ({
       <div className="px-4 mb-8">
         <div className="mb-4">
           <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">
-            {lang === 'ru' ? 'НАШИ ПРЕИМУЩЕСТВА' : lang === 'en' ? 'OUR ADVANTAGES' : 'BIZNING AFZALLIKLARIMIZ'}
+            {(t as any).advantages}
           </p>
-          <h3 className="text-2xl font-bold text-slate-900">{lang === 'ru' ? 'Почему мы?' : lang === 'en' ? 'Why choose us?' : 'Nima uchun biz?'}</h3>
+          <h3 className="text-2xl font-bold text-slate-900">{(t as any).whyUs}</h3>
         </div>
 
         {/* Main Feature Card */}
@@ -175,9 +175,9 @@ export const HomeScreen = ({
             <div className="inline-flex items-center justify-center w-14 h-14 bg-white/10 backdrop-blur-xl rounded-2xl mb-3 border border-white/20">
               <Clock size={28} className="text-primary" strokeWidth={2.5} />
             </div>
-            <h4 className="text-xl font-bold text-white mb-2">{lang === 'ru' ? 'Сроки по договору' : lang === 'en' ? 'Contract deadlines' : 'Shartnoma muddatlari'}</h4>
+            <h4 className="text-xl font-bold text-white mb-2">{(t as any).deadlineTitle}</h4>
             <p className="text-white/90 text-sm leading-relaxed">
-              {lang === 'ru' ? 'Гарантируем выполнение в срок или штраф. Каждый день просрочки = 1% от стоимости возвращаем.' : lang === 'en' ? 'We guarantee completion on time or a penalty. Each day of delay = 1% of the cost returned.' : 'Muddati kafolatlanadi yoki jarima. Har bir kechikkan kun uchun = 1% qaytariladi.'}
+              {(t as any).deadlineDesc}
             </p>
           </div>
         </div>
@@ -191,9 +191,9 @@ export const HomeScreen = ({
               <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 backdrop-blur-xl rounded-xl mb-3 border border-white/10">
                 <Target size={24} className="text-primary" strokeWidth={2.5} />
               </div>
-              <h4 className="text-lg font-bold text-white mb-2">{lang === 'ru' ? 'Прозрачный процесс' : lang === 'en' ? 'Transparent Process' : 'Shaffof jarayon'}</h4>
+              <h4 className="text-lg font-bold text-white mb-2">{(t as any).transparentTitle}</h4>
               <p className="text-white/90 text-xs leading-relaxed">
-                {lang === 'ru' ? 'Ежедневные фото-отчеты в Telegram и полная прозрачность всех работ' : lang === 'en' ? 'Daily photo reports in Telegram and full transparency of all work' : 'Telegramda kundalik foto-hisobotlar va barcha ishlar jarayonining to\'liq nazorati'}
+                {(t as any).transparentDesc}
               </p>
             </div>
           </div>
@@ -209,9 +209,9 @@ export const HomeScreen = ({
               <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 backdrop-blur-xl rounded-xl mb-3 border border-white/20">
                 <Gem size={24} className="text-primary" strokeWidth={2.5} />
               </div>
-              <h4 className="text-lg font-bold text-white mb-2">{lang === 'ru' ? 'Премиум материалы' : lang === 'en' ? 'Premium materials' : 'Premium materiallar'}</h4>
+              <h4 className="text-lg font-bold text-white mb-2">{(t as any).materialsTitle}</h4>
               <p className="text-white/90 text-xs leading-relaxed">
-                {lang === 'ru' ? 'Работаем с ведущими брендами по оптовым ценам' : lang === 'en' ? 'We work with leading brands at wholesale prices' : 'Yetakchi brendlar bilan ulgurji narxlarda ishlaymiz'}
+                {(t as any).materialsDesc}
               </p>
             </div>
           </div>
@@ -221,15 +221,15 @@ export const HomeScreen = ({
         <div className="mt-3 bg-white rounded-[24px] p-5 border border-slate-100 grid grid-cols-3 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-slate-900 mb-1">240+</div>
-            <div className="text-xs text-slate-500">{lang === 'ru' ? 'Проектов' : lang === 'en' ? 'Projects' : 'Loyihalar'}</div>
+            <div className="text-xs text-slate-500">{(t as any).projectsCount}</div>
           </div>
           <div className="text-center border-l border-r border-slate-100">
             <div className="text-2xl font-bold text-slate-900 mb-1">{lang === 'ru' ? '3 года' : lang === 'en' ? '3 years' : '3 yil'}</div>
-            <div className="text-xs text-slate-500">{lang === 'ru' ? 'Гарантия' : lang === 'en' ? 'Warranty' : 'Kafolat'}</div>
+            <div className="text-xs text-slate-500">{(t as any).warranty}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-slate-900 mb-1">{lang === 'ru' ? '8 лет' : lang === 'en' ? '8 years' : '8 yil'}</div>
-            <div className="text-xs text-slate-500">{lang === 'ru' ? 'Опыт' : lang === 'en' ? 'Experience' : 'Tajriba'}</div>
+            <div className="text-xs text-slate-500">{(t as any).experience}</div>
           </div>
         </div>
       </div>
@@ -239,17 +239,17 @@ export const HomeScreen = ({
         <div className="flex justify-between items-end mb-4">
           <div>
             <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">
-              {lang === 'ru' ? 'ПОРТФОЛИО' : lang === 'en' ? 'PORTFOLIO' : 'PORTFOLIO'}
+              {(t as any).portfolioLabel}
             </p>
             <h3 className="text-2xl font-bold text-slate-900">
-              {lang === 'ru' ? 'Последние работы' : lang === 'en' ? 'Recent Works' : 'So\'nggi ishlar'}
+              {t.recentTitle}
             </h3>
           </div>
           <button
             onClick={() => onNavigate('portfolio')}
             className="text-sm font-bold text-slate-900 flex items-center hover:text-slate-600 transition-colors"
           >
-            {lang === 'ru' ? 'Все' : lang === 'en' ? 'All' : 'Barchasi'}
+            {(t as any).all}
             <ArrowUpRight size={16} className="ml-1" />
           </button>
         </div>

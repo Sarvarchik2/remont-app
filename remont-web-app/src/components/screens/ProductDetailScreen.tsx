@@ -22,7 +22,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
   if (!product) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#F9F9F7]">
-        <div className="text-slate-400 font-bold">{lang === 'ru' ? 'Товар не найден' : lang === 'en' ? 'Product not found' : 'Mahsulot topilmadi'}</div>
+        <div className="text-slate-400 font-bold">{t.product_not_found}</div>
       </div>
     );
   }
@@ -45,8 +45,8 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
         notes: `Product inquiry: ${product.title[lang]} (ID: ${product.id}). ${tgUser ? `TG User: @${tgUser.username} (ID: ${tgUser.id})` : ''}`,
       };
       await onSubmitLead(newLead);
-      toast.success(lang === 'ru' ? 'Запрос отправлен!' : lang === 'en' ? 'Inquiry sent!' : 'So\'rov yuborildi!', {
-        description: lang === 'ru' ? 'Наш менеджер скоро свяжется с вами' : lang === 'en' ? 'Our manager will contact you soon' : 'Menejerimiz tez orada bog\'lanadi',
+      toast.success(t.success_inquiry, {
+        description: t.success_inquiry_desc,
       });
     }
   };
@@ -86,7 +86,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
             </div>
             <div className="flex items-center text-slate-900 text-xs font-bold">
               <Check size={14} className="mr-1 text-[#FFB800]" />
-              {lang === 'ru' ? 'В наличии' : lang === 'en' ? 'Available' : 'Mavjud'}
+              {t.available}
             </div>
           </div>
 
@@ -96,7 +96,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
 
           <div className="flex items-baseline text-slate-900">
             <span className="text-3xl font-black mr-1">{formatPrice(product.price)}</span>
-            <span className="text-lg font-bold text-slate-400">{lang === 'ru' ? 'сум' : lang === 'en' ? 'sum' : "so'm"}</span>
+            <span className="text-lg font-bold text-slate-400">{t.currency}</span>
           </div>
         </div>
 
@@ -131,7 +131,7 @@ export const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({ lang, 
           className="w-full bg-[#FFB800] text-black rounded-[24px] py-4 shadow-xl shadow-[#FFB800]/20 flex items-center justify-center font-bold text-lg active:scale-[0.98] transition-transform hover:bg-[#E5A600]"
         >
           <MessageCircle className="mr-2" size={24} />
-          {lang === 'ru' ? 'Узнать подробнее' : lang === 'en' ? 'Learn More' : "Batafsil ma'lumot"}
+          {t.learn_more}
         </button>
       </div>
     </div>

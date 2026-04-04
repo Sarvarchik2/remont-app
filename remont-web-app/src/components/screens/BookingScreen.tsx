@@ -91,7 +91,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({ lang, onNavigate, 
         <div>
           <label className="block text-xs font-bold text-slate-900 mb-2 uppercase tracking-wide ml-2">{t.name}</label>
           <input
-            placeholder={lang === 'ru' ? 'Алишер' : lang === 'en' ? 'Alisher' : 'Alisher'}
+            placeholder={(t as any).name_placeholder}
             required
             value={name}
             onChange={(e) => setName(e.target.value)}

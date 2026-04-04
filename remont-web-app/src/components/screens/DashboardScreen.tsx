@@ -58,7 +58,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
     <div className="pb-32 px-4 pt-4 bg-[#F9F9F7] min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-extrabold text-slate-900">{lang === 'ru' ? 'профиль' : lang === 'en' ? 'profile' : 'profil'}</h1>
+        <h1 className="text-3xl font-extrabold text-slate-900">{t.profile}</h1>
         <div className="w-10 h-10"></div>
       </div>
 
@@ -72,7 +72,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           )}
         </div>
         <h2 className="text-2xl font-bold text-slate-900 mb-1">
-          {tgUser ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() : (lang === 'ru' ? 'Загрузка...' : lang === 'en' ? 'Loading...' : 'Yuklanmoqda...')}
+          {tgUser ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() : t.loading}
         </h2>
         {tgUser?.username && (
           <p className="text-primary font-bold text-sm mb-2">@{tgUser.username}</p>
@@ -85,21 +85,21 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
         )}
 
         {currentProject ? (
-          <p className="text-slate-400 font-medium text-sm">{lang === 'ru' ? 'Договор №' : lang === 'en' ? 'Contract #' : 'Shartnoma №'}{currentProject.contractNumber}</p>
+          <p className="text-slate-400 font-medium text-sm">{t.contract}{currentProject.contractNumber}</p>
         ) : (
           <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-full inline-block mt-1">
-            Ваш ID: {tgUser?.telegram_id || tgUser?.id || '-'}
+            {t.id} {tgUser?.telegram_id || tgUser?.id || '-'}
           </p>
         )}
 
         <div className="mt-8 flex items-center justify-center divide-x divide-slate-100">
           <div className="px-8 flex-1">
             <div className="text-2xl font-bold text-slate-900">{currentProject ? '1' : '0'}</div>
-            <div className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mt-1">{lang === 'ru' ? 'Проект' : lang === 'en' ? 'Project' : 'Loyiha'}</div>
+            <div className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mt-1">{t.project}</div>
           </div>
           <div className="px-8 flex-1">
             <div className="text-2xl font-bold text-slate-900">{currentProject?.timeline?.length || 0}</div>
-            <div className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mt-1">{lang === 'ru' ? 'Событий' : lang === 'en' ? 'Events' : 'Hodisalar'}</div>
+            <div className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mt-1">{t.events}</div>
           </div>
         </div>
       </div>
@@ -116,8 +116,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                 <Lock size={22} className="fill-current" />
               </div>
               <div className="text-left">
-                <span className="font-bold text-white text-base block">Админ-панель</span>
-                <span className="text-xs text-slate-400 font-medium tracking-wide uppercase">Управление проектами</span>
+                <span className="font-bold text-white text-base block">{t.admin_panel}</span>
+                <span className="text-xs text-slate-400 font-medium tracking-wide uppercase">{t.admin_desc}</span>
               </div>
             </div>
             <ChevronRight size={20} className="text-slate-500 group-hover:translate-x-1 transition-transform" />
@@ -128,7 +128,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       {currentProject ? (
         <div className="mb-3">
           <h3 className="text-sm font-bold text-slate-400 tracking-widest uppercase mb-3 px-1">
-            {lang === 'ru' ? 'Мой проект' : lang === 'en' ? 'My Project' : 'Mening loyiham'}
+            {t.my_project_title}
           </h3>
           <button
             onClick={handleProjectClick}
@@ -141,9 +141,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                     <Package size={24} />
                   </div>
                   <div className="text-left">
-                    <h4 className="font-bold text-slate-900 text-base">{lang === 'ru' ? 'мой проект' : lang === 'en' ? 'my project' : 'mening loyiham'}</h4>
+                    <h4 className="font-bold text-slate-900 text-base">{t.my_project_title}</h4>
                     <span className="bg-slate-100 text-slate-600 text-[10px] font-bold px-2.5 py-1 rounded-full inline-block mt-1 uppercase">
-                      {typeof currentProject.status === 'string' ? (currentProject.status === 'process' ? 'В работе' : currentProject.status === 'finished' ? 'Завершен' : 'Новый') : 'В работе'}
+                      {currentProject.status === 'finished' ? t.status.finished : currentProject.status === 'new' ? t.status.new : t.status.process}
                     </span>
                   </div>
                 </div>
@@ -157,11 +157,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                 </div>
                 <div className="flex items-center text-slate-600 text-sm">
                   <Calendar size={16} className="mr-2 text-slate-400" />
-                  <span>{lang === 'ru' ? 'Этап:' : lang === 'en' ? 'Stage:' : 'Bosqich:'} {typeof currentProject.currentStage === 'string' ? currentProject.currentStage : (currentProject.currentStage as any)?.[lang] || (currentProject.currentStage as any)?.ru}</span>
+                  <span>{t.stage} {typeof currentProject.currentStage === 'string' ? currentProject.currentStage : (currentProject.currentStage as any)?.[lang] || (currentProject.currentStage as any)?.ru}</span>
                 </div>
                 <div className="flex items-center text-slate-600 text-sm">
                   <DollarSign size={16} className="mr-2 text-slate-400" />
-                  <span className="font-bold">{lang === 'ru' ? 'Оплачено:' : lang === 'en' ? 'Paid:' : 'To\'langan:'} {(currentProject.finance?.paid || 0).toLocaleString('ru-RU')} {lang === 'ru' ? 'сум' : lang === 'en' ? 'sum' : 'so\'m'}</span>
+                  <span className="font-bold">{t.paid} {(currentProject.finance?.paid || 0).toLocaleString('ru-RU')} $</span>
                 </div>
               </div>
             </div>
@@ -174,7 +174,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                 />
               </div>
               <div className="flex justify-between mt-2 text-xs text-slate-500">
-                <span>{lang === 'ru' ? 'Прогресс оплаты' : lang === 'en' ? 'Payment progress' : 'To\'lov jarayoni'}</span>
+                <span>{t.payment_progress}</span>
                 <span className="font-bold">{currentProject.finance ? Math.round((currentProject.finance.paid / currentProject.finance.total) * 100) : 0}%</span>
               </div>
             </div>
@@ -187,12 +187,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
               <Package size={28} />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-2 leading-tight">
-              {lang === 'ru' ? 'Нет активных проектов' : lang === 'en' ? 'No active projects' : 'Faol loyihalar yo\'q'}
+              {t.no_projects}
             </h3>
             <p className="text-slate-500 text-sm mb-8 leading-relaxed">
-              {lang === 'ru' ? 'Начните свой идеальный ремонт вместе с нами. Рассчитайте стоимость за 1 минуту.' :
-                lang === 'en' ? 'Start your perfect renovation with us. Calculate the cost in 1 minute.' :
-                  'Mukammal ta\'miringizni biz bilan boshlang. 1 daqiqada narxni hisoblang.'}
+              {t.no_projects_desc}
             </p>
 
             <div className="flex flex-col gap-3">
@@ -200,7 +198,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                 onClick={() => onNavigate && onNavigate('calc')}
                 className="w-full bg-primary text-black rounded-2xl py-4 font-bold text-sm hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-primary/20"
               >
-                {lang === 'ru' ? 'Рассчитать стоимость ремонта' : lang === 'en' ? 'Calculate Renovation Cost' : 'Ta\'mirlash narxini hisoblash'}
+                {t.calc_btn}
               </button>
             </div>
           </div>
@@ -218,7 +216,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
               <Phone size={22} />
             </div>
             <div className="text-left">
-              <span className="font-bold text-slate-900 text-base block">{lang === 'ru' ? 'Связаться с менеджером' : lang === 'en' ? 'Contact manager' : 'Menejer bilan aloqa'}</span>
+              <span className="font-bold text-slate-900 text-base block">{t.contact_manager}</span>
               <span className="text-sm text-slate-500 font-medium">+998 90 354 76 66</span>
             </div>
           </div>

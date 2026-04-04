@@ -85,7 +85,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
       <div className="pb-32 pt-4 px-4 min-h-screen bg-[#F9F9F7]">
         <div className="mb-2">
           <p className="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-1">
-            КАЛЬКУЛЯТОР
+            {t.subtitle}
           </p>
           <h1 className="text-3xl font-bold text-slate-900">{t.title}</h1>
         </div>
@@ -93,7 +93,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
         <div className="bg-white rounded-[40px] p-6 shadow-sm border border-slate-100 mb-6 mt-6">
           {/* Total Display */}
           <div className="text-center py-6">
-            <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">Примерная стоимость</p>
+            <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">{t.est_cost}</p>
             <div className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
               {formatPrice(total)}
               <span className="text-lg text-slate-400 ml-1 font-bold">$</span>
@@ -106,8 +106,8 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
             {/* Area */}
             <div>
               <div className="flex justify-between mb-4">
-                <label className="text-sm font-bold text-slate-900">Площадь квартиры</label>
-                <span className="text-sm font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded-full">{area} м²</span>
+                <label className="text-sm font-bold text-slate-900">{t.area_label}</label>
+                <span className="text-sm font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded-full">{area} {t.sqm}</span>
               </div>
               <input
                 type="range"
@@ -118,14 +118,14 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
                 className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#FFB800]"
               />
               <div className="flex justify-between mt-2 text-[10px] font-bold text-slate-300">
-                <span>20 м²</span>
-                <span>200 м²</span>
+                <span>20 {t.sqm}</span>
+                <span>200 {t.sqm}</span>
               </div>
             </div>
 
             {/* Type Selector */}
             <div>
-              <label className="text-sm font-bold text-slate-900 mb-3 block">Тип помещения</label>
+              <label className="text-sm font-bold text-slate-900 mb-3 block">{t.type_label}</label>
               <div className="grid grid-cols-2 gap-3">
                 {prices?.map((p) => (
                   <button
@@ -144,12 +144,12 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
 
             {/* Level Selector */}
             <div>
-              <label className="text-sm font-bold text-slate-900 mb-3 block">Уровень ремонта</label>
+              <label className="text-sm font-bold text-slate-900 mb-3 block">{t.level_label}</label>
               <div className="space-y-3">
                 {[
-                  { id: 'economy', label: 'Эконом', desc: 'Базовые материалы' },
-                  { id: 'standard', label: 'Стандарт', desc: 'Оптимальное качество' },
-                  { id: 'premium', label: 'Премиум', desc: 'Дизайн и сложные работы' }
+                  { id: 'economy', label: t.packages.economy, desc: t.packages.economy_desc },
+                  { id: 'standard', label: t.packages.comfort, desc: t.packages.comfort_desc },
+                  { id: 'premium', label: t.packages.premium, desc: t.packages.premium_desc }
                 ].map((lvl) => (
                   <button
                     key={lvl.id}
@@ -179,13 +179,13 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
           onClick={handleOrderClick}
           className="w-full bg-[#FFB800] text-black rounded-[24px] py-5 font-bold text-lg shadow-xl shadow-[#FFB800]/20 flex items-center justify-center space-x-2 active:scale-[0.98] transition-transform hover:bg-[#E5A600]"
         >
-          <span>Заказать расчет</span>
+          <span>{t.cta_main}</span>
           <ArrowRight size={20} />
         </button>
 
         <div className="text-center mt-6 px-8">
           <p className="text-xs text-slate-400 leading-relaxed">
-            Расчет является предварительным. Точная стоимость определяется после замера и составления детальной сметы.
+            {t.disclaimer}
           </p>
         </div>
       </div>
@@ -195,7 +195,7 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] flex items-end justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-t-[40px] max-w-md w-full p-6 animate-slide-up">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-slate-900">{(t as any).modal.title}</h3>
+              <h3 className="text-xl font-bold text-slate-900">{t.modal.title}</h3>
               <button
                 onClick={() => setShowContactModal(false)}
                 className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors"
@@ -207,22 +207,22 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
             {!tgUser ? (
               <div className="space-y-4 mb-6">
                 <div>
-                  <label className="text-sm font-bold text-slate-700 mb-2 block">{(t as any).modal.name}</label>
+                  <label className="text-sm font-bold text-slate-700 mb-2 block">{t.modal.name}</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder={(t as any).modal.name_placeholder}
+                    placeholder={t.modal.name_placeholder}
                     className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-slate-900 outline-none focus:ring-2 focus:ring-[#FFB800]/20 placeholder:text-slate-300"
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-bold text-slate-700 mb-2 block">{(t as any).modal.phone}</label>
+                  <label className="text-sm font-bold text-slate-700 mb-2 block">{t.modal.phone}</label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder={(t as any).modal.phone_placeholder}
+                    placeholder={t.modal.phone_placeholder}
                     className="w-full bg-slate-50 border-none rounded-2xl py-4 px-6 text-slate-900 outline-none focus:ring-2 focus:ring-[#FFB800]/20 placeholder:text-slate-300"
                   />
                 </div>
@@ -241,24 +241,24 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
 
             {/* Calculation Summary */}
             <div className="bg-slate-50 rounded-2xl p-4 mb-6">
-              <p className="text-xs text-slate-500 font-medium mb-2">{(t as any).modal.summary}:</p>
+              <p className="text-xs text-slate-500 font-medium mb-2">{t.modal.summary}:</p>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-slate-600">{(t as any).modal.area}:</span>
-                <span className="text-sm font-bold text-slate-900">{area} м²</span>
+                <span className="text-sm text-slate-600">{t.modal.area}:</span>
+                <span className="text-sm font-bold text-slate-900">{area} {t.sqm}</span>
               </div>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-slate-600">{(t as any).modal.type}:</span>
+                <span className="text-sm text-slate-600">{t.modal.type}:</span>
                 <span className="text-sm font-bold text-slate-900">{(prices?.find(p => p.id === type) || prices?.[0])?.label}</span>
               </div>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm text-slate-600">{(t as any).modal.level}:</span>
+                <span className="text-sm text-slate-600">{t.modal.level}:</span>
                 <span className="text-sm font-bold text-slate-900">
                   {level === 'economy' ? t.packages.economy : level === 'standard' ? t.packages.comfort : t.packages.premium}
                 </span>
               </div>
               <div className="border-t border-slate-200 mt-3 pt-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-slate-900">{(t as any).modal.total}:</span>
+                  <span className="text-sm font-bold text-slate-900">{t.modal.total}:</span>
                   <span className="text-lg font-bold text-slate-900">{formatPrice(total)} $</span>
                 </div>
               </div>
@@ -268,10 +268,10 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
               onClick={handleSubmit}
               className="w-full bg-[#FFB800] text-black rounded-2xl py-4 font-bold text-lg shadow-lg shadow-[#FFB800]/20 active:scale-95 transition-transform hover:bg-[#E5A600]"
             >
-              {(t as any).modal.submit}
+              {t.modal.submit}
             </button>
             <p className="text-xs text-slate-400 text-center mt-3">
-              {(t as any).modal.manager_note}
+              {t.modal.manager_note}
             </p>
           </div>
         </div>
@@ -284,15 +284,15 @@ export const CalculatorScreen: React.FC<CalculatorScreenProps> = ({ lang, onSubm
             <div className="w-16 h-16 bg-[#00C896] rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 size={32} className="text-white" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">{(t as any).modal.success_title}</h3>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">{t.modal.success_title}</h3>
             <p className="text-slate-600 mb-6">
-              {(t as any).modal.success_text}
+              {t.modal.success_text}
             </p>
             <button
               onClick={() => setShowSuccessModal(false)}
               className="w-full bg-[#FFB800] text-black rounded-2xl py-4 font-bold shadow-lg shadow-[#FFB800]/20 active:scale-95 transition-transform hover:bg-[#E5A600]"
             >
-              {(t as any).modal.success_btn}
+              {t.modal.success_btn}
             </button>
           </div>
         </div>
