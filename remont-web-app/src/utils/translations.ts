@@ -86,6 +86,23 @@ export const translations = {
       },
       next: "Далее",
       back: "Назад",
+      modal: {
+        title: "Оставьте контакты",
+        name: "Ваше имя",
+        name_placeholder: "Введите имя",
+        phone: "Телефон",
+        phone_placeholder: "+998 90 354 76 66",
+        summary: "Расчет",
+        area: "Площадь",
+        type: "Тип",
+        level: "Уровень",
+        total: "Примерная стоимость",
+        submit: "Отправить заявку",
+        manager_note: "Менеджер свяжется с вами в течение 15 минут",
+        success_title: "Заявка отправлена!",
+        success_text: "Наш менеджер свяжется с вами в ближайшее время для уточнения деталей",
+        success_btn: "Отлично"
+      }
     },
     portfolio: {
       title: "Галерея проектов",
@@ -495,6 +512,23 @@ export const translations = {
       },
       next: "Keyingisi",
       back: "Orqaga",
+      modal: {
+        title: "Kontakt qoldiring",
+        name: "Ismingiz",
+        name_placeholder: "Ismni kiriting",
+        phone: "Telefon",
+        phone_placeholder: "+998 90 354 76 66",
+        summary: "Hisob-kitob",
+        area: "Maydon",
+        type: "Tur",
+        level: "Daraja",
+        total: "Taxminiy qiymat",
+        submit: "Ariza yuborish",
+        manager_note: "Menejer 15 daqiqa ichida siz bilan bog'lanadi",
+        success_title: "Ariza yuborildi!",
+        success_text: "Menejerimiz tez orada batafsil ma'lumot olish uchun bog'lanadi",
+        success_btn: "Zo'r"
+      }
     },
     portfolio: {
       title: "Loyihalar galereyasi",
@@ -898,12 +932,29 @@ export const translations = {
         rough_mat: "Rough Materials",
         finish_mat: "Finishing Materials",
         total: "Turnkey Total:",
-        range: "mln sum",
+        range: "$",
         download: "Download Estimate (PDF)",
         cta: "Call an Engineer",
       },
       next: "Next",
       back: "Back",
+      modal: {
+        title: "Leave your contact",
+        name: "Your name",
+        name_placeholder: "Enter your name",
+        phone: "Phone",
+        phone_placeholder: "+998 90 354 76 66",
+        summary: "Calculation",
+        area: "Area",
+        type: "Type",
+        level: "Level",
+        total: "Estimated Cost",
+        submit: "Send Request",
+        manager_note: "A manager will contact you within 15 minutes",
+        success_title: "Request Sent!",
+        success_text: "Our manager will contact you soon for details",
+        success_btn: "Great"
+      }
     },
     portfolio: {
       title: "Project Gallery",

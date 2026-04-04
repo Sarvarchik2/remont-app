@@ -7,7 +7,7 @@ export interface CalculatorPriceType {
 }
 
 export const INITIAL_CALCULATOR_PRICES: CalculatorPriceType[] = [
-    { id: 'new', label: 'Новостройка', economy: 1200000, standard: 1800000, premium: 3500000 },
-    { id: 'secondary', label: 'Вторичка', economy: 1500000, standard: 2200000, premium: 4000000 },
-    { id: 'house', label: 'Частный дом', economy: 2000000, standard: 3000000, premium: 5000000 }
+    { id: 'new', label: 'Новостройка', economy: 150, standard: 250, premium: 450 },
+    { id: 'secondary', label: 'Вторичка', economy: 180, standard: 300, premium: 550 },
+    { id: 'house', label: 'Частный дом', economy: 250, standard: 350, premium: 650 }
 ];
